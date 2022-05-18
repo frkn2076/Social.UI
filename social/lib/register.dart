@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:social/register.dart';
 
-void main() => runApp(const Login());
-
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
-
+import 'main.dart';
+ 
+void main() => runApp(const Register());
+ 
+class Register extends StatelessWidget {
+  const Register({Key? key}) : super(key: key);
+ 
   static const String _title = 'Sample App';
-
+ 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,18 +21,18 @@ class Login extends StatelessWidget {
     );
   }
 }
-
+ 
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
-
+ 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
-
+ 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+ 
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -52,7 +53,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Login',
+                  'Sign in',
                   style: TextStyle(fontSize: 20),
                 )),
             Container(
@@ -76,38 +77,34 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                //forgot password screen
-              },
-              child: const Text(
-                'Forgot Password',
-              ),
+            Container(
+              height: 40
             ),
             Container(
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Login'),
+                  child: const Text('Sign in'),
                   onPressed: () {
                     print(nameController.text);
                     print(passwordController.text);
                   },
-                )),
+                )
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Does not have account?'),
+                const Text('Have account?'),
                 TextButton(
                   child: const Text(
-                    'Sign in',
+                    'Login',
                     style: TextStyle(fontSize: 20),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Register()),
+                          builder: (context) => const Login()),
                     );
                   },
                 )
