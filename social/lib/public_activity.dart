@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity.dart';
+import 'package:social/profile.dart';
 
 import 'register.dart';
 
@@ -33,7 +34,11 @@ class PublicActivity extends StatelessWidget {
               ),
               tooltip: 'Go to profile',
               onPressed: () {
-                // handle the press
+                Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Profile(id: 1)),
+                    );
               },
             ),
           ],
