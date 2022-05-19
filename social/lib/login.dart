@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
+import 'public_activity.dart';
+import 'register.dart';
 
-class Register extends StatelessWidget {
-  const Register({Key? key}) : super(key: key);
- 
+class Login extends StatelessWidget {
+  const Login({Key? key}) : super(key: key);
+
   static const String _title = 'Sample App';
- 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,18 +19,18 @@ class Register extends StatelessWidget {
     );
   }
 }
- 
+
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
- 
+
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
- 
+
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
- 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -50,13 +51,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Sign in',
+                  'Login',
                   style: TextStyle(fontSize: 20),
                 )),
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                controller: nameController,
+                controller: emailController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email',
@@ -74,34 +75,43 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
             ),
-            Container(
-              height: 40
+            TextButton(
+              onPressed: () {
+                //forgot password screen
+              },
+              child: const Text(
+                'Forgot Password',
+              ),
             ),
             Container(
                 height: 50,
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
-                  child: const Text('Sign in'),
+                  child: const Text('Login'),
                   onPressed: () {
-                    print(nameController.text);
-                    print(passwordController.text);
+                    if(emailController.text == 'test' && passwordController.text == '12345'){
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PublicActivity()),
+                    );
+                    }
                   },
-                )
-            ),
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Have account?'),
+                const Text('Does not have account?'),
                 TextButton(
                   child: const Text(
-                    'Login',
+                    'Sign in',
                     style: TextStyle(fontSize: 20),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Login()),
+                          builder: (context) => const Register()),
                     );
                   },
                 )
