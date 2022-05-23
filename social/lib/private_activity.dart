@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity.dart';
-import 'package:social/profile.dart';
-
 import 'register.dart';
 
 class PrivateActivity extends StatelessWidget {
   const PrivateActivity({Key? key}) : super(key: key);
 
-  static const String _title = 'Sample App';
+  static const String _title = 'My Activities';
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +21,7 @@ class PrivateActivity extends StatelessWidget {
           },
         ),
         title: const Text(_title),
-        actions: [
-          IconButton(
-            icon: const CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-            ),
-            tooltip: 'Go to profile',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Profile(id: 1)),
-              );
-            },
-          ),
-        ],
+        centerTitle: true,
       ),
       body: const MyStatefulWidget(),
     );

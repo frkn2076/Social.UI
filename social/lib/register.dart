@@ -83,8 +83,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: ElevatedButton(
                   child: const Text('Sign in'),
                   onPressed: () {
-                    print(nameController.text);
-                    print(passwordController.text);
+                    
                   },
                 )
             ),

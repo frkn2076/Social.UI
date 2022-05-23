@@ -4,7 +4,7 @@ class Activity extends StatelessWidget {
   final int id;
   const Activity({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Sample App';
+  static const String _title = 'Activity';
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,7 @@ class Activity extends StatelessWidget {
           },
         ),
         title: const Text(_title),
+        centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
     );
@@ -50,8 +51,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           decoration:
               BoxDecoration(border: Border.all(color: Colors.blueAccent)),
           child: Text(
-            'Etkinlik ${widget.id} \nDetaylar... \n ...' +
-                '\n Katılımcılar: \n Furkan \n Tuba \n Öztürk',
+            'Etkinlik ${widget.id} \nDetaylar... \n ... \n Katılımcılar: \n Furkan \n Tuba \n Öztürk',
             style: const TextStyle(
                 color: Colors.blue, fontWeight: FontWeight.w500, fontSize: 30),
           ),

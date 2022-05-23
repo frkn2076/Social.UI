@@ -7,7 +7,7 @@ import 'register.dart';
 class PublicActivity extends StatelessWidget {
   const PublicActivity({Key? key}) : super(key: key);
 
-  static const String _title = 'Sample App';
+  static const String _title = 'Activities';
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class PublicActivity extends StatelessWidget {
           },
         ),
         title: const Text(_title),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: const CircleAvatar(

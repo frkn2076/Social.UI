@@ -5,15 +5,19 @@ import 'register.dart';
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
 
-  static const String _title = 'Sample App';
+  static const String _title = 'Social';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: _title,
       home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
+        appBar: AppBar(
+          title: const Text(_title,
+          style: TextStyle(fontSize: 30),
+          ),
+          centerTitle: true,
+        ),
         body: const MyStatefulWidget(),
       ),
     );
@@ -39,17 +43,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           children: <Widget>[
             Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                child: const Text(
-                  'Social',
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30),
-                )),
-            Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
                 child: const Text(
                   'Login',
                   style: TextStyle(fontSize: 20),
