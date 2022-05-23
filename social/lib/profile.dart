@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:social/private_activity.dart';
 
 class Profile extends StatelessWidget {
   final int id;
@@ -9,24 +10,20 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
+    return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
           ),
-          title: const Text(_title),
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body: MyStatefulWidget(id: id),
+        title: const Text(_title),
       ),
+      body: MyStatefulWidget(id: id),
     );
   }
 }
@@ -112,7 +109,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ),
                   child: TextButton(
                     child: const Text("Save"),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrivateActivity(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

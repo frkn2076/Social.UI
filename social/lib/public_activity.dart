@@ -11,40 +11,35 @@ class PublicActivity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(
-          leading: GestureDetector(
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+    return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(_title),
+        actions: [
+          IconButton(
+            icon: const CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/foto1.jpeg'),
             ),
-            onTap: () {
-              Navigator.pop(context);
+            tooltip: 'Go to profile',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Profile(id: 1)),
+              );
             },
           ),
-          title: const Text(_title),
-          actions: [
-            IconButton(
-              icon: const CircleAvatar(
-                radius: 20,
-                backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-              ),
-              tooltip: 'Go to profile',
-              onPressed: () {
-                Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Profile(id: 1)),
-                    );
-              },
-            ),
-          ],
-        ),
-        body: const MyStatefulWidget(),
+        ],
       ),
+      body: const MyStatefulWidget(),
     );
   }
 }
