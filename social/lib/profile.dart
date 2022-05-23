@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class Profile extends StatelessWidget {
   final int id;
@@ -62,6 +63,61 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               image: AssetImage('assets/images/foto1.jpeg'),
             ),
           ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+            child: const Text(
+              "User:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent),
+            ),
+            child: const Text("Furkan Öztürk"),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+            child: const Text(
+              "About me:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(20),
+            margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent),
+            ),
+            child: const Text("About yourself..."),
+          ),
+          Container(
+            alignment: Alignment.topCenter,
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blueAccent),
+                  ),
+                  child: TextButton(
+                    child: const Text("Save"),
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
