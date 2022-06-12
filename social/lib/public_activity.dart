@@ -77,9 +77,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blueAccent)),
+                        border: Border.all(color: Colors.blueAccent),
+                        image: const DecorationImage(
+                          image: AssetImage("assets/images/ada.jpeg"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                       child: Text(
-                        'Etkinlik $i \nDetaylar... \n ...',
+                        'Ada Turu $i \nDetaylar... \n ...',
                         style: const TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.w500,
