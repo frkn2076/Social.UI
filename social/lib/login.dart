@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/forgot_password.dart';
 import 'public_activity.dart';
 import 'register.dart';
 
@@ -13,8 +14,9 @@ class Login extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text(_title,
-          style: TextStyle(fontSize: 30),
+          title: const Text(
+            _title,
+            style: TextStyle(fontSize: 30),
           ),
           centerTitle: true,
         ),
@@ -42,12 +44,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         child: ListView(
           children: <Widget>[
             Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 20),
-                )),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
+              child: const Text(
+                'Login',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Container(height: 20),
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
@@ -71,7 +75,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
             TextButton(
               onPressed: () {
-                //forgot password screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPassword(),
+                  ),
+                );
               },
               child: const Text(
                 'Forgot Password',
@@ -83,12 +92,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: ElevatedButton(
                   child: const Text('Login'),
                   onPressed: () {
-                    if(emailController.text == 'test' && passwordController.text == '12345'){
+                    if (emailController.text == 'test' &&
+                        passwordController.text == '12345') {
                       Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PublicActivity()),
-                    );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PublicActivity()),
+                      );
                     }
                   },
                 )),
@@ -104,8 +114,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const Register()),
+                      MaterialPageRoute(builder: (context) => const Register()),
                     );
                   },
                 )
