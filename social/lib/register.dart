@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:social/http/api.dart';
+import 'package:social/http/models/response.dart';
 import 'login.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
-
   static const String _title = 'Social';
 
   @override
@@ -39,66 +40,79 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
-              child: const Text(
-                'Sign In',
-                style: TextStyle(fontSize: 20),
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
+            child: const Text(
+              'Sign In',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Container(height: 20),
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email',
               ),
             ),
-            Container(height: 20),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+            child: TextField(
+              obscureText: true,
+              controller: passwordController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
               ),
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
-            ),
-            Container(height: 40),
-            Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  child: const Text('Sign in'),
-                  onPressed: () {},
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text('Have account?'),
-                TextButton(
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
+          ),
+          Container(height: 40),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: ElevatedButton(
+              child: const Text('Sign in'),
+              onPressed: () {
+                var response = Api()
+                    .register(emailController.text, passwordController.text);
+                response.then(
+                  (isSuccess) {
+                    setState(() {
+                      if (isSuccess) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
+                        );
+                      }
+                    });
                   },
-                )
-              ],
+                );
+              },
             ),
-          ],
-        ));
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('Have account?'),
+              TextButton(
+                child: const Text(
+                  'Login',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () {},
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/forgot_password.dart';
+import 'http/api.dart';
 import 'public_activity.dart';
 import 'register.dart';
 
@@ -87,21 +88,29 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
             Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: ElevatedButton(
-                  child: const Text('Login'),
-                  onPressed: () {
-                    if (emailController.text == 'test' &&
-                        passwordController.text == '12345') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PublicActivity()),
-                      );
-                    }
-                  },
-                )),
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: ElevatedButton(
+                child: const Text('Login'),
+                onPressed: () {
+                  var response = Api()
+                      .login(emailController.text, passwordController.text);
+                  response.then(
+                    (isSuccess) {
+                      setState(() {
+                        if (isSuccess) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PublicActivity()),
+                          );
+                        }
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
