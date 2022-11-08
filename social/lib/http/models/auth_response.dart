@@ -1,4 +1,4 @@
-class AuthResponse<T> {
+class AuthResponse {
   String? accessToken;
   int? accessTokenExpireDate;
   String? refreshToken;
