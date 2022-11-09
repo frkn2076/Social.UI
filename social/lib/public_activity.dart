@@ -57,14 +57,14 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  var activities = Api().GetAllActivities(true);
+  var activities = Api().getAllActivities(true);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<List<AllActivityResponse>>(
-        future: Api().GetAllActivities(true),
+        future: Api().getAllActivities(true),
         builder: (context, projectSnap) {
           return projectSnap.connectionState == ConnectionState.done
               ? ListView.builder(
@@ -102,7 +102,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Activity(id: index)),
+                                builder: (context) => Activity(id: projectSnap.data![index].id!)),
                           );
                         },
                       ),
