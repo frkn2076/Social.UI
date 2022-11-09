@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:social/http/models/private_profile.dart';
 import 'models/activity_detail_response.dart';
 import 'models/all_activity_response.dart';
 import 'models/auth_response.dart';
@@ -90,5 +92,59 @@ class Api {
       return responseBody;
     }
     return null;
+  }
+
+  Future<bool> joinActivity(int activityId) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final body = jsonEncode(<String, Object>{'activityId': activityId});
+
+    final response = await http.post(Uri.parse('${baseUrl}activity/join'),
+        headers: fixedHeaders, body: body);
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<PrivateProfile?> getPrivateProfile() async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final response = await http.get(Uri.parse('${baseUrl}profile/private'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      var responseBody = PrivateProfile.fromJson(jsonDecode(response.body));
+      return responseBody;
+    }
+    return null;
+  }
+
+  Future<bool?> updatePrivateProfile(String? photo, String? name, String? about) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+    
+    final body = jsonEncode(
+        <String, String?>{'Photo': photo, 'Name': name, 'About': about});
+
+    final response = await http.put(Uri.parse('${baseUrl}profile/private'),
+        headers: fixedHeaders, body: body);
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 }

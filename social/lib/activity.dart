@@ -123,21 +123,31 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             .toList(),
                       ),
                     ),
-                    // Container(
-                    //   alignment: Alignment.center,
-                    //   padding: const EdgeInsets.all(10),
-                    //   margin: const EdgeInsets.all(15.0),
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.blueAccent),
-                    //   ),
-                    //   child: Text(
-                    //     'Etkinlik ${widget.id} \nDetaylar... \n ... \n Katılımcılar: \n Furkan \n Tuba \n Öztürk',
-                    //     style: const TextStyle(
-                    //         color: Colors.blue,
-                    //         fontWeight: FontWeight.w500,
-                    //         fontSize: 30),
-                    //   ),
-                    // ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                      ),
+                      child: ElevatedButton(
+                        child: const Text(
+                          "Join",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20),
+                        ),
+                        onPressed: () => {
+                          Api().joinActivity(widget.id).then(
+                                (isSuccess) => setState(
+                                  () {
+                                  },
+                                ),
+                              )
+                        },
+                      ),
+                    ),
                   ],
                 )
               : const Center(

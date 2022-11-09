@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:social/http/models/private_profile.dart';
 import 'package:social/private_activity.dart';
+
+import 'http/api.dart';
 
 class Profile extends StatelessWidget {
   final int id;
@@ -64,80 +67,103 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _photoController = TextEditingController();
+  TextEditingController _aboutController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
-          ),
-          child: const Image(
-            image: AssetImage('assets/images/foto1.jpeg'),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
-          child: const Text(
-            "User:",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
-          ),
-          child: const Text("Furkan Öztürk"),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
-          child: const Text(
-            "About me:",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blueAccent),
-          ),
-          child: const Text("About yourself..."),
-        ),
-        Container(
-          alignment: Alignment.topCenter,
-          padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
+    return FutureBuilder<PrivateProfile?>(
+      future: Api().getPrivateProfile(),
+      builder: (context, projectSnap) {
+        if (projectSnap.connectionState == ConnectionState.done) {
+          _nameController.text = projectSnap.data?.name ?? "Your name...";
+          _aboutController.text = projectSnap.data?.about ?? "Tell me about yourself...";
+
+          return ListView(
+            children: <Widget>[
               Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blueAccent),
                 ),
-                child: TextButton(
-                  child: const Text("Save"),
-                  onPressed: () {},
+                child: const Image(
+                  image: AssetImage('assets/images/foto1.jpeg'),
                 ),
               ),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+                child: const Text(
+                  "User:",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent),
+                ),
+                child: TextField(controller: _nameController),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+                child: const Text(
+                  "About me:",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent),
+                ),
+                child: TextField(controller: _aboutController),
+              ),
+              Container(
+                alignment: Alignment.topCenter,
+                padding: const EdgeInsets.all(5),
+                margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                      ),
+                      child: TextButton(
+                        child: const Text("Save"),
+                        onPressed: () => {
+                          Api()
+                              .updatePrivateProfile(null, _nameController.text, _aboutController.text)
+                              .then(
+                                (isSuccess) => setState(
+                                  () {},
+                                ),
+                              )
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
-          ),
-        )
-      ],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
