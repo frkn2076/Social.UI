@@ -4,9 +4,9 @@ import 'package:social/private_activity.dart';
 
 import 'http/api.dart';
 
-class Profile extends StatelessWidget {
+class PrivateProfile extends StatelessWidget {
   final int id;
-  const Profile({Key? key, required this.id}) : super(key: key);
+  const PrivateProfile({Key? key, required this.id}) : super(key: key);
 
   static const String _title = 'Profile';
 
@@ -67,12 +67,19 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _photoController = TextEditingController();
+  TextEditingController _aboutController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PrivateProfileResponse?>(
-      future: Api().getProfileById(widget.id),
+      future: Api().getPrivateProfile(),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
+          _nameController.text = projectSnap.data?.name ?? "Your name...";
+          _aboutController.text = projectSnap.data?.about ?? "Tell me about yourself...";
+
           return ListView(
             children: <Widget>[
               Container(
@@ -104,7 +111,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blueAccent),
                 ),
-                child: Text(projectSnap.data?.name ?? ""),
+                child: TextField(controller: _nameController),
               ),
               Container(
                 alignment: Alignment.topLeft,
@@ -122,8 +129,35 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blueAccent),
                 ),
-                child: Text(projectSnap.data?.about ?? ""),
+                child: TextField(controller: _aboutController),
               ),
+              Container(
+                alignment: Alignment.topCenter,
+                padding: const EdgeInsets.all(5),
+                margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                      ),
+                      child: TextButton(
+                        child: const Text("Save"),
+                        onPressed: () => {
+                          Api()
+                              .updatePrivateProfile(null, _nameController.text, _aboutController.text)
+                              .then(
+                                (isSuccess) => setState(
+                                  () {},
+                                ),
+                              )
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           );
         } else {

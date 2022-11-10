@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/activity.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
-import 'package:social/profile.dart';
+import 'package:social/private_profile.dart';
 
 import 'register.dart';
 
@@ -36,7 +36,7 @@ class PublicActivity extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Profile(id: 1)),
+                MaterialPageRoute(builder: (context) => const PrivateProfile(id: 1)),
               );
             },
           ),
@@ -57,7 +57,6 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  var activities = Api().getAllActivities(true);
 
   @override
   Widget build(BuildContext context) {

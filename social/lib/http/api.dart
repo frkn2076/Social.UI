@@ -112,7 +112,7 @@ class Api {
     return false;
   }
 
-  Future<PrivateProfile?> getPrivateProfile() async {
+  Future<PrivateProfileResponse?> getPrivateProfile() async {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
@@ -123,7 +123,7 @@ class Api {
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
-      var responseBody = PrivateProfile.fromJson(jsonDecode(response.body));
+      var responseBody = PrivateProfileResponse.fromJson(jsonDecode(response.body));
       return responseBody;
     }
     return null;
@@ -147,4 +147,43 @@ class Api {
     }
     return false;
   }
+
+  Future<PrivateProfileResponse?> getProfileById(int id) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final response = await http.get(Uri.parse('${baseUrl}profile/$id'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      var responseBody = PrivateProfileResponse.fromJson(jsonDecode(response.body));
+      return responseBody;
+    }
+    return null;
+  }
+
+  Future<List<AllActivityResponse>> getPrivateActivities() async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final response = await http.get(
+        Uri.parse('${baseUrl}activity/private/all'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+    }
+    return List.empty();
+  }
+
 }

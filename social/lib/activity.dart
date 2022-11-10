@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/models/activity_detail_response.dart';
+import 'package:social/profile.dart';
 
 import 'http/api.dart';
 
@@ -101,11 +102,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             .map(
                               (joiner) => GestureDetector(
                                 onTap: () => {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //       builder: (context) => const Register()),
-                                  // )
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Profile(id: joiner.id!)),
+                                  )
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
@@ -141,8 +143,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         onPressed: () => {
                           Api().joinActivity(widget.id).then(
                                 (isSuccess) => setState(
-                                  () {
-                                  },
+                                  () {},
                                 ),
                               )
                         },

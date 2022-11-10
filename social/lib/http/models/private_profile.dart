@@ -1,4 +1,4 @@
-class PrivateProfile {
+class PrivateProfileResponse {
   int? id;
   String? userName;
   String? email;
@@ -11,7 +11,7 @@ class PrivateProfile {
   String? role;
   String? about;
 
-  PrivateProfile(
+  PrivateProfileResponse(
       {this.id,
       this.userName,
       this.email,
@@ -24,7 +24,7 @@ class PrivateProfile {
       this.role,
       this.about});
 
-  PrivateProfile.fromJson(Map<String, dynamic> json) {
+  PrivateProfileResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userName = json['userName'];
     email = json['email'];
