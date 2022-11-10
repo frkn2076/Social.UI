@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/api.dart';
-import 'package:social/http/models/response.dart';
 import 'login.dart';
 
 class Register extends StatelessWidget {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social/activity.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
-import 'package:social/private_profile.dart';
 
 import 'register.dart';
 

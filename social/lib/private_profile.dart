@@ -67,9 +67,9 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _photoController = TextEditingController();
-  TextEditingController _aboutController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _photoController = TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
