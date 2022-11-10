@@ -185,4 +185,25 @@ class Api {
     return List.empty();
   }
 
+  Future<bool> createActivity(String? title, String? detail, String? location, String? date, String? phoneNumber) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final body = jsonEncode(<String, Object?>{'title': title,
+     'detail': detail,
+     'location': location,
+     'date': '2023-06-03T10:30',
+     'phoneNumber': phoneNumber});
+
+    final response = await http.post(Uri.parse('${baseUrl}activity'),
+        headers: fixedHeaders, body: body);
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
 }

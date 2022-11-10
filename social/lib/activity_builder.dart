@@ -41,8 +41,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _detailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
             child: const Text(
-              "Description:",
+              "Detail:",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -84,7 +85,25 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blueAccent),
             ),
-            child: TextField(controller: _descriptionController),
+            child: TextField(controller: _detailController),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+            child: const Text(
+              "Location:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueAccent),
+            ),
+            child: TextField(controller: _locationController),
           ),
           Container(
             alignment: Alignment.topLeft,
@@ -136,7 +155,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: TextButton(
                     child: const Text("Save"),
                     onPressed: () => {
-                      Api().updatePrivateProfile(null, null, null).then(
+                      Api().createActivity(_titleController.text,
+                       _detailController.text,
+                       _locationController.text,
+                       _dateController.text,
+                       _phoneNumberController.text).then(
                             (isSuccess) => setState(
                               () {},
                             ),
