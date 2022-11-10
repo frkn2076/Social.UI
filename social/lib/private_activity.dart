@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity.dart';
+import 'package:social/activity_builder.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 
@@ -25,6 +26,33 @@ class PrivateActivity extends StatelessWidget {
         ),
         title: const Text(_title),
         centerTitle: true,
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(2.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ActivityBuilder(),
+                  ),
+                );
+              },
+              child: const Text(
+                "Create Activity",
+              ),
+            ),
+          ),
+        ],
       ),
       body: const MyStatefulWidget(),
     );
