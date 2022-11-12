@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
+import 'package:social/owner_activity.dart';
 import 'package:social/private_activity.dart';
 
 import 'http/api.dart';
@@ -42,12 +43,37 @@ class PrivateProfile extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PrivateActivity(),
+                    builder: (context) => PrivateActivity(id: id),
                   ),
                 );
               },
               child: const Text(
-                "My Activities",
+                "Joined Ones",
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(2.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OwnerActivity(id: id),
+                  ),
+                );
+              },
+              child: const Text(
+                "Created Ones",
               ),
             ),
           ),

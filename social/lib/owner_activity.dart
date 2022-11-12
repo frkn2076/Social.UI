@@ -6,9 +6,9 @@ import 'package:social/http/models/all_activity_response.dart';
 
 import 'register.dart';
 
-class PrivateActivity extends StatelessWidget {
+class OwnerActivity extends StatelessWidget {
   final int id;
-  const PrivateActivity({Key? key, required this.id}) : super(key: key);
+  const OwnerActivity({Key? key, required this.id}) : super(key: key);
 
   static const String _title = 'Activities';
 
@@ -77,7 +77,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<List<AllActivityResponse>>(
-        future: Api().getPrivateActivities(),
+        future: Api().getOwnerActivities(widget.id),
         builder: (context, projectSnap) {
           return projectSnap.connectionState == ConnectionState.done
               ? ListView.builder(

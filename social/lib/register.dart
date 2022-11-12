@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:social/http/api.dart';
 import 'package:social/public_activity.dart';
 
+import 'utils/condition.dart';
+
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
   static const String _title = 'Social';
@@ -35,13 +37,13 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  var condition = _condition.none;
+  var _condition = Condition.none;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: condition == _condition.success
+      child: _condition == Condition.success
           ? AlertDialog(
               title: const Text('Success'),
               content: SingleChildScrollView(
@@ -56,13 +58,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: const Text('Ok'),
                   onPressed: () {
                     setState(() {
-                      condition = _condition.none;
+                      _condition = Condition.none;
                     });
                   },
                 ),
               ],
             )
-          : condition == _condition.fail
+          : _condition == Condition.fail
               ? AlertDialog(
                   title: const Text('Fail'),
                   content: SingleChildScrollView(
@@ -75,7 +77,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       child: const Text('Close'),
                       onPressed: () {
                         setState(() {
-                          condition = _condition.none;
+                          _condition = Condition.none;
                         });
                       },
                     ),
@@ -126,14 +128,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             (isSuccess) {
                               setState(() {
                                 if (isSuccess) {
-                                  condition = _condition.success;
+                                  _condition = Condition.none;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => const PublicActivity()),
                                   );
                                 } else {
-                                  condition = _condition.fail;
+                                  _condition = Condition.fail;
                                 }
                               });
                             },
@@ -159,5 +161,3 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 }
-
-enum _condition { none, success, fail }

@@ -195,7 +195,7 @@ class Api {
     final body = jsonEncode(<String, Object?>{'title': title,
      'detail': detail,
      'location': location,
-     'date': '2023-06-03T10:30',
+     'date': date,
      'phoneNumber': phoneNumber});
 
     final response = await http.post(Uri.parse('${baseUrl}activity'),
@@ -205,5 +205,26 @@ class Api {
       return true;
     }
     return false;
+  }
+
+  Future<List<AllActivityResponse>> getOwnerActivities(int id) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final response = await http.get(
+        Uri.parse('${baseUrl}activity/owner/$id'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+    }
+    return List.empty();
   }
 }
