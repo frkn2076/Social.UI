@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/public_profile.dart';
+import 'package:social/utils/helper.dart';
 
 import 'http/api.dart';
 
@@ -86,6 +87,69 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       margin: const EdgeInsets.all(15.0),
                       child: Text(
                         projectSnap.data!.detail!,
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+                      child: const Text(
+                        "Location:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(15.0),
+                      child: Text(
+                        projectSnap.data!.location!,
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+                      child: const Text(
+                        "Date:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(15.0),
+                      child: Text(
+                        Helper.FormatDateTime(projectSnap.data!.date!),
+                        style: const TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+                      child: const Text(
+                        "PhoneNumber:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.all(15.0),
+                      child: Text(
+                        projectSnap.data!.phoneNumber!,
                         style: const TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.w500,

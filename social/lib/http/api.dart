@@ -6,9 +6,9 @@ import 'models/all_activity_response.dart';
 import 'models/auth_response.dart';
 
 class Api {
-  static const baseUrl = 'https://localhost:5001/';
-  static String? accessToken;
-  static String? refreshToken;
+  static const _baseUrl = 'https://localhost:5001/';
+  static String? _accessToken;
+  static String? _refreshToken;
   static int? profileId;
 
   Future<bool> register(String userName, String password) async {
@@ -21,14 +21,14 @@ class Api {
         <String, Object>{'UserName': userName, 'Password': password});
 
     final response = await http.post(
-        Uri.parse('${baseUrl}authorization/register'),
+        Uri.parse('${_baseUrl}authorization/register'),
         headers: fixedHeaders,
         body: body);
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
-      accessToken = responseBody.accessToken;
-      refreshToken = responseBody.refreshToken;
+      _accessToken = responseBody.accessToken;
+      _refreshToken = responseBody.refreshToken;
       return true;
     }
     return false;
@@ -43,13 +43,13 @@ class Api {
     final body = jsonEncode(
         <String, Object>{'UserName': userName, 'Password': password});
 
-    final response = await http.post(Uri.parse('${baseUrl}authorization/login'),
+    final response = await http.post(Uri.parse('${_baseUrl}authorization/login'),
         headers: fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
-      accessToken = responseBody.accessToken;
-      refreshToken = responseBody.refreshToken;
+      _accessToken = responseBody.accessToken;
+      _refreshToken = responseBody.refreshToken;
       return true;
     }
     return false;
@@ -59,11 +59,11 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final response = await http.get(
-        Uri.parse('${baseUrl}activity/all/$isRefresh'),
+        Uri.parse('${_baseUrl}activity/all/$isRefresh'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -80,10 +80,10 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
-    final response = await http.get(Uri.parse('${baseUrl}activity/$activityId'),
+    final response = await http.get(Uri.parse('${_baseUrl}activity/$activityId'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -98,12 +98,12 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final body = jsonEncode(<String, Object>{'activityId': activityId});
 
-    final response = await http.post(Uri.parse('${baseUrl}activity/join'),
+    final response = await http.post(Uri.parse('${_baseUrl}activity/join'),
         headers: fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
@@ -116,10 +116,10 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
-    final response = await http.get(Uri.parse('${baseUrl}profile/private'),
+    final response = await http.get(Uri.parse('${_baseUrl}profile/private'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -134,13 +134,13 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
     
     final body = jsonEncode(
         <String, String?>{'Photo': photo, 'Name': name, 'About': about});
 
-    final response = await http.put(Uri.parse('${baseUrl}profile/private'),
+    final response = await http.put(Uri.parse('${_baseUrl}profile/private'),
         headers: fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
@@ -153,10 +153,10 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
-    final response = await http.get(Uri.parse('${baseUrl}profile/$id'),
+    final response = await http.get(Uri.parse('${_baseUrl}profile/$id'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -170,11 +170,11 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final response = await http.get(
-        Uri.parse('${baseUrl}activity/private/all'),
+        Uri.parse('${_baseUrl}activity/private/all'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -191,11 +191,11 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final response = await http.get(
-        Uri.parse('${baseUrl}activity/joined/$userId'),
+        Uri.parse('${_baseUrl}activity/joined/$userId'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
@@ -212,7 +212,7 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final body = jsonEncode(<String, Object?>{'title': title,
@@ -221,7 +221,7 @@ class Api {
      'date': date,
      'phoneNumber': phoneNumber});
 
-    final response = await http.post(Uri.parse('${baseUrl}activity'),
+    final response = await http.post(Uri.parse('${_baseUrl}activity'),
         headers: fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
@@ -234,11 +234,11 @@ class Api {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
-      "Authorization": "Bearer $accessToken"
+      "Authorization": "Bearer $_accessToken"
     };
 
     final response = await http.get(
-        Uri.parse('${baseUrl}activity/owner/$id'),
+        Uri.parse('${_baseUrl}activity/owner/$id'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {
