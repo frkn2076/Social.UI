@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/private_profile.dart';
-import 'package:social/profile.dart';
+import 'package:social/public_profile.dart';
 
 import 'http/api.dart';
 
-class Activity extends StatelessWidget {
+class ActivityDetail extends StatelessWidget {
   final int id;
-  const Activity({Key? key, required this.id}) : super(key: key);
+  const ActivityDetail({Key? key, required this.id}) : super(key: key);
 
   static const String _title = 'Social';
 
@@ -110,8 +110,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PrivateProfile(
-                                                      id: joiner.id!)),
+                                                  const PrivateProfile()),
                                         )
                                       }
                                     else
@@ -120,7 +119,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Profile(id: joiner.id!)),
+                                                  PublicProfile(id: joiner.id!)),
                                         )
                                       }
                                   },

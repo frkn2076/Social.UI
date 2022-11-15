@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:social/activity.dart';
+import 'package:social/activity_detail.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 
 import 'register.dart';
 
-class PrivateActivity extends StatelessWidget {
+class JoinedActivity extends StatelessWidget {
   final int id;
-  const PrivateActivity({Key? key, required this.id}) : super(key: key);
+  const JoinedActivity({Key? key, required this.id}) : super(key: key);
 
   static const String _title = 'Activities';
 
@@ -77,7 +77,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<List<AllActivityResponse>>(
-        future: Api().getPrivateActivities(),
+        future: Api().getJoinedActivities(widget.id),
         builder: (context, projectSnap) {
           return projectSnap.connectionState == ConnectionState.done
               ? ListView.builder(
@@ -115,7 +115,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Activity(id: projectSnap.data![index].id!)),
+                                builder: (context) => ActivityDetail(id: projectSnap.data![index].id!)),
                           );
                         },
                       ),

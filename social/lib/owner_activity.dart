@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:social/activity.dart';
+import 'package:social/activity_detail.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
@@ -115,7 +115,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Activity(id: projectSnap.data![index].id!)),
+                                builder: (context) => ActivityDetail(id: projectSnap.data![index].id!)),
                           );
                         },
                       ),

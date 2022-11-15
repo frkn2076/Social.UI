@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
+import 'package:social/owner_activity.dart';
+import 'package:social/joined_activity.dart';
 
 import 'http/api.dart';
 
-class Profile extends StatelessWidget {
+class PublicProfile extends StatelessWidget {
   final int id;
-  const Profile({Key? key, required this.id}) : super(key: key);
+  const PublicProfile({Key? key, required this.id}) : super(key: key);
 
   static const String _title = 'Profile';
 
@@ -24,6 +26,58 @@ class Profile extends StatelessWidget {
         ),
         title: const Text(_title),
         centerTitle: true,
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(2.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JoinedActivity(id: id),
+                  ),
+                );
+              },
+              child: const Text(
+                "Joined Ones",
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(2.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.red),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OwnerActivity(id: id),
+                  ),
+                );
+              },
+              child: const Text(
+                "Created Ones",
+              ),
+            ),
+          ),
+        ],
       ),
       body: MyStatefulWidget(id: id),
     );

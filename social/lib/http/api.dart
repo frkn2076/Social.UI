@@ -9,6 +9,7 @@ class Api {
   static const baseUrl = 'https://localhost:5001/';
   static String? accessToken;
   static String? refreshToken;
+  static int? profileId;
 
   Future<bool> register(String userName, String password) async {
     final fixedHeaders = {
@@ -123,6 +124,7 @@ class Api {
 
     if (response.statusCode == 200) {
       var responseBody = PrivateProfileResponse.fromJson(jsonDecode(response.body));
+      profileId = responseBody.id;
       return responseBody;
     }
     return null;
@@ -173,6 +175,27 @@ class Api {
 
     final response = await http.get(
         Uri.parse('${baseUrl}activity/private/all'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+    }
+    return List.empty();
+  }
+
+  Future<List<AllActivityResponse>> getJoinedActivities(int userId) async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $accessToken"
+    };
+
+    final response = await http.get(
+        Uri.parse('${baseUrl}activity/joined/$userId'),
         headers: fixedHeaders);
 
     if (response.statusCode == 200) {

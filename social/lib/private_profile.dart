@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
-import 'package:social/private_activity.dart';
+import 'package:social/joined_activity.dart';
 
 import 'http/api.dart';
 
 class PrivateProfile extends StatelessWidget {
-  final int id;
-  const PrivateProfile({Key? key, required this.id}) : super(key: key);
+  const PrivateProfile({Key? key}) : super(key: key);
 
   static const String _title = 'Profile';
 
@@ -40,12 +39,14 @@ class PrivateProfile extends StatelessWidget {
                 primary: Colors.white,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PrivateActivity(id: id),
-                  ),
-                );
+                if (Api.profileId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => JoinedActivity(id: Api.profileId!),
+                    ),
+                  );
+                }
               },
               child: const Text(
                 "Joined Ones",
@@ -65,12 +66,14 @@ class PrivateProfile extends StatelessWidget {
                 primary: Colors.white,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OwnerActivity(id: id),
-                  ),
-                );
+                if (Api.profileId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OwnerActivity(id: Api.profileId!),
+                    ),
+                  );
+                }
               },
               child: const Text(
                 "Created Ones",
@@ -79,14 +82,13 @@ class PrivateProfile extends StatelessWidget {
           ),
         ],
       ),
-      body: MyStatefulWidget(id: id),
+      body: const MyStatefulWidget(),
     );
   }
 }
 
 class MyStatefulWidget extends StatefulWidget {
-  final int id;
-  const MyStatefulWidget({Key? key, required this.id}) : super(key: key);
+  const MyStatefulWidget({Key? key}) : super(key: key);
 
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
@@ -104,7 +106,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
           _nameController.text = projectSnap.data?.name ?? "Your name...";
-          _aboutController.text = projectSnap.data?.about ?? "Tell me about yourself...";
+          _aboutController.text =
+              projectSnap.data?.about ?? "Tell me about yourself...";
 
           return ListView(
             children: <Widget>[
@@ -172,7 +175,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         child: const Text("Save"),
                         onPressed: () => {
                           Api()
-                              .updatePrivateProfile(null, _nameController.text, _aboutController.text)
+                              .updatePrivateProfile(null, _nameController.text,
+                                  _aboutController.text)
                               .then(
                                 (isSuccess) => setState(
                                   () {},
