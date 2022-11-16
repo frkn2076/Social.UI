@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
 import 'package:social/utils/holder.dart';
 import 'http/api.dart';
@@ -45,26 +46,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: _isAlertDialogOn
-          ? AlertDialog(
-              title: const Text('Wrong credentials'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: const <Widget>[
-                    Text('Your username or password is wrong')
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Close'),
-                  onPressed: () {
-                    setState(() {
-                      _isAlertDialogOn = false;
-                    });
-                  },
-                ),
-              ],
-            )
+          ? 
+          CustomePopup(
+              title: 'Wrong credentials',
+              message: 'Your username or password is wrong',
+              buttonName: 'Close',
+              onPressed: () => setState(() =>  _isAlertDialogOn = false))
           : ListView(
               children: <Widget>[
                 Container(

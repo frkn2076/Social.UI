@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/public_activity.dart';
 
 import 'http/api.dart';
@@ -56,45 +57,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: _condition == Condition.success
-          ? AlertDialog(
-              title: const Text('Success'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: const <Widget>[
-                    Text('You have created activity succesfully!')
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Ok'),
-                  onPressed: () {
-                    setState(() {
-                      _condition = Condition.none;
-                    });
-                  },
-                ),
-              ],
-            )
+          ? 
+          CustomePopup(
+              title: 'Success',
+              message: 'You have created activity succesfully!',
+              buttonName: 'Ok',
+              onPressed: () => setState(() => _condition = Condition.none))
           : _condition == Condition.fail
-              ? AlertDialog(
-                  title: const Text('Fail'),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: const <Widget>[Text('Something went wrong')],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: const Text('Close'),
-                      onPressed: () {
-                        setState(() {
-                          _condition = Condition.none;
-                        });
-                      },
-                    ),
-                  ],
-                )
+              ? 
+              CustomePopup(
+              title: 'Fail',
+              message: 'Something went wrong',
+              buttonName: 'Close',
+              onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
                     Container(
