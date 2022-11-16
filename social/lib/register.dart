@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/http/api.dart';
 import 'package:social/login.dart';
 import 'package:social/public_activity.dart';
+import 'package:social/utils/holder.dart';
 
 import 'utils/condition.dart';
 
@@ -36,8 +37,8 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController userNameController = TextEditingController(text: Holder.userName);
+  TextEditingController passwordController = TextEditingController(text: Holder.password);
   var _condition = Condition.none;
 
   @override
@@ -98,7 +99,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: TextField(
-                        controller: emailController,
+                        controller: userNameController,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Email',
@@ -124,7 +125,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         child: const Text('Sign in'),
                         onPressed: () {
                           var response = Api().register(
-                              emailController.text, passwordController.text);
+                              userNameController.text, passwordController.text);
                           response.then(
                             (isSuccess) {
                               setState(() {
@@ -155,6 +156,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             style: TextStyle(fontSize: 20),
                           ),
                           onPressed: () {
+                            Holder.userName = userNameController.text;
+                            Holder.password = passwordController.text;
                             Navigator.push(
                               context,
                               MaterialPageRoute(

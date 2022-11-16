@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/forgot_password.dart';
+import 'package:social/utils/holder.dart';
 import 'http/api.dart';
 import 'public_activity.dart';
 import 'register.dart';
@@ -35,8 +36,8 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController userNameController = TextEditingController(text: Holder.userName);
+  TextEditingController passwordController = TextEditingController(text: Holder.password);
   bool _isAlertDialogOn = false;
 
   @override
@@ -78,7 +79,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: emailController,
+                    controller: userNameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Email',
@@ -116,7 +117,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     child: const Text('Login'),
                     onPressed: () {
                       var response = Api()
-                          .login(emailController.text, passwordController.text);
+                          .login(userNameController.text, passwordController.text);
                       response.then(
                         (isSuccess) {
                           setState(() {
@@ -149,6 +150,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         style: TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
+                        Holder.userName = userNameController.text;
+                        Holder.password = passwordController.text;
                         Navigator.push(
                           context,
                           MaterialPageRoute(
