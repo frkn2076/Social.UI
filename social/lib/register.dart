@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/http/api.dart';
+import 'package:social/login.dart';
 import 'package:social/public_activity.dart';
 
 import 'utils/condition.dart';
@@ -132,7 +133,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const PublicActivity()),
+                                        builder: (context) =>
+                                            const PublicActivity()),
                                   );
                                 } else {
                                   _condition = Condition.fail;
@@ -152,7 +154,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             'Login',
                             style: TextStyle(fontSize: 20),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Login()),
+                            );
+                          },
                         )
                       ],
                     ),

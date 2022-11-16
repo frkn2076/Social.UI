@@ -10,7 +10,7 @@ class OwnerActivity extends StatelessWidget {
   final int id;
   const OwnerActivity({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Activities';
+  static const String _title = 'Created Activities';
 
   @override
   Widget build(BuildContext context) {

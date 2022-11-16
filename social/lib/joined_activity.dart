@@ -10,7 +10,7 @@ class JoinedActivity extends StatelessWidget {
   final int id;
   const JoinedActivity({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Activities';
+  static const String _title = 'Joined Activities';
 
   @override
   Widget build(BuildContext context) {
