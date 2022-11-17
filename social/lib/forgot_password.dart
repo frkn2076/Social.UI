@@ -3,17 +3,25 @@ import 'package:flutter/material.dart';
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({Key? key}) : super(key: key);
 
-  static const String _title = 'Sample App';
+  static const String _title = 'Forgot Password';
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: const MyStatefulWidget(),
+    return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(_title),
+        centerTitle: true,
       ),
+      body: const MyStatefulWidget(),
     );
   }
 }
