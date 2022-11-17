@@ -76,6 +76,27 @@ class Api {
     return List.empty();
   }
 
+  Future<List<AllActivityResponse>> getActivitiesRandomly() async {
+    final fixedHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-type": "application/json",
+      "Authorization": "Bearer $_accessToken"
+    };
+
+    final response = await http.get(
+        Uri.parse('${_baseUrl}activity/all/random'),
+        headers: fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+    }
+    return List.empty();
+  }
+
   Future<ActivityDetailResponse?> getActivityDetail(int activityId) async {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",

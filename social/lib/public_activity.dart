@@ -55,6 +55,14 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  late Future<List<AllActivityResponse>> _activities;
+
+  @override
+  void initState() {
+    super.initState();
+    _activities = Api().getActivitiesRandomly();
+  }
+
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -63,49 +71,57 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<List<AllActivityResponse>>(
-        future: Api().getAllActivities(true),
+        future: _activities,
         builder: (context, projectSnap) {
           return projectSnap.connectionState == ConnectionState.done
-              ? ListView.builder(
-                  itemCount: projectSnap.data?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Register()),
-                        )
-                      },
-                      child: GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueAccent),
-                            image: const DecorationImage(
-                              image: AssetImage("assets/images/ada.jpeg"),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Text(
-                            projectSnap.data![index].title!,
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 30),
-                          ),
-                        ),
-                        onTap: () {
+              ? RefreshIndicator(
+                  child: ListView.builder(
+                    itemCount: projectSnap.data?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () => {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ActivityDetail(id: projectSnap.data![index].id!)),
-                          );
+                                builder: (context) => const Register()),
+                          )
                         },
-                      ),
-                    );
+                        child: GestureDetector(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.all(15.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blueAccent),
+                              image: const DecorationImage(
+                                image: AssetImage("assets/images/ada.jpeg"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Text(
+                              projectSnap.data![index].title!,
+                              style: const TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 30),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ActivityDetail(
+                                      id: projectSnap.data![index].id!)),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  onRefresh: () async {
+                    setState(() {
+                      _activities = Api().getActivitiesRandomly();
+                    });
                   },
                 )
               : const Center(
