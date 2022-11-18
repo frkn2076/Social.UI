@@ -48,28 +48,41 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final TextEditingController _detailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  DateTime _date = DateTime(DateTime.now().year, DateTime.now().month,
-      DateTime.now().day, DateTime.now().hour, DateTime.now().minute % 15 * 15);
+
+  late DateTime _now;
+  late DateTime _initDate;
+
   var _condition = Condition.none;
+
+  int year = 0;
+  int month = 0;
+  int day = 0;
+  int hour = 0;
+  int minute = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _now = DateTime.now();
+    _initDate = DateTime(_now.year, _now.month, _now.day, _now.hour, 0);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: _condition == Condition.success
-          ? 
-          CustomePopup(
+          ? CustomePopup(
               title: 'Success',
               message: 'You have created activity succesfully!',
               buttonName: 'Ok',
               onPressed: () => setState(() => _condition = Condition.none))
           : _condition == Condition.fail
-              ? 
-              CustomePopup(
-              title: 'Fail',
-              message: 'Something went wrong',
-              buttonName: 'Close',
-              onPressed: () => setState(() => _condition = Condition.none))
+              ? CustomePopup(
+                  title: 'Fail',
+                  message: 'Something went wrong',
+                  buttonName: 'Close',
+                  onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
                     Container(
@@ -147,11 +160,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.date,
                         maximumYear: 2030,
-                        minimumYear: 2010,
-                        initialDateTime: DateTime.now(),
+                        minimumYear: 2022,
+                        initialDateTime: _initDate,
                         onDateTimeChanged: (DateTime value) {
-                          _date = DateTime(value.year, value.month, value.day,
-                              _date.hour, _date.minute);
+                          year = value.year;
+                          month = value.month;
+                          day = value.day;
                         },
                         use24hFormat: false,
                         minuteInterval: 1,
@@ -177,11 +191,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                       child: CupertinoDatePicker(
                         mode: CupertinoDatePickerMode.time,
-                        initialDateTime: DateTime(1, 1, 1, DateTime.now().hour,
-                            DateTime.now().minute % 15 * 15),
+                        initialDateTime: _initDate,
                         onDateTimeChanged: (DateTime value) {
-                          _date = DateTime(_date.year, _date.month, _date.day,
-                              value.hour, value.minute);
+                          hour = value.hour;
+                          minute = value.minute;
                         },
                         use24hFormat: true,
                         minuteInterval: 15,
@@ -220,7 +233,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               child: const Text("Save"),
                               onPressed: () {
                                 var dateInput = DateFormat('yyyy-MM-ddTHH:mm')
-                                    .format(_date);
+                                    .format(DateTime(
+                                        year, month, day, hour, minute));
                                 Api()
                                     .createActivity(
                                         _titleController.text,
@@ -237,7 +251,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    PublicActivity(),
+                                                    const PublicActivity(),
                                               ),
                                             );
                                           } else {
