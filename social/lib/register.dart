@@ -110,7 +110,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const PublicActivity()),
+                                            PublicActivity()),
                                   );
                                 } else {
                                   _condition = Condition.fail;

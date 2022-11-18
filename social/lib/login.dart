@@ -114,7 +114,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const PublicActivity()),
+                                        PublicActivity()),
                               );
                             } else {
                               setState(() {
