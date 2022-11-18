@@ -4,26 +4,8 @@ import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/private_profile.dart';
 
-import 'custome_widgets/customer_search_bar.dart';
+import 'custome_widgets/custome_searchbar.dart';
 import 'register.dart';
-
-// class PublicActivity extends StatelessWidget {
-//   PublicActivity({Key? key}) : super(key: key);
-
-//   static const String _title = 'Activities';
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       title: 'Flutter Demo',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: const MyStatefulWidget(),
-//     );
-//   }
-// }
 
 class PublicActivity extends StatefulWidget {
   const PublicActivity({Key? key}) : super(key: key);
@@ -60,7 +42,18 @@ class _PublicActivityState extends State<PublicActivity> {
         ),
         title: !_searchBoolean
             ? const Text('Activities')
-            : CustomeHelper().searchTextField(),
+            : CustomeSearchBar(
+                onChanged: (String searchText) {
+                  setState(() {
+                    if (searchText.isNotEmpty) {
+                      _activities =
+                          Api().getActivitiesRandomlyByKey(searchText);
+                    } else {
+                      _activities = Api().getActivitiesRandomly();
+                    }
+                  });
+                },
+              ),
         centerTitle: true,
         actions: [
           !_searchBoolean
@@ -70,15 +63,13 @@ class _PublicActivityState extends State<PublicActivity> {
                     setState(() {
                       _searchBoolean = true;
                     });
-                    
                   })
               : IconButton(
-                  icon: Icon(Icons.clear),
+                  icon: const Icon(Icons.clear),
                   onPressed: () {
                     setState(() {
-                       _searchBoolean = false;
+                      _searchBoolean = false;
                     });
-                   
                   }),
           IconButton(
             icon: const CircleAvatar(
