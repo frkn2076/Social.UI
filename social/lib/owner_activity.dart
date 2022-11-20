@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/activity_builder.dart';
+import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/register.dart';
@@ -15,15 +16,7 @@ class OwnerActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: const CustomeBackButton(),
         title: const Text(_title),
         centerTitle: true,
         actions: [

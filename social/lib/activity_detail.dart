@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/public_profile.dart';
@@ -15,15 +16,7 @@ class ActivityDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: const CustomeBackButton(),
         title: const Text(
           _title,
           style: TextStyle(fontSize: 30),

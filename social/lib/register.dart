@@ -57,8 +57,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ? CustomePopup(
                   title: 'Fail',
                   message: 'Something went wrong',
-                  onPressed: () =>
-                      setState(() => _condition = Condition.none))
+                  onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
                     Container(
@@ -105,11 +104,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               setState(() {
                                 if (isSuccess) {
                                   _condition = Condition.none;
+                                  Holder.userName = userNameController.text;
+                                  Holder.password = passwordController.text;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            PublicActivity()),
+                                        builder: (context) => const PublicActivity()),
                                   );
                                 } else {
                                   _condition = Condition.fail;

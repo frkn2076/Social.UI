@@ -37,8 +37,10 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  TextEditingController userNameController = TextEditingController(text: Holder.userName);
-  TextEditingController passwordController = TextEditingController(text: Holder.password);
+  TextEditingController userNameController =
+      TextEditingController(text: Holder.userName);
+  TextEditingController passwordController =
+      TextEditingController(text: Holder.password);
   bool _isAlertDialogOn = false;
 
   @override
@@ -46,12 +48,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: _isAlertDialogOn
-          ? 
-          CustomePopup(
+          ? CustomePopup(
               title: 'Wrong credentials',
               message: 'Your username or password is wrong',
               buttonName: 'Close',
-              onPressed: () => setState(() =>  _isAlertDialogOn = false))
+              onPressed: () => setState(() => _isAlertDialogOn = false))
           : ListView(
               children: <Widget>[
                 Container(
@@ -103,18 +104,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: ElevatedButton(
                     child: const Text('Login'),
                     onPressed: () {
-                      var response = Api()
-                          .login(userNameController.text, passwordController.text);
+                      var response = Api().login(
+                          userNameController.text, passwordController.text);
                       response.then(
                         (isSuccess) {
                           setState(() {
                             if (isSuccess) {
                               _isAlertDialogOn = false;
+                              Holder.userName = userNameController.text;
+                              Holder.password = passwordController.text;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        PublicActivity()),
+                                        const PublicActivity()),
                               );
                             } else {
                               setState(() {

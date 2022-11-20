@@ -1,29 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/holder.dart';
 
 class PrivateProfile extends StatelessWidget {
   const PrivateProfile({Key? key}) : super(key: key);
-
-  static const String _title = 'Profile';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(_title),
+        leading: const CustomeBackButton(),
+        title: Text(Holder.userName!),
         centerTitle: true,
         actions: [
           Container(

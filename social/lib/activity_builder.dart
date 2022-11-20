@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/public_activity.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -16,15 +17,7 @@ class ActivityBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          child: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
+        leading: const CustomeBackButton(),
         title: const Text(
           _title,
           style: TextStyle(fontSize: 30),
