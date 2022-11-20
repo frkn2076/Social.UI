@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:social/utils/helper.dart';
 
 import 'http/api.dart';
 
@@ -116,39 +113,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           return ListView(
             children: <Widget>[
               Stack(
-                children: <Widget>[
+                children: [
                   Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.blueAccent),
                     ),
                     child: const Image(
                       image: AssetImage('assets/images/foto1.jpeg'),
-                      height: 150,
-                      width: 150,
                     ),
                   ),
                   Positioned(
                     right: 100.0,
                     bottom: 0.0,
-                    child: GestureDetector(
-                      child: Icon(
+                    child: IconButton(
+                      // ignore: prefer_const_constructors
+                      icon: Icon(
                         size: 40,
                         Icons.add_circle_outline,
                         color: Colors.blue,
                       ),
-                      onTap: () async {
+                      onPressed: () async {
                         var pickedFile = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.all(50),
+                padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
                 child: TextField(
                     controller: _nameController,
                     decoration: const InputDecoration(
