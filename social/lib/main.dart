@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'login.dart';
+import 'package:social/login.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides(); // for api call certicifications

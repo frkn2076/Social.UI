@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
-
-import 'http/api.dart';
+import 'package:social/http/api.dart';
 
 class PublicProfile extends StatelessWidget {
   final int id;

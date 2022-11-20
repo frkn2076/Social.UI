@@ -3,8 +3,7 @@ import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/public_profile.dart';
 import 'package:social/utils/helper.dart';
-
-import 'http/api.dart';
+import 'package:social/http/api.dart';
 
 class ActivityDetail extends StatelessWidget {
   final int id;

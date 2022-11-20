@@ -4,10 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/public_activity.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:social/utils/helper.dart';
-
-import 'http/api.dart';
-import 'utils/condition.dart';
+import 'package:social/http/api.dart';
+import 'package:social/utils/condition.dart';
 
 class ActivityBuilder extends StatelessWidget {
   const ActivityBuilder({Key? key}) : super(key: key);

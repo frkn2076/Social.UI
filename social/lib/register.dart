@@ -4,8 +4,7 @@ import 'package:social/login.dart';
 import 'package:social/public_activity.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
-
-import 'utils/condition.dart';
+import 'package:social/utils/condition.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);

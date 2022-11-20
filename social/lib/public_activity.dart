@@ -3,9 +3,8 @@ import 'package:social/activity_detail.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/private_profile.dart';
-
-import 'custome_widgets/custome_searchbar.dart';
-import 'register.dart';
+import 'package:social/custome_widgets/custome_searchbar.dart';
+import 'package:social/register.dart';
 
 class PublicActivity extends StatefulWidget {
   const PublicActivity({Key? key}) : super(key: key);

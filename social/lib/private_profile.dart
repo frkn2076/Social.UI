@@ -3,8 +3,7 @@ import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
-
-import 'http/api.dart';
+import 'package:social/http/api.dart';
 
 class PrivateProfile extends StatelessWidget {
   const PrivateProfile({Key? key}) : super(key: key);

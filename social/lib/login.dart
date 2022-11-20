@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
 import 'package:social/utils/holder.dart';
-import 'http/api.dart';
+import 'package:social/http/api.dart';
 import 'public_activity.dart';
-import 'register.dart';
+import 'package:social/register.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);

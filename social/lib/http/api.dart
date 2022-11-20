@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:social/http/models/private_profile.dart';
-import 'models/activity_detail_response.dart';
-import 'models/all_activity_response.dart';
-import 'models/auth_response.dart';
+import 'package:social/http/models/activity_detail_response.dart';
+import 'package:social/http/models/all_activity_response.dart';
+import 'package:social/http/models/auth_response.dart';
 
 class Api {
   static const _baseUrl = 'https://10.0.2.2:5001/'; //localhost for avd/emulator https://10.0.2.2:5001/ , otherwise https://localhost:5001/
