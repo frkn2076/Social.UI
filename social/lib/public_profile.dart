@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
-import 'package:social/http/models/private_profile.dart';
+import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:social/http/api.dart';

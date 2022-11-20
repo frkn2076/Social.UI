@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
-import 'package:social/http/models/private_profile.dart';
+import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,15 +21,14 @@ class PrivateProfile extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red),
+              border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
             ),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.nordic_walking_outlined),
+              tooltip: 'Joined Ones',
               onPressed: () {
                 if (Api.profileId != null) {
                   Navigator.push(
@@ -40,23 +39,19 @@ class PrivateProfile extends StatelessWidget {
                   );
                 }
               },
-              child: const Text(
-                "Joined Ones",
-              ),
             ),
           ),
           Container(
             margin: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red),
+              border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
             ),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.supervised_user_circle_outlined),
+              tooltip: "Created Ones",
               onPressed: () {
                 if (Api.profileId != null) {
                   Navigator.push(
@@ -67,9 +62,6 @@ class PrivateProfile extends StatelessWidget {
                   );
                 }
               },
-              child: const Text(
-                "Created Ones",
-              ),
             ),
           ),
         ],

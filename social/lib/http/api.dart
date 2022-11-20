@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:social/http/models/private_profile.dart';
+import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/auth_response.dart';

@@ -23,15 +23,14 @@ class OwnerActivity extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red),
+              border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
             ),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              tooltip: 'Create activity',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -40,9 +39,6 @@ class OwnerActivity extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text(
-                "Create Activity",
-              ),
             ),
           ),
         ],
@@ -107,7 +103,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ActivityDetail(id: projectSnap.data![index].id!)),
+                                builder: (context) => ActivityDetail(
+                                    id: projectSnap.data![index].id!)),
                           );
                         },
                       ),
