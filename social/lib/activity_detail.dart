@@ -128,7 +128,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.all(5),
                       margin: const EdgeInsets.all(15.0),
                       child: Text(
-                        Helper.FormatDateTime(projectSnap.data!.date!),
+                        Helper.formatDateTime(projectSnap.data!.date!),
                         style: const TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.w500,

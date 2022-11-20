@@ -11,14 +11,14 @@ class CustomeSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onChanged: onChanged,
-      autofocus: true, //Display the keyboard when TextField is displayed
+      autofocus: true, 
       cursorColor: Colors.white,
       style: const TextStyle(
         color: Colors.white,
         fontSize: 20,
       ),
       textInputAction:
-          TextInputAction.search, //Specify the action button on the keyboard
+          TextInputAction.search, 
       decoration: const InputDecoration(
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Colors.white),

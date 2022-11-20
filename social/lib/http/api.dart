@@ -6,7 +6,7 @@ import 'models/all_activity_response.dart';
 import 'models/auth_response.dart';
 
 class Api {
-  static const _baseUrl = 'https://localhost:5001/';
+  static const _baseUrl = 'https://10.0.2.2:5001/'; //localhost for avd/emulator https://10.0.2.2:5001/ , otherwise https://localhost:5001/
   static String? _accessToken;
   static String? _refreshToken;
   static int? profileId;
@@ -250,7 +250,7 @@ class Api {
     return List.empty();
   }
 
-  Future<bool> createActivity(String? title, String? detail, String? location, String? date, String? phoneNumber) async {
+  Future<bool> createActivity(String? title, String? detail, String? location, String? date, String? phoneNumber, int capacity) async {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
@@ -261,7 +261,8 @@ class Api {
      'detail': detail,
      'location': location,
      'date': date,
-     'phoneNumber': phoneNumber});
+     'phoneNumber': phoneNumber,
+     'capacity': capacity});
 
     final response = await http.post(Uri.parse('${_baseUrl}activity'),
         headers: fixedHeaders, body: body);

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/public_activity.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'package:social/utils/helper.dart';
 
 import 'http/api.dart';
 import 'utils/condition.dart';
@@ -59,6 +61,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int day = 0;
   int hour = 0;
   int minute = 0;
+  int _currentCapacity = 10;
 
   @override
   void initState() {
@@ -152,8 +155,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                      height:
-                          MediaQuery.of(context).copyWith().size.height * 0.25,
+                      height: Helper.height(context) * 0.25,
+                      // MediaQuery.of(context).copyWith().size.height * 0.25,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                       ),
@@ -184,8 +187,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                      height:
-                          MediaQuery.of(context).copyWith().size.height * 0.25,
+                      height: Helper.height(context) * 0.25,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                       ),
@@ -216,7 +218,35 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                       ),
-                      child: TextField(controller: _phoneNumberController),
+                      child: TextField(
+                          controller: _phoneNumberController,
+                          keyboardType: TextInputType.number),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
+                      child: const Text(
+                        "Capacity:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blueAccent),
+                      ),
+                      child: NumberPicker(
+                        value: _currentCapacity,
+                        minValue: 0,
+                        maxValue: 100,
+                        axis: Axis.horizontal,
+                        itemWidth: 50,
+                        onChanged: (value) =>
+                            setState(() => _currentCapacity = value),
+                      ),
                     ),
                     Container(
                       alignment: Alignment.topCenter,
@@ -229,7 +259,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.blueAccent),
                             ),
-                            child: TextButton(
+                            child: ElevatedButton(
                               child: const Text("Save"),
                               onPressed: () {
                                 var dateInput = DateFormat('yyyy-MM-ddTHH:mm')
@@ -241,7 +271,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         _detailController.text,
                                         _locationController.text,
                                         dateInput,
-                                        _phoneNumberController.text)
+                                        _phoneNumberController.text,
+                                        _currentCapacity)
                                     .then(
                                       (isSuccess) => setState(
                                         () {

@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:social/http/models/private_profile.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:social/utils/helper.dart';
 
 import 'http/api.dart';
 
@@ -111,54 +115,56 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
           return ListView(
             children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: const Image(
-                  image: AssetImage('assets/images/foto1.jpeg'),
-                  height: 150,
-                  width: 150,
-                ),
+              Stack(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent),
+                    ),
+                    child: const Image(
+                      image: AssetImage('assets/images/foto1.jpeg'),
+                      height: 150,
+                      width: 150,
+                    ),
+                  ),
+                  Positioned(
+                    right: 100.0,
+                    bottom: 0.0,
+                    child: GestureDetector(
+                      child: Icon(
+                        size: 40,
+                        Icons.add_circle_outline,
+                        color: Colors.blue,
+                      ),
+                      onTap: () async {
+                        var pickedFile = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                      },
+                    ),
+                  )
+                ],
               ),
               Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
-                child: const Text(
-                  "User:",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                padding: const EdgeInsets.all(50),
+                child: TextField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Name & Surname',
+                    )),
               ),
               Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: TextField(controller: _nameController),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
-                child: const Text(
-                  "About me:",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
                 padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
+                child: TextField(
+                  controller: _aboutController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'About me',
+                  ),
                 ),
-                child: TextField(controller: _aboutController),
               ),
               Container(
                 alignment: Alignment.topCenter,
