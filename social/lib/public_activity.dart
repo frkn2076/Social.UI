@@ -16,6 +16,7 @@ class PublicActivity extends StatefulWidget {
 
 class _PublicActivityState extends State<PublicActivity> {
   late Future<List<AllActivityResponse>> _activities;
+  String? _searchText;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _PublicActivityState extends State<PublicActivity> {
             : CustomeSearchBar(
                 onChanged: (String searchText) {
                   setState(() {
+                    _searchText = searchText;
                     if (searchText.isNotEmpty) {
                       _activities =
                           Api().getActivitiesRandomlyByKey(searchText);
@@ -130,7 +132,12 @@ class _PublicActivityState extends State<PublicActivity> {
                     ),
                     onRefresh: () async {
                       setState(() {
-                        _activities = Api().getActivitiesRandomly();
+                        if (_searchText != null && _searchText!.isNotEmpty) {
+                          _activities =
+                              Api().getActivitiesRandomlyByKey(_searchText!);
+                        } else {
+                          _activities = Api().getActivitiesRandomly();
+                        }
                       });
                     },
                   )

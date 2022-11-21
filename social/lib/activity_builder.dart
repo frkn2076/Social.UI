@@ -59,6 +59,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     super.initState();
     _now = DateTime.now();
     _initDate = DateTime(_now.year, _now.month, _now.day, _now.hour, 0);
+    year = _now.year;
+    month = _now.month;
+    day = _now.day;
+    hour = _now.hour;
   }
 
   @override
