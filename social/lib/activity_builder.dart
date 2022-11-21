@@ -7,6 +7,7 @@ import 'package:social/public_activity.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class ActivityBuilder extends StatelessWidget {
   const ActivityBuilder({Key? key}) : super(key: key);
@@ -39,7 +40,8 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _detailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final MaskedTextController _phoneNumberController =
+      MaskedTextController(mask: '(000)000-00-00');
   final TextEditingController _locationController = TextEditingController();
 
   late DateTime _now;
@@ -87,8 +89,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextField(
                         controller: _titleController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
                           labelText: 'Title',
                         ),
                       ),
@@ -97,8 +100,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextField(
                         controller: _detailController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
                           labelText: 'Detail',
                         ),
                       ),
@@ -107,21 +111,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextField(
                         controller: _locationController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
                           labelText: 'Location',
                         ),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                       height:
                           MediaQuery.of(context).copyWith().size.height * 0.20,
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'Date',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
                         ),
                         child: CupertinoDatePicker(
@@ -140,7 +145,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                       height:
                           MediaQuery.of(context).copyWith().size.height * 0.20,
                       child: InputDecorator(
@@ -163,40 +168,47 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: TextField(
-                        controller: _phoneNumberController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'PhoneNumber',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      height:
-                          MediaQuery.of(context).copyWith().size.height * 0.20,
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'Capacity',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              child: TextField(
+                                controller: _phoneNumberController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'PhoneNumber',
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        child: NumberPicker(
-                          value: _currentCapacity,
-                          minValue: 0,
-                          maxValue: 100,
-                          axis: Axis.horizontal,
-                          itemWidth: 50,
-                          onChanged: (value) =>
-                              setState(() => _currentCapacity = value),
-                        ),
+                          Expanded(
+                            child: InputDecorator(
+                              decoration: InputDecoration(
+                                labelText: 'Capacity',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              ),
+                              child: NumberPicker(
+                                value: _currentCapacity,
+                                minValue: 2,
+                                maxValue: 100,
+                                axis: Axis.horizontal,
+                                itemWidth: 45,
+                                itemHeight: 20,
+                                onChanged: (value) =>
+                                    setState(() => _currentCapacity = value),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Container(
                       alignment: Alignment.topCenter,
-                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -204,8 +216,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             child: const Text("Save"),
                             onPressed: () {
                               var dateInput = DateFormat('yyyy-MM-ddTHH:mm')
-                                  .format(DateTime(
-                                      year, month, day, hour, minute));
+                                  .format(
+                                      DateTime(year, month, day, hour, minute));
                               Api()
                                   .createActivity(
                                       _titleController.text,
