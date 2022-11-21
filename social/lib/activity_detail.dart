@@ -53,6 +53,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             message: 'You have joined activity succesfully!',
             buttonName: 'Ok',
             onPressed: () {
+              setState(() => _condition = Condition.none);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -121,35 +122,40 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               CustomeInfoText(
                                   title: "PhoneNumber:",
                                   text: projectSnap.data!.phoneNumber),
-                              Container(
-                                height: 100,
-                                width: 100,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(15.0),
-                                child: ListView(
-                                  children: projectSnap.data!.joiners!.map(
-                                    (joiner) {
-                                      bool isPrivate = joiner.id! ==
-                                          projectSnap.data!.userId!;
-                                      return CustomeJoinerTextButton(
-                                        isPrivate: isPrivate,
-                                        userName: joiner.userName,
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => isPrivate
-                                                    ? const PrivateProfile()
-                                                    : PublicProfile(
-                                                        id: joiner.id!)),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ).toList(),
-                                ),
-                              ),
+                              projectSnap.data?.joiners?.isEmpty ?? true
+                                  ? Container()
+                                  : Container(
+                                      height: 100,
+                                      width: 100,
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.all(10),
+                                      margin: const EdgeInsets.all(15.0),
+                                      child: ListView(
+                                        children:
+                                            projectSnap.data!.joiners!.map(
+                                          (joiner) {
+                                            bool isPrivate = joiner.id! ==
+                                                projectSnap.data!.userId!;
+                                            return CustomeJoinerTextButton(
+                                              isPrivate: isPrivate,
+                                              userName: joiner.userName,
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          isPrivate
+                                                              ? const PrivateProfile()
+                                                              : PublicProfile(
+                                                                  id: joiner
+                                                                      .id!)),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ).toList(),
+                                      ),
+                                    ),
                               Container(
                                 alignment: Alignment.topCenter,
                                 padding: const EdgeInsets.all(5),
@@ -166,19 +172,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         child: const Text("Join"),
                                         onPressed: () {
                                           Api().joinActivity(widget.id).then(
-                                            (isSuccess) {
-                                              setState(
-                                                () {
-                                                  if (isSuccess) {
-                                                    _condition =
-                                                        Condition.success;
-                                                  } else {
-                                                    _condition = Condition.fail;
-                                                  }
-                                                },
-                                              );
-                                            },
-                                          );
+                                              (isSuccess) => setState(() =>
+                                                  _condition = isSuccess
+                                                      .conditionParser()));
                                         },
                                       ),
                                     ),

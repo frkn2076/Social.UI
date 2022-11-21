@@ -92,7 +92,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           _nameController.text = projectSnap.data?.name ?? "Your name...";
           _aboutController.text =
               projectSnap.data?.about ?? "Tell me about yourself...";
-
           return ListView(
             children: <Widget>[
               Stack(

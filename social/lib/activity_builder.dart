@@ -150,7 +150,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                      height: MediaQuery.of(context).copyWith().size.height * 0.25,
+                      height:
+                          MediaQuery.of(context).copyWith().size.height * 0.25,
                       // MediaQuery.of(context).copyWith().size.height * 0.25,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
@@ -182,7 +183,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                      height: MediaQuery.of(context).copyWith().size.height * 0.25,
+                      height:
+                          MediaQuery.of(context).copyWith().size.height * 0.25,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent),
                       ),
@@ -268,24 +270,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         dateInput,
                                         _phoneNumberController.text,
                                         _currentCapacity)
-                                    .then(
-                                      (isSuccess) => setState(
-                                        () {
-                                          if (isSuccess) {
-                                            _condition = Condition.none;
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const PublicActivity(),
-                                              ),
-                                            );
-                                          } else {
-                                            _condition = Condition.fail;
-                                          }
-                                        },
+                                    .then((isSuccess) {
+                                  setState(() =>
+                                      _condition = isSuccess.conditionParser());
+                                  if (isSuccess) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PublicActivity(),
                                       ),
                                     );
+                                  }
+                                });
                               },
                             ),
                           ),
