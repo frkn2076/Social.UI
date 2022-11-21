@@ -44,6 +44,7 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   var _condition = Condition.none;
+  var _isJoined = false;
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +137,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           (joiner) {
                                             bool isPrivate = joiner.id! ==
                                                 projectSnap.data!.userId!;
+                                            if (isPrivate) {
+                                              _isJoined = true;
+                                            }
                                             return CustomeJoinerTextButton(
                                               isPrivate: isPrivate,
                                               userName: joiner.userName,
@@ -168,15 +172,25 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.black),
                                       ),
-                                      child: TextButton(
-                                        child: const Text("Join"),
-                                        onPressed: () {
-                                          Api().joinActivity(widget.id).then(
-                                              (isSuccess) => setState(() =>
-                                                  _condition = isSuccess
-                                                      .conditionParser()));
-                                        },
-                                      ),
+                                      child: _isJoined
+                                          ? const Tooltip(
+                                              message:
+                                                  'You already joined the activity',
+                                              child: Icon(
+                                                Icons.done_outline_outlined,
+                                                color: Colors.green,
+                                                size: 50,
+                                              ),
+                                            )
+                                          : TextButton(
+                                              child: const Text("Join"),
+                                              onPressed: () {
+                                                Api().joinActivity(widget.id).then(
+                                                    (isSuccess) => setState(() =>
+                                                        _condition = isSuccess
+                                                            .conditionParser()));
+                                              },
+                                            ),
                                     ),
                                   ],
                                 ),
