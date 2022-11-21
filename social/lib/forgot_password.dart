@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/utils/holder.dart';
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -37,15 +38,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         children: <Widget>[
           Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
-            child: const Text(
+            padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
+            child: Text(
               'Forgot Password',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: Holder.titleFontSize),
             ),
           ),
-          Container(height: 20),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 40),
             child: TextField(
               controller: emailController,
               decoration: const InputDecoration(
@@ -54,9 +54,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
           ),
-          Container(height: 40),
           Container(
-            height: 50,
+            height: Holder.buttonHeight,
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: ElevatedButton(
               child: const Text('Send email for password'),

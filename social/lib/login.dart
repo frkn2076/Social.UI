@@ -17,9 +17,9 @@ class Login extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             _title,
-            style: TextStyle(fontSize: 30),
+            style: TextStyle(fontSize: Holder.pageFontSize),
           ),
           centerTitle: true,
         ),
@@ -57,13 +57,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.fromLTRB(10, 100, 10, 0),
-                  child: const Text(
+                  padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
+                  child: Text(
                     'Login',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: Holder.titleFontSize),
                   ),
                 ),
-                Container(height: 20),
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
@@ -99,7 +98,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ),
                 ),
                 Container(
-                  height: 50,
+                  height: Holder.buttonHeight,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
                     child: const Text('Login'),
@@ -108,23 +107,23 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           userNameController.text, passwordController.text);
                       response.then(
                         (isSuccess) {
-                          setState(() {
-                            if (isSuccess) {
-                              _isAlertDialogOn = false;
-                              Holder.userName = userNameController.text;
-                              Holder.password = passwordController.text;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PublicActivity()),
-                              );
-                            } else {
-                              setState(() {
+                          setState(
+                            () {
+                              if (isSuccess) {
+                                _isAlertDialogOn = false;
+                                Holder.userName = userNameController.text;
+                                Holder.password = passwordController.text;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PublicActivity()),
+                                );
+                              } else {
                                 _isAlertDialogOn = true;
-                              });
-                            }
-                          });
+                              }
+                            },
+                          );
                         },
                       );
                     },
@@ -135,9 +134,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   children: <Widget>[
                     const Text('Does not have account?'),
                     TextButton(
-                      child: const Text(
+                      child: Text(
                         'Sign in',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: Holder.titleFontSize),
                       ),
                       onPressed: () {
                         Holder.userName = userNameController.text;
