@@ -173,7 +173,7 @@ class Api {
     return null;
   }
 
-  Future<bool?> updatePrivateProfile(String? photo, String? name, String? about) async {
+  Future<bool> updatePrivateProfile(String? photo, String? name, String? about) async {
     final fixedHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Content-type": "application/json",
