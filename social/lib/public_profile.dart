@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
@@ -22,51 +24,47 @@ class PublicProfile extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red),
+              border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
             ),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.nordic_walking_outlined),
+              tooltip: 'Joined Ones',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JoinedActivity(id: id),
-                  ),
-                );
+                if (Api.profileId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => JoinedActivity(id: Api.profileId!),
+                    ),
+                  );
+                }
               },
-              child: const Text(
-                "Joined Ones",
-              ),
             ),
           ),
           Container(
             margin: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.red),
+              border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
             ),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.supervised_user_circle_outlined),
+              tooltip: "Created Ones",
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OwnerActivity(id: id),
-                  ),
-                );
+                if (Api.profileId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OwnerActivity(id: Api.profileId!),
+                    ),
+                  );
+                }
               },
-              child: const Text(
-                "Created Ones",
-              ),
             ),
           ),
         ],
@@ -93,55 +91,48 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         if (projectSnap.connectionState == ConnectionState.done) {
           return ListView(
             children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(100.0, 80.0, 100.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: const Image(
-                  image: AssetImage('assets/images/foto1.jpeg'),
-                  height: 150,
-                  width: 150,
-                ),
+              Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent),
+                    ),
+                    child: const Image(
+                      image: AssetImage('assets/images/foto1.jpeg'),
+                    ),
+                  ),
+                  Positioned(
+                    right: 100.0,
+                    bottom: 0.0,
+                    child: IconButton(
+                      // ignore: prefer_const_constructors
+                      icon: Icon(
+                        size: 40,
+                        Icons.add_circle_outline,
+                        color: Colors.blue,
+                      ),
+                      onPressed: () async {
+                        var pickedFile = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                      },
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 40.0, 50.0, 0),
-                child: const Text(
-                  "User:",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+              CustomeFocusedTextField(
+                padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
+                readOnly: true,
+                labelText: 'Name & Surname',
+                controller: TextEditingController(text: projectSnap.data?.name),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: Text(projectSnap.data?.name ?? ""),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
-                child: const Text(
-                  "About me:",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.fromLTRB(50.0, 0, 50.0, 0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                ),
-                child: Text(projectSnap.data?.about ?? ""),
-              ),
+              CustomeFocusedTextField(
+                readOnly: true,
+                labelText: 'About',
+                controller: TextEditingController(text: projectSnap.data?.about),
+              )
             ],
           );
         } else {

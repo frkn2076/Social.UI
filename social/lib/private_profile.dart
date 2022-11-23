@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_decoration.dart';
+import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
@@ -143,54 +145,39 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                           ],
                         ),
-                        Container(
+                        CustomeFocusedTextField(
                           padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
-                          child: TextField(
-                              controller: _nameController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Name & Surname',
-                              )),
+                          readOnly: true,
+                          labelText: 'Name & Surname',
+                          controller: _nameController,
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: TextField(
-                            controller: _aboutController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'About me',
-                            ),
-                          ),
+                        CustomeFocusedTextField(
+                          readOnly: true,
+                          labelText: 'About me',
+                          controller: _aboutController,
                         ),
                         Container(
                           alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.all(5),
-                          margin:
-                              const EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                ),
-                                child: TextButton(
-                                  child: const Text("Save"),
-                                  onPressed: () => {
-                                    Api()
-                                        .updatePrivateProfile(
-                                            null,
-                                            _nameController.text,
-                                            _aboutController.text)
-                                        .then(
-                                      (isSuccess) {
-                                        setState(() => _condition =
-                                            isSuccess.conditionParser());
-                                      },
-                                    )
-                                  },
-                                ),
-                              ),
+                              ElevatedButton(
+                                child: const Text("Save"),
+                                onPressed: () => {
+                                  Api()
+                                      .updatePrivateProfile(
+                                          null,
+                                          _nameController.text,
+                                          _aboutController.text)
+                                      .then(
+                                    (isSuccess) {
+                                      setState(() => _condition =
+                                          isSuccess.conditionParser());
+                                    },
+                                  )
+                                },
+                              )
                             ],
                           ),
                         )

@@ -76,7 +76,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               title: 'Success',
               message: 'You have created activity succesfully!',
               buttonName: 'Ok',
-              onPressed: () => setState(() => _condition = Condition.none))
+              onPressed: () {
+                setState(() => _condition = Condition.none);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PublicActivity(),
+                  ),
+                );
+              })
           : _condition == Condition.fail
               ? CustomePopup(
                   title: 'Fail',
@@ -229,15 +237,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   .then((isSuccess) {
                                 setState(() =>
                                     _condition = isSuccess.conditionParser());
-                                if (isSuccess) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PublicActivity(),
-                                    ),
-                                  );
-                                }
                               });
                             },
                           ),
