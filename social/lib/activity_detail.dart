@@ -119,46 +119,59 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       projectSnap.data!.date!)),
                               CustomeInfoText(
                                   title: "Location:",
-                                  text: projectSnap.data!.location),
+                                  text: projectSnap.data!.location!),
                               CustomeInfoText(
                                   title: "PhoneNumber:",
-                                  text: projectSnap.data!.phoneNumber),
+                                  text: projectSnap.data!.joiners!
+                                          .map((x) => x.id)
+                                          .contains(Api.profileId)
+                                      ? projectSnap.data!.phoneNumber!
+                                      : '(xxx)xxx-xx-xx'),
                               projectSnap.data?.joiners?.isEmpty ?? true
                                   ? Container()
-                                  : Container(
-                                      height: 100,
-                                      width: 100,
-                                      alignment: Alignment.center,
-                                      padding: const EdgeInsets.all(10),
-                                      margin: const EdgeInsets.all(15.0),
-                                      child: ListView(
-                                        children:
-                                            projectSnap.data!.joiners!.map(
-                                          (joiner) {
-                                            bool isPrivate = joiner.id! ==
-                                                projectSnap.data!.userId!;
-                                            if (isPrivate) {
-                                              _isJoined = true;
-                                            }
-                                            return CustomeJoinerTextButton(
-                                              isPrivate: isPrivate,
-                                              userName: joiner.userName,
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          isPrivate
-                                                              ? const PrivateProfile()
-                                                              : PublicProfile(
-                                                                  id: joiner
-                                                                      .id!)),
+                                  : Column(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 20, 0, 0),
+                                          child: const Text('JOINERS', style: TextStyle(fontSize: 22),),
+                                        ),
+                                        Container(
+                                          height: 100,
+                                          width: 100,
+                                          alignment: Alignment.center,
+                                          padding: const EdgeInsets.all(10),
+                                          margin: const EdgeInsets.all(15.0),
+                                          child: ListView(
+                                            children:
+                                                projectSnap.data!.joiners!.map(
+                                              (joiner) {
+                                                bool isPrivate = joiner.id! ==
+                                                    projectSnap.data!.userId!;
+                                                if (isPrivate) {
+                                                  _isJoined = true;
+                                                }
+                                                return CustomeJoinerTextButton(
+                                                  isPrivate: isPrivate,
+                                                  userName: joiner.userName,
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              isPrivate
+                                                                  ? const PrivateProfile()
+                                                                  : PublicProfile(
+                                                                      id: joiner
+                                                                          .id!)),
+                                                    );
+                                                  },
                                                 );
                                               },
-                                            );
-                                          },
-                                        ).toList(),
-                                      ),
+                                            ).toList(),
+                                          ),
+                                        )
+                                      ],
                                     ),
                               Container(
                                 alignment: Alignment.topCenter,

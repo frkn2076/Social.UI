@@ -121,7 +121,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               margin: const EdgeInsets.fromLTRB(
                                   100.0, 20.0, 100.0, 0),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
+                                border:
+                                    Border.all(color: Colors.blue, width: 2),
                               ),
                               child: const Image(
                                 image: AssetImage('assets/images/foto1.jpeg'),
@@ -147,12 +148,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         ),
                         CustomeFocusedTextField(
                           padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
-                          readOnly: true,
                           labelText: 'Name & Surname',
                           controller: _nameController,
                         ),
                         CustomeFocusedTextField(
-                          readOnly: true,
                           labelText: 'About me',
                           controller: _aboutController,
                         ),
@@ -172,8 +171,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           _aboutController.text)
                                       .then(
                                     (isSuccess) {
-                                      setState(() => _condition =
-                                          isSuccess.conditionParser());
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      setState(() {
+                                        _condition =
+                                            isSuccess.conditionParser();
+                                      });
                                     },
                                   )
                                 },

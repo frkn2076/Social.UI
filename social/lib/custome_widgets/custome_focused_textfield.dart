@@ -20,7 +20,7 @@ class CustomeFocusedTextField extends StatelessWidget {
       padding: padding ?? const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: TextField(
         autofocus: true,
-        readOnly: true,
+        readOnly: readOnly == true,
         controller: controller,
         decoration: customeInputDecoration(labelText),
       ),

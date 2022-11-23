@@ -98,26 +98,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     padding: const EdgeInsets.all(5),
                     margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blueAccent),
+                      border: Border.all(color: Colors.blue, width: 2),
                     ),
                     child: const Image(
                       image: AssetImage('assets/images/foto1.jpeg'),
-                    ),
-                  ),
-                  Positioned(
-                    right: 100.0,
-                    bottom: 0.0,
-                    child: IconButton(
-                      // ignore: prefer_const_constructors
-                      icon: Icon(
-                        size: 40,
-                        Icons.add_circle_outline,
-                        color: Colors.blue,
-                      ),
-                      onPressed: () async {
-                        var pickedFile = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                      },
                     ),
                   ),
                 ],
@@ -131,7 +115,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               CustomeFocusedTextField(
                 readOnly: true,
                 labelText: 'About',
-                controller: TextEditingController(text: projectSnap.data?.about),
+                controller:
+                    TextEditingController(text: projectSnap.data?.about),
               )
             ],
           );

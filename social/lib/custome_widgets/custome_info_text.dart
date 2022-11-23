@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomeInfoText extends StatelessWidget {
-  final String? title;
-  final String? text;
+  final String title;
+  final String text;
 
-  const CustomeInfoText({Key? key, this.title, this.text}) : super(key: key);
+  const CustomeInfoText({Key? key, required this.title, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +15,11 @@ class CustomeInfoText extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            title == null ? '' : '$title ',
+            '$title ',
             style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 14),
           ),
           Text(
-            text ?? '',
+            text,
             style: const TextStyle(
                 color: Colors.blue, fontWeight: FontWeight.w500, fontSize: 14),
           )
