@@ -91,6 +91,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).requestFocus(FocusNode());
     return _condition == Condition.success
         ? CustomePopup(
             title: 'Success',
@@ -171,8 +172,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           _aboutController.text)
                                       .then(
                                     (isSuccess) {
-                                      FocusScope.of(context)
-                                          .requestFocus(FocusNode());
                                       setState(() {
                                         _condition =
                                             isSuccess.conditionParser();

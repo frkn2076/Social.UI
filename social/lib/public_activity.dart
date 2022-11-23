@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/http/api.dart';
@@ -64,20 +65,8 @@ class _PublicActivityState extends State<PublicActivity> {
                     setState(() {
                       _searchBoolean = false;
                     });
-                  }),
-          IconButton(
-            icon: const CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-            ),
-            tooltip: 'Go to profile',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PrivateProfile()),
-              );
-            },
-          ),
+                  },
+                ),
         ],
       ),
       body: Padding(
@@ -147,6 +136,53 @@ class _PublicActivityState extends State<PublicActivity> {
           },
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: IconButton(
+                  icon: const Icon(Icons.settings_outlined, color: Colors.blue),
+                  onPressed: () {}),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: IconButton(
+                // do not remove below comments
+                // icon: const CircleAvatar(
+                //   radius: 20,
+                //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
+                // ),
+                icon: const CircleAvatar(
+                  backgroundColor: Color(0xffE6E6E6),
+                  radius: 30,
+                  child:
+                      Icon(Icons.person, color: Colors.blue //Color(0xffCCCCCC),
+                          ),
+                ),
+                tooltip: 'Go to profile',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PrivateProfile()),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ActivityBuilder(),
+                ),
+              )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
