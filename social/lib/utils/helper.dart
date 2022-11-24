@@ -13,6 +13,8 @@ class Helper {
     return DateFormat('dd MMMM yyyy - hh:mm', 'tr').format(dateTime);
   }
 
+  
+
   static String base64StringFromImage(String path) {
     File imagefile = File(path);
     var imagebytes = imagefile.readAsBytesSync();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
@@ -19,15 +20,25 @@ class _PublicActivityState extends State<PublicActivity> {
   late Future<List<AllActivityResponse>> _activities;
   String? _searchText;
 
+  late DateTime _now;
+  late DateTime _fromDateFilter;
+  late DateTime _toDateFilter;
+
+  int _currentCapacity = 10;
+
   @override
   void initState() {
     super.initState();
     _activities = Api().getActivitiesRandomly();
+    _now = DateTime.now();
+    _fromDateFilter = _now;
+    _toDateFilter = DateTime(2030, 1, 1);
   }
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _searchBoolean = false;
+  bool _includeExpiredActivities = false;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +78,83 @@ class _PublicActivityState extends State<PublicActivity> {
                     });
                   },
                 ),
+          PopupMenuButton(
+            icon: const Icon(Icons.filter_list_outlined),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Row(
+                      children: [
+                        const Text("Include expired ones"),
+                        Switch(
+                          value: _includeExpiredActivities,
+                          onChanged: (value) => setState(() {
+                            _includeExpiredActivities = value;
+                            _fromDateFilter =
+                                value ? DateTime(2022, 1, 1) : _now;
+                          }),
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Row(
+                      children: [
+                        const Text('From: '),
+                        Text(DateFormat('dd-MM-yyyy').format(_fromDateFilter)),
+                        TextButton(
+                          child: const Icon(Icons.calendar_month),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: _fromDateFilter,
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime(2100));
+                            if (pickedDate != null) {
+                              setState(() => _fromDateFilter = pickedDate);
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return Row(
+                      children: [
+                        const Text('To     : '),
+                        Text(DateFormat('dd-MM-yyyy').format(_toDateFilter)),
+                        TextButton(
+                          child: const Icon(Icons.calendar_month),
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: _toDateFilter,
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime(2100));
+                            if (pickedDate != null) {
+                              setState(() => _toDateFilter = pickedDate);
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  },
+                ),
+              )
+            ],
+            offset: const Offset(0, 50),
+            color: Colors.white,
+            elevation: 2,
+          ),
         ],
       ),
       body: Padding(
