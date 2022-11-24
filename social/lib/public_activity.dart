@@ -24,7 +24,7 @@ class _PublicActivityState extends State<PublicActivity> {
   late DateTime _fromDateFilter;
   late DateTime _toDateFilter;
 
-  int _currentCapacity = 10;
+  RangeValues _capacityRange = const RangeValues(2, 100);
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _PublicActivityState extends State<PublicActivity> {
     _activities = Api().getActivitiesRandomly();
     _now = DateTime.now();
     _fromDateFilter = _now;
-    _toDateFilter = DateTime(2030, 1, 1);
+    _toDateFilter = DateTime(_now.year + 1, 1, 1);
   }
 
   TextEditingController nameController = TextEditingController();
@@ -79,77 +79,93 @@ class _PublicActivityState extends State<PublicActivity> {
                   },
                 ),
           PopupMenuButton(
+            // padding: const EdgeInsets.only(
+            // top: 50, right: 50),
             icon: const Icon(Icons.filter_list_outlined),
             itemBuilder: (context) => [
               PopupMenuItem(
+                padding: const EdgeInsets.only(top: 20, left: 20),
                 child: StatefulBuilder(
                   builder: (context, setState) {
-                    return Row(
+                    return Column(
                       children: [
-                        const Text("Include expired ones"),
-                        Switch(
-                          value: _includeExpiredActivities,
-                          onChanged: (value) => setState(() {
-                            _includeExpiredActivities = value;
-                            _fromDateFilter =
-                                value ? DateTime(2022, 1, 1) : _now;
-                          }),
+                        Row(
+                          children: [
+                            const Text("Include expired ones"),
+                            Switch(
+                              value: _includeExpiredActivities,
+                              onChanged: (value) => setState(() {
+                                _includeExpiredActivities = value;
+                                _fromDateFilter =
+                                    value ? DateTime(2022, 1, 1) : _now;
+                              }),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('From: '),
+                            Text(DateFormat('dd-MM-yyyy')
+                                .format(_fromDateFilter)),
+                            TextButton(
+                              child: const Icon(Icons.calendar_month),
+                              onPressed: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: _fromDateFilter,
+                                    firstDate: DateTime(1950),
+                                    lastDate: DateTime(2100));
+                                if (pickedDate != null) {
+                                  setState(() => _fromDateFilter = pickedDate);
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('To     : '),
+                            Text(
+                                DateFormat('dd-MM-yyyy').format(_toDateFilter)),
+                            TextButton(
+                              child: const Icon(Icons.calendar_month),
+                              onPressed: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: _toDateFilter,
+                                    firstDate: DateTime(1950),
+                                    lastDate: DateTime(2100));
+                                if (pickedDate != null) {
+                                  setState(() => _toDateFilter = pickedDate);
+                                }
+                              },
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('Capacity:'),
+                            RangeSlider(
+                              values: _capacityRange,
+                              max: 100,
+                              divisions: 100,
+                              labels: RangeLabels(
+                                _capacityRange.start.round().toString(),
+                                _capacityRange.end.round().toString(),
+                              ),
+                              onChanged: (RangeValues values) {
+                                setState(() {
+                                  _capacityRange = values;
+                                });
+                              },
+                            )
+                          ],
                         )
                       ],
                     );
                   },
                 ),
               ),
-              PopupMenuItem(
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return Row(
-                      children: [
-                        const Text('From: '),
-                        Text(DateFormat('dd-MM-yyyy').format(_fromDateFilter)),
-                        TextButton(
-                          child: const Icon(Icons.calendar_month),
-                          onPressed: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: _fromDateFilter,
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime(2100));
-                            if (pickedDate != null) {
-                              setState(() => _fromDateFilter = pickedDate);
-                            }
-                          },
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return Row(
-                      children: [
-                        const Text('To     : '),
-                        Text(DateFormat('dd-MM-yyyy').format(_toDateFilter)),
-                        TextButton(
-                          child: const Icon(Icons.calendar_month),
-                          onPressed: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: _toDateFilter,
-                                firstDate: DateTime(1950),
-                                lastDate: DateTime(2100));
-                            if (pickedDate != null) {
-                              setState(() => _toDateFilter = pickedDate);
-                            }
-                          },
-                        )
-                      ],
-                    );
-                  },
-                ),
-              )
             ],
             offset: const Offset(0, 50),
             color: Colors.white,
