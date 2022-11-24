@@ -10,7 +10,6 @@ import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/http/api.dart';
-import 'package:social/utils/holder.dart';
 
 class ActivityDetail extends StatelessWidget {
   final int id;

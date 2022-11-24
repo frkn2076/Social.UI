@@ -7,6 +7,7 @@ import 'package:social/public_activity.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 
 class ActivityBuilder extends StatelessWidget {
