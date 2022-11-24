@@ -5,6 +5,7 @@ import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/holder.dart';
 
 class PublicProfile extends StatelessWidget {
   final int id;
@@ -32,11 +33,11 @@ class PublicProfile extends StatelessWidget {
               icon: const Icon(Icons.nordic_walking_outlined),
               tooltip: 'Joined Ones',
               onPressed: () {
-                if (Api.profileId != null) {
+                if (Holder.userId != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => JoinedActivity(id: Api.profileId!),
+                      builder: (context) => JoinedActivity(id: Holder.userId!),
                     ),
                   );
                 }
@@ -55,11 +56,11 @@ class PublicProfile extends StatelessWidget {
               icon: const Icon(Icons.supervised_user_circle_outlined),
               tooltip: "Created Ones",
               onPressed: () {
-                if (Api.profileId != null) {
+                if (Holder.userId != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OwnerActivity(id: Api.profileId!),
+                      builder: (context) => OwnerActivity(id: Holder.userId!),
                     ),
                   );
                 }

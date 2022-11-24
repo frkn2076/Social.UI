@@ -10,6 +10,7 @@ import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/holder.dart';
 
 class ActivityDetail extends StatelessWidget {
   final int id;
@@ -57,7 +58,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => JoinedActivity(id: Api.profileId!)),
+                    builder: (context) => JoinedActivity(id: Holder.userId!)),
               );
             })
         : _condition == Condition.fail
@@ -123,7 +124,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   title: "PhoneNumber:",
                                   text: projectSnap.data!.joiners!
                                           .map((x) => x.id)
-                                          .contains(Api.profileId)
+                                          .contains(Holder.userId!)
                                       ? projectSnap.data!.phoneNumber!
                                       : '(xxx)xxx-xx-xx'),
                               projectSnap.data?.joiners?.isEmpty ?? true

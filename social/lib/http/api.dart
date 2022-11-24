@@ -1,19 +1,18 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/auth_response.dart';
+import 'package:social/utils/holder.dart';
 
 class Api {
   static const _baseUrl =
       'https://10.0.2.2:5001/'; //localhost for avd/emulator https://10.0.2.2:5001/ , otherwise https://localhost:5001/
   static String? _accessToken;
   static String? _refreshToken;
-  static int? profileId;
 
-  static Map<String, String> fixedHeaders = {
+  static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Content-type": "application/json",
   };
@@ -24,14 +23,14 @@ class Api {
 
     final response = await http.post(
         Uri.parse('${_baseUrl}authorization/register'),
-        headers: fixedHeaders,
+        headers: _fixedHeaders,
         body: body);
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
       _accessToken = responseBody.accessToken;
       _refreshToken = responseBody.refreshToken;
-      fixedHeaders["Authorization"] = "Bearer $_accessToken";
+      _fixedHeaders["Authorization"] = "Bearer $_accessToken";
       return true;
     }
     return false;
@@ -43,14 +42,14 @@ class Api {
 
     final response = await http.post(
         Uri.parse('${_baseUrl}authorization/login'),
-        headers: fixedHeaders,
+        headers: _fixedHeaders,
         body: body);
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
       _accessToken = responseBody.accessToken;
       _refreshToken = responseBody.refreshToken;
-      fixedHeaders["Authorization"] = "Bearer $_accessToken";
+      _fixedHeaders["Authorization"] = "Bearer $_accessToken";
       return true;
     }
     return false;
@@ -59,7 +58,7 @@ class Api {
   Future<List<AllActivityResponse>> getAllActivities(bool isRefresh) async {
     final response = await http.get(
         Uri.parse('${_baseUrl}activity/all/$isRefresh'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json
@@ -72,8 +71,11 @@ class Api {
   }
 
   Future<List<AllActivityResponse>> getActivitiesRandomly() async {
+    // to set userId, will be removed later
+    await getPrivateProfile();
+
     final response = await http.get(Uri.parse('${_baseUrl}activity/all/random'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json
@@ -89,7 +91,7 @@ class Api {
       String key) async {
     final response = await http.get(
         Uri.parse('${_baseUrl}activity/all/random/search?key=$key'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json
@@ -104,7 +106,7 @@ class Api {
   Future<ActivityDetailResponse?> getActivityDetail(int activityId) async {
     final response = await http.get(
         Uri.parse('${_baseUrl}activity/$activityId'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       var responseBody =
@@ -118,7 +120,7 @@ class Api {
     final body = jsonEncode(<String, Object>{'activityId': activityId});
 
     final response = await http.post(Uri.parse('${_baseUrl}activity/join'),
-        headers: fixedHeaders, body: body);
+        headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
       return true;
@@ -128,12 +130,12 @@ class Api {
 
   Future<PrivateProfileResponse?> getPrivateProfile() async {
     final response = await http.get(Uri.parse('${_baseUrl}profile/private'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       var responseBody =
           PrivateProfileResponse.fromJson(jsonDecode(response.body));
-      profileId = responseBody.id;
+      Holder.userId = responseBody.id;
       return responseBody;
     }
     return null;
@@ -145,7 +147,7 @@ class Api {
         <String, String?>{'Photo': photo, 'Name': name, 'About': about});
 
     final response = await http.put(Uri.parse('${_baseUrl}profile/private'),
-        headers: fixedHeaders, body: body);
+        headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
       return true;
@@ -155,7 +157,7 @@ class Api {
 
   Future<PrivateProfileResponse?> getProfileById(int id) async {
     final response = await http.get(Uri.parse('${_baseUrl}profile/$id'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       var responseBody =
@@ -168,7 +170,7 @@ class Api {
   Future<List<AllActivityResponse>> getPrivateActivities() async {
     final response = await http.get(
         Uri.parse('${_baseUrl}activity/private/all'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json
@@ -183,7 +185,7 @@ class Api {
   Future<List<AllActivityResponse>> getJoinedActivities(int userId) async {
     final response = await http.get(
         Uri.parse('${_baseUrl}activity/joined/$userId'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json
@@ -207,7 +209,7 @@ class Api {
     });
 
     final response = await http.post(Uri.parse('${_baseUrl}activity'),
-        headers: fixedHeaders, body: body);
+        headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
       return true;
@@ -217,7 +219,7 @@ class Api {
 
   Future<List<AllActivityResponse>> getOwnerActivities(int id) async {
     final response = await http.get(Uri.parse('${_baseUrl}activity/owner/$id'),
-        headers: fixedHeaders);
+        headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
       return json

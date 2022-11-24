@@ -33,11 +33,11 @@ class PrivateProfile extends StatelessWidget {
               icon: const Icon(Icons.nordic_walking_outlined),
               tooltip: 'Joined Ones',
               onPressed: () {
-                if (Api.profileId != null) {
+                if (Holder.userId != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => JoinedActivity(id: Api.profileId!),
+                      builder: (context) => JoinedActivity(id: Holder.userId!),
                     ),
                   );
                 }
@@ -56,11 +56,11 @@ class PrivateProfile extends StatelessWidget {
               icon: const Icon(Icons.supervised_user_circle_outlined),
               tooltip: "Created Ones",
               onPressed: () {
-                if (Api.profileId != null) {
+                if (Holder.userId != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OwnerActivity(id: Api.profileId!),
+                      builder: (context) => OwnerActivity(id: Holder.userId!),
                     ),
                   );
                 }
