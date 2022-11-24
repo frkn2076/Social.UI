@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
-import 'package:social/custome_widgets/custome_decoration.dart';
 import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/private_profile_response.dart';

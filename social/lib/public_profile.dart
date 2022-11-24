@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/http/models/private_profile_response.dart';
