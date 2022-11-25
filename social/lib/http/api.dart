@@ -71,35 +71,42 @@ class Api {
     return List.empty();
   }
 
-  Future<List<AllActivityResponse>> getActivitiesRandomly() async {
+  // Future<List<AllActivityResponse>> getActivitiesRandomly() async {
+  //   // to set userId, will be removed later
+  //   await getPrivateProfile();
+
+  //   final response = await http.get(Uri.parse('${_baseUrl}activity/all/random'),
+  //       headers: _fixedHeaders);
+
+  //   if (response.statusCode == 200) {
+  //     return json
+  //         .decode(response.body)
+  //         .map<AllActivityResponse>(
+  //             (data) => AllActivityResponse.fromJson(data))
+  //         .toList();
+  //   }
+  //   return List.empty();
+  // }
+
+  Future<List<AllActivityResponse>> getActivitiesRandomlyByFilter(
+      DateTime fromDate,
+      DateTime toDate,
+      int fromCapacity,
+      int toCapacity,
+      String? key) async {
     // to set userId, will be removed later
     await getPrivateProfile();
 
-    final response = await http.get(Uri.parse('${_baseUrl}activity/all/random'),
-        headers: _fixedHeaders);
+    final body = jsonEncode(<String, Object?>{
+      'fromDate': _formatDateTimeForPayload(fromDate),
+      'toDate': _formatDateTimeForPayload(toDate),
+      'fromCapacity': 2,
+      'toCapacity': 100,
+      'key': key
+    });
 
-    if (response.statusCode == 200) {
-      return json
-          .decode(response.body)
-          .map<AllActivityResponse>(
-              (data) => AllActivityResponse.fromJson(data))
-          .toList();
-    }
-    return List.empty();
-  }
-
-  Future<List<AllActivityResponse>> getActivitiesRandomlyByFilter(DateTime fromDate, DateTime toDate,
-   int fromCapacity, int toCapacity) async {
-    // to set userId, will be removed later
-    await getPrivateProfile();
-
-    final body = jsonEncode(
-        <String, Object>{'fromDate': _formatDateTimeForPayload(fromDate),
-         'toDate': _formatDateTimeForPayload(toDate),
-         'fromCapacity': 2,
-         'toCapacity': 100});
-
-    final response = await http.post(Uri.parse('${_baseUrl}activity/all/random/filter'),
+    final response = await http.post(
+        Uri.parse('${_baseUrl}activity/all/random/filter'),
         headers: _fixedHeaders,
         body: body);
 
@@ -113,21 +120,21 @@ class Api {
     return List.empty();
   }
 
-  Future<List<AllActivityResponse>> getActivitiesRandomlyByKey(
-      String key) async {
-    final response = await http.get(
-        Uri.parse('${_baseUrl}activity/all/random/search?key=$key'),
-        headers: _fixedHeaders);
+  // Future<List<AllActivityResponse>> getActivitiesRandomlyByKey(
+  //     String key) async {
+  //   final response = await http.get(
+  //       Uri.parse('${_baseUrl}activity/all/random/search?key=$key'),
+  //       headers: _fixedHeaders);
 
-    if (response.statusCode == 200) {
-      return json
-          .decode(response.body)
-          .map<AllActivityResponse>(
-              (data) => AllActivityResponse.fromJson(data))
-          .toList();
-    }
-    return List.empty();
-  }
+  //   if (response.statusCode == 200) {
+  //     return json
+  //         .decode(response.body)
+  //         .map<AllActivityResponse>(
+  //             (data) => AllActivityResponse.fromJson(data))
+  //         .toList();
+  //   }
+  //   return List.empty();
+  // }
 
   Future<ActivityDetailResponse?> getActivityDetail(int activityId) async {
     final response = await http.get(
@@ -260,7 +267,7 @@ class Api {
   static String _formatDateTimeForPayload(DateTime? dateTime) {
     if (dateTime == null) {
       return "";
-    }//2022-12-14T17:23:03.432Z
+    } //2022-12-14T17:23:03.432Z
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 }

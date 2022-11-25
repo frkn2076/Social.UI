@@ -18,27 +18,31 @@ class PublicActivity extends StatefulWidget {
 
 class _PublicActivityState extends State<PublicActivity> {
   late Future<List<AllActivityResponse>> _activities;
-  String? _searchText;
-
   late DateTime _now;
   late DateTime _fromDateFilter;
   late DateTime _toDateFilter;
 
+  String? _searchText;
   RangeValues _capacityRange = const RangeValues(2, 100);
+  bool _searchBoolean = false;
+  bool _includeExpiredActivities = false;
 
   @override
   void initState() {
     super.initState();
-    _activities = Api().getActivitiesRandomly();
     _now = DateTime.now();
     _fromDateFilter = _now;
-    _toDateFilter = DateTime(_now.year + 1, 1, 1);
+    _toDateFilter = DateTime(_now.year + 2, 1, 1);
+    _activities = Api().getActivitiesRandomlyByFilter(
+        _fromDateFilter,
+        _toDateFilter,
+        _capacityRange.start.round(),
+        _capacityRange.end.round(),
+        _searchText);
   }
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _searchBoolean = false;
-  bool _includeExpiredActivities = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +55,12 @@ class _PublicActivityState extends State<PublicActivity> {
                 onChanged: (String searchText) {
                   setState(() {
                     _searchText = searchText;
-                    if (searchText.isNotEmpty) {
-                      _activities =
-                          Api().getActivitiesRandomlyByKey(searchText);
-                    } else {
-                      _activities = Api().getActivitiesRandomly();
-                    }
+                    _activities = Api().getActivitiesRandomlyByFilter(
+                        _fromDateFilter,
+                        _toDateFilter,
+                        _capacityRange.start.round(),
+                        _capacityRange.end.round(),
+                        _searchText);
                   });
                 },
               ),
@@ -78,136 +82,7 @@ class _PublicActivityState extends State<PublicActivity> {
                     });
                   },
                 ),
-          PopupMenuButton(
-            // padding: const EdgeInsets.only(
-            // top: 50, right: 50),
-            icon: const Icon(Icons.filter_list_outlined),
-            itemBuilder: (innerContext) => [
-              PopupMenuItem(
-                padding: const EdgeInsets.only(top: 20, left: 20),
-                child: StatefulBuilder(
-                  builder: (builderContext, innerSetState) {
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Text("Include expired ones"),
-                            Switch(
-                              value: _includeExpiredActivities,
-                              onChanged: (value) => innerSetState(() {
-                                _includeExpiredActivities = value;
-                                _fromDateFilter =
-                                    value ? DateTime(2022, 1, 1) : _now;
-                              }),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text('From: '),
-                            Text(DateFormat('dd-MM-yyyy')
-                                .format(_fromDateFilter)),
-                            TextButton(
-                              child: const Icon(Icons.calendar_month),
-                              onPressed: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: builderContext,
-                                    initialDate: _fromDateFilter,
-                                    firstDate: DateTime(1950),
-                                    lastDate: DateTime(2100));
-                                if (pickedDate != null) {
-                                  innerSetState(() => _fromDateFilter = pickedDate);
-                                }
-                              },
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text('To     : '),
-                            Text(
-                                DateFormat('dd-MM-yyyy').format(_toDateFilter)),
-                            TextButton(
-                              child: const Icon(Icons.calendar_month),
-                              onPressed: () async {
-                                DateTime? pickedDate = await showDatePicker(
-                                    context: builderContext,
-                                    initialDate: _toDateFilter,
-                                    firstDate: DateTime(1950),
-                                    lastDate: DateTime(2100));
-                                if (pickedDate != null) {
-                                  innerSetState(() => _toDateFilter = pickedDate);
-                                }
-                              },
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text('Capacity:'),
-                            RangeSlider(
-                              values: _capacityRange,
-                              max: 100,
-                              divisions: 100,
-                              labels: RangeLabels(
-                                _capacityRange.start.round().toString(),
-                                _capacityRange.end.round().toString(),
-                              ),
-                              onChanged: (RangeValues values) {
-                                innerSetState(() {
-                                  _capacityRange = values;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(top: 20, left: 20),
-                              child: ElevatedButton(
-                                child: const Text("Reset"),
-                                onPressed: () {
-                                  innerSetState(() {
-                                    _includeExpiredActivities = false;
-                                    _capacityRange = const RangeValues(2, 100);
-                                    _fromDateFilter = _now;
-                                    _toDateFilter =
-                                        DateTime(_now.year + 1, 1, 1);
-                                  });
-                                },
-                              ),
-                            ),
-                            const Spacer(),
-                            Container(
-                              padding:
-                                  const EdgeInsets.only(top: 20, right: 40),
-                              child: ElevatedButton(
-                                child: const Text("Search"),
-                                onPressed: () {
-                                  setState(() {
-                                    _activities = Api()
-                                        .getActivitiesRandomlyByFilter(
-                                            _fromDateFilter,
-                                            _toDateFilter,
-                                            _capacityRange.start.round(),
-                                            _capacityRange.end.round());
-                                  });
-                                },
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-            offset: const Offset(0, 50),
-            color: Colors.white,
-            elevation: 2,
-          ),
+          buildFilterPopup(),
         ],
       ),
       body: Padding(
@@ -262,12 +137,12 @@ class _PublicActivityState extends State<PublicActivity> {
                     ),
                     onRefresh: () async {
                       setState(() {
-                        if (_searchText != null && _searchText!.isNotEmpty) {
-                          _activities =
-                              Api().getActivitiesRandomlyByKey(_searchText!);
-                        } else {
-                          _activities = Api().getActivitiesRandomly();
-                        }
+                        _activities = Api().getActivitiesRandomlyByFilter(
+                            _fromDateFilter,
+                            _toDateFilter,
+                            _capacityRange.start.round(),
+                            _capacityRange.end.round(),
+                            _searchText);
                       });
                     },
                   )
@@ -324,6 +199,133 @@ class _PublicActivityState extends State<PublicActivity> {
                 ),
               )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+
+  Widget buildFilterPopup() {
+    return PopupMenuButton(
+      icon: const Icon(Icons.filter_list_outlined),
+      itemBuilder: (innerContext) => [
+        PopupMenuItem(
+          padding: const EdgeInsets.only(top: 20, left: 20),
+          child: StatefulBuilder(
+            builder: (builderContext, innerSetState) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      const Text("Include expired ones"),
+                      Switch(
+                        value: _includeExpiredActivities,
+                        onChanged: (value) => innerSetState(() {
+                          _includeExpiredActivities = value;
+                          _fromDateFilter = value ? DateTime(2022, 1, 1) : _now;
+                        }),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('From: '),
+                      Text(DateFormat('dd-MM-yyyy').format(_fromDateFilter)),
+                      TextButton(
+                        child: const Icon(Icons.calendar_month),
+                        onPressed: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: builderContext,
+                              initialDate: _fromDateFilter,
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime(2100));
+                          if (pickedDate != null) {
+                            innerSetState(() => _fromDateFilter = pickedDate);
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('To     : '),
+                      Text(DateFormat('dd-MM-yyyy').format(_toDateFilter)),
+                      TextButton(
+                        child: const Icon(Icons.calendar_month),
+                        onPressed: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: builderContext,
+                              initialDate: _toDateFilter,
+                              firstDate: DateTime(1950),
+                              lastDate: DateTime(2100));
+                          if (pickedDate != null) {
+                            innerSetState(() => _toDateFilter = pickedDate);
+                          }
+                        },
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('Capacity:'),
+                      RangeSlider(
+                        values: _capacityRange,
+                        max: 100,
+                        divisions: 100,
+                        labels: RangeLabels(
+                          _capacityRange.start.round().toString(),
+                          _capacityRange.end.round().toString(),
+                        ),
+                        onChanged: (RangeValues values) {
+                          innerSetState(() {
+                            _capacityRange = values;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 20, left: 20),
+                        child: ElevatedButton(
+                          child: const Text("Reset"),
+                          onPressed: () {
+                            innerSetState(() {
+                              _includeExpiredActivities = false;
+                              _capacityRange = const RangeValues(2, 100);
+                              _fromDateFilter = _now;
+                              _toDateFilter = DateTime(_now.year + 1, 1, 1);
+                            });
+                          },
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.only(top: 20, right: 40),
+                        child: ElevatedButton(
+                          child: const Text("Search"),
+                          onPressed: () {
+                            setState(() {
+                              _activities = Api().getActivitiesRandomlyByFilter(
+                                  _fromDateFilter,
+                                  _toDateFilter,
+                                  _capacityRange.start.round(),
+                                  _capacityRange.end.round(),
+                                  _searchText);
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+      offset: const Offset(0, 50),
+      color: Colors.white,
+      elevation: 2,
     );
   }
 }
