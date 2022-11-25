@@ -57,6 +57,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ? CustomePopup(
                   title: 'Fail',
                   message: 'Something went wrong',
+                  buttonName: 'Close',
                   onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[

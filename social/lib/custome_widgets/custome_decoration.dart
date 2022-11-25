@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-InputDecoration customeInputDecoration([String? labelText]){
+InputDecoration customeInputDecoration(String? labelText){
   return InputDecoration(
     labelStyle: const TextStyle(color: Colors.blue),
     border: const OutlineInputBorder(),

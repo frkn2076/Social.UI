@@ -153,7 +153,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                 }
                                                 return CustomeJoinerTextButton(
                                                   isPrivate: isPrivate,
-                                                  userName: joiner.userName,
+                                                  userName: joiner.userName!,
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,

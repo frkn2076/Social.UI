@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class CustomeInfoText extends StatelessWidget {
   final String title;
   final String text;
-
-  const CustomeInfoText({Key? key, required this.title, required this.text}) : super(key: key);
+  const CustomeInfoText({Key? key, required this.title, required this.text})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,8 @@ class CustomeInfoText extends StatelessWidget {
         children: [
           Text(
             '$title ',
-            style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 14),
+            style: const TextStyle(
+                color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 14),
           ),
           Text(
             text,
