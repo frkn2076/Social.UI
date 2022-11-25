@@ -82,11 +82,11 @@ class _PublicActivityState extends State<PublicActivity> {
             // padding: const EdgeInsets.only(
             // top: 50, right: 50),
             icon: const Icon(Icons.filter_list_outlined),
-            itemBuilder: (context) => [
+            itemBuilder: (innerContext) => [
               PopupMenuItem(
                 padding: const EdgeInsets.only(top: 20, left: 20),
                 child: StatefulBuilder(
-                  builder: (context, setState) {
+                  builder: (builderContext, innerSetState) {
                     return Column(
                       children: [
                         Row(
@@ -94,7 +94,7 @@ class _PublicActivityState extends State<PublicActivity> {
                             const Text("Include expired ones"),
                             Switch(
                               value: _includeExpiredActivities,
-                              onChanged: (value) => setState(() {
+                              onChanged: (value) => innerSetState(() {
                                 _includeExpiredActivities = value;
                                 _fromDateFilter =
                                     value ? DateTime(2022, 1, 1) : _now;
@@ -111,12 +111,12 @@ class _PublicActivityState extends State<PublicActivity> {
                               child: const Icon(Icons.calendar_month),
                               onPressed: () async {
                                 DateTime? pickedDate = await showDatePicker(
-                                    context: context,
+                                    context: builderContext,
                                     initialDate: _fromDateFilter,
                                     firstDate: DateTime(1950),
                                     lastDate: DateTime(2100));
                                 if (pickedDate != null) {
-                                  setState(() => _fromDateFilter = pickedDate);
+                                  innerSetState(() => _fromDateFilter = pickedDate);
                                 }
                               },
                             )
@@ -131,12 +131,12 @@ class _PublicActivityState extends State<PublicActivity> {
                               child: const Icon(Icons.calendar_month),
                               onPressed: () async {
                                 DateTime? pickedDate = await showDatePicker(
-                                    context: context,
+                                    context: builderContext,
                                     initialDate: _toDateFilter,
                                     firstDate: DateTime(1950),
                                     lastDate: DateTime(2100));
                                 if (pickedDate != null) {
-                                  setState(() => _toDateFilter = pickedDate);
+                                  innerSetState(() => _toDateFilter = pickedDate);
                                 }
                               },
                             )
@@ -154,10 +154,47 @@ class _PublicActivityState extends State<PublicActivity> {
                                 _capacityRange.end.round().toString(),
                               ),
                               onChanged: (RangeValues values) {
-                                setState(() {
+                                innerSetState(() {
                                   _capacityRange = values;
                                 });
                               },
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(top: 20, left: 20),
+                              child: ElevatedButton(
+                                child: const Text("Reset"),
+                                onPressed: () {
+                                  innerSetState(() {
+                                    _includeExpiredActivities = false;
+                                    _capacityRange = const RangeValues(2, 100);
+                                    _fromDateFilter = _now;
+                                    _toDateFilter =
+                                        DateTime(_now.year + 1, 1, 1);
+                                  });
+                                },
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding:
+                                  const EdgeInsets.only(top: 20, right: 40),
+                              child: ElevatedButton(
+                                child: const Text("Search"),
+                                onPressed: () {
+                                  setState(() {
+                                    _activities = Api()
+                                        .getActivitiesRandomlyByFilter(
+                                            _fromDateFilter,
+                                            _toDateFilter,
+                                            _capacityRange.start.round(),
+                                            _capacityRange.end.round());
+                                  });
+                                },
+                              ),
                             )
                           ],
                         )

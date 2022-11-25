@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/all_activity_response.dart';
@@ -76,6 +77,31 @@ class Api {
 
     final response = await http.get(Uri.parse('${_baseUrl}activity/all/random'),
         headers: _fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+    }
+    return List.empty();
+  }
+
+  Future<List<AllActivityResponse>> getActivitiesRandomlyByFilter(DateTime fromDate, DateTime toDate,
+   int fromCapacity, int toCapacity) async {
+    // to set userId, will be removed later
+    await getPrivateProfile();
+
+    final body = jsonEncode(
+        <String, Object>{'fromDate': _formatDateTimeForPayload(fromDate),
+         'toDate': _formatDateTimeForPayload(toDate),
+         'fromCapacity': 2,
+         'toCapacity': 100});
+
+    final response = await http.post(Uri.parse('${_baseUrl}activity/all/random/filter'),
+        headers: _fixedHeaders,
+        body: body);
 
     if (response.statusCode == 200) {
       return json
@@ -229,5 +255,12 @@ class Api {
           .toList();
     }
     return List.empty();
+  }
+
+  static String _formatDateTimeForPayload(DateTime? dateTime) {
+    if (dateTime == null) {
+      return "";
+    }//2022-12-14T17:23:03.432Z
+    return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 }
