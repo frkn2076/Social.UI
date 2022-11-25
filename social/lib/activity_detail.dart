@@ -4,8 +4,8 @@ import 'package:social/custome_widgets/custome_info_text.dart';
 import 'package:social/custome_widgets/custome_joiner_textbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/activity_detail_response.dart';
-import 'package:social/joined_activity.dart';
 import 'package:social/private_profile.dart';
+import 'package:social/public_activity.dart';
 import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
@@ -58,7 +58,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => JoinedActivity(id: Holder.userId!)),
+                    builder: (context) => const PublicActivity()),
               );
             })
         : _condition == Condition.fail

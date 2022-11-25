@@ -37,7 +37,7 @@ class PublicProfile extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => JoinedActivity(id: Holder.userId!),
+                      builder: (context) => JoinedActivity(id: id),
                     ),
                   );
                 }
@@ -60,7 +60,7 @@ class PublicProfile extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OwnerActivity(id: Holder.userId!),
+                      builder: (context) => OwnerActivity(id: id),
                     ),
                   );
                 }

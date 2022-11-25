@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity_detail.dart';
-import 'package:social/activity_builder.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
@@ -20,29 +19,6 @@ class JoinedActivity extends StatelessWidget {
         leading: const CustomeBackButton(),
         title: const Text(_title),
         centerTitle: true,
-        actions: [
-          Container(
-            margin: const EdgeInsets.all(2.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(12.0),
-              ),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              tooltip: 'Create activity',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ActivityBuilder(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
       ),
       body: MyStatefulWidget(id: id),
     );
@@ -104,7 +80,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ActivityDetail(id: projectSnap.data![index].id!)),
+                                builder: (context) => ActivityDetail(
+                                    id: projectSnap.data![index].id!)),
                           );
                         },
                       ),
