@@ -16,6 +16,7 @@ class CustomePopup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: const Color.fromARGB(255, 198, 131, 210),
       title: Text(title),
       content: SingleChildScrollView(
         child: ListBody(

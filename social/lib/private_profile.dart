@@ -91,7 +91,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).requestFocus(FocusNode());
     return _condition == Condition.success
         ? CustomePopup(
             title: 'Success',
@@ -108,10 +107,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
                   if (projectSnap.connectionState == ConnectionState.done) {
-                    if(projectSnap.data?.name != null){
+                    if(projectSnap.data?.name?.isNotEmpty ?? false){
                       _nameController.text = projectSnap.data!.name!;
                     }
-                    if(projectSnap.data?.about != null){
+                    if(projectSnap.data?.about?.isNotEmpty ?? false){
                       _aboutController.text= projectSnap.data!.about!;
                     }
                     return Container(
