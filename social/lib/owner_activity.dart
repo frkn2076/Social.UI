@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/register.dart';
@@ -38,7 +39,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: customeBackground(),
       padding: const EdgeInsets.all(10),
       child: FutureBuilder<List<AllActivityResponse>>(
         future: Api().getOwnerActivities(widget.id),

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/private_profile.dart';
@@ -85,7 +86,8 @@ class _PublicActivityState extends State<PublicActivity> {
           buildFilterPopup(),
         ],
       ),
-      body: Padding(
+      body: Container(
+        decoration: customeBackground(),
         padding: const EdgeInsets.all(10),
         child: FutureBuilder<List<AllActivityResponse>>(
           future: _activities,
@@ -153,41 +155,45 @@ class _PublicActivityState extends State<PublicActivity> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: IconButton(
-                  icon: const Icon(Icons.settings_outlined, color: Colors.blue),
-                  onPressed: () {}),
-            ),
-            const Spacer(),
-            Container(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: IconButton(
-                // do not remove below comments
-                // icon: const CircleAvatar(
-                //   radius: 20,
-                //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-                // ),
-                icon: const CircleAvatar(
-                  backgroundColor: Color(0xffE6E6E6),
-                  radius: 30,
-                  child:
-                      Icon(Icons.person, color: Colors.blue //Color(0xffCCCCCC),
-                          ),
-                ),
-                tooltip: 'Go to profile',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PrivateProfile()),
-                  );
-                },
+        child: Container(
+          decoration: customeBackground(),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: IconButton(
+                    icon:
+                        const Icon(Icons.settings_outlined, color: Colors.blue),
+                    onPressed: () {}),
               ),
-            ),
-          ],
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: IconButton(
+                  // do not remove below comments
+                  // icon: const CircleAvatar(
+                  //   radius: 20,
+                  //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
+                  // ),
+                  icon: const CircleAvatar(
+                    backgroundColor: Color(0xffE6E6E6),
+                    radius: 30,
+                    child: Icon(Icons.person,
+                        color: Colors.blue //Color(0xffCCCCCC),
+                        ),
+                  ),
+                  tooltip: 'Go to profile',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PrivateProfile()),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -204,6 +210,11 @@ class _PublicActivityState extends State<PublicActivity> {
 
   Widget buildFilterPopup() {
     return PopupMenuButton(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
       icon: const Icon(Icons.filter_list_outlined),
       itemBuilder: (innerContext) => [
         PopupMenuItem(
@@ -292,7 +303,7 @@ class _PublicActivityState extends State<PublicActivity> {
                               _includeExpiredActivities = false;
                               _capacityRange = const RangeValues(2, 100);
                               _fromDateFilter = _now;
-                              _toDateFilter = DateTime(_now.year + 1, 1, 1);
+                              _toDateFilter = DateTime(_now.year + 2, 1, 1);
                             });
                           },
                         ),
@@ -324,7 +335,7 @@ class _PublicActivityState extends State<PublicActivity> {
         ),
       ],
       offset: const Offset(0, 50),
-      color: Colors.white,
+      color: const Color.fromARGB(255, 194, 159, 239),
       elevation: 2,
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/private_profile_response.dart';
@@ -107,82 +108,87 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
                   if (projectSnap.connectionState == ConnectionState.done) {
-                    _nameController.text =
-                        projectSnap.data?.name ?? "Your name...";
-                    _aboutController.text =
-                        projectSnap.data?.about ?? "Tell me about yourself...";
-                    return ListView(
-                      children: <Widget>[
-                        Stack(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(5),
-                              margin: const EdgeInsets.fromLTRB(
-                                  100.0, 20.0, 100.0, 0),
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.blue, width: 2),
-                              ),
-                              child: const Image(
-                                image: AssetImage('assets/images/foto1.jpeg'),
-                              ),
-                            ),
-                            Positioned(
-                              right: 100.0,
-                              bottom: 0.0,
-                              child: IconButton(
-                                // ignore: prefer_const_constructors
-                                icon: Icon(
-                                  size: 40,
-                                  Icons.add_circle_outline,
-                                  color: Colors.blue,
-                                ),
-                                onPressed: () async {
-                                  var pickedFile = await ImagePicker()
-                                      .pickImage(source: ImageSource.gallery);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        CustomeFocusedTextField(
-                          padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
-                          labelText: 'Name & Surname',
-                          controller: _nameController,
-                        ),
-                        CustomeFocusedTextField(
-                          labelText: 'About me',
-                          controller: _aboutController,
-                        ),
-                        Container(
-                          alignment: Alignment.topCenter,
-                          padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                    if(projectSnap.data?.name != null){
+                      _nameController.text = projectSnap.data!.name!;
+                    }
+                    if(projectSnap.data?.about != null){
+                      _aboutController.text= projectSnap.data!.about!;
+                    }
+                    return Container(
+                      decoration: customeBackground(),
+                      child: ListView(
+                        children: <Widget>[
+                          Stack(
                             children: [
-                              ElevatedButton(
-                                child: const Text("Save"),
-                                onPressed: () => {
-                                  Api()
-                                      .updatePrivateProfile(
-                                          null,
-                                          _nameController.text,
-                                          _aboutController.text)
-                                      .then(
-                                    (isSuccess) {
-                                      setState(() {
-                                        _condition =
-                                            isSuccess.conditionParser();
-                                      });
-                                    },
-                                  )
-                                },
-                              )
+                              Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.fromLTRB(
+                                    100.0, 20.0, 100.0, 0),
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.blue, width: 2),
+                                ),
+                                child: const Image(
+                                  image: AssetImage('assets/images/foto1.jpeg'),
+                                ),
+                              ),
+                              Positioned(
+                                right: 100.0,
+                                bottom: 0.0,
+                                child: IconButton(
+                                  // ignore: prefer_const_constructors
+                                  icon: Icon(
+                                    size: 40,
+                                    Icons.add_circle_outline,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () async {
+                                    var pickedFile = await ImagePicker()
+                                        .pickImage(source: ImageSource.gallery);
+                                  },
+                                ),
+                              ),
                             ],
                           ),
-                        )
-                      ],
+                          CustomeFocusedTextField(
+                            padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
+                            labelText: 'Name & Surname',
+                            controller: _nameController,
+                          ),
+                          CustomeFocusedTextField(
+                            labelText: 'About me',
+                            controller: _aboutController,
+                          ),
+                          Container(
+                            alignment: Alignment.topCenter,
+                            padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  child: const Text("Save"),
+                                  onPressed: () => {
+                                    Api()
+                                        .updatePrivateProfile(
+                                            null,
+                                            _nameController.text,
+                                            _aboutController.text)
+                                        .then(
+                                      (isSuccess) {
+                                        setState(() {
+                                          _condition =
+                                              isSuccess.conditionParser();
+                                        });
+                                      },
+                                    )
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     );
                   } else {
                     return const Center(

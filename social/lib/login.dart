@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
 import 'package:social/utils/holder.dart';
@@ -45,7 +46,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      decoration: customeBackground(),
       padding: const EdgeInsets.all(10),
       child: _isAlertDialogOn
           ? CustomePopup(

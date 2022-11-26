@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_info_text.dart';
 import 'package:social/custome_widgets/custome_joiner_textbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
@@ -57,8 +58,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               setState(() => _condition = Condition.none);
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const PublicActivity()),
+                MaterialPageRoute(builder: (context) => const PublicActivity()),
               );
             })
         : _condition == Condition.fail
@@ -67,7 +67,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 message: 'Something went wrong',
                 buttonName: 'Close',
                 onPressed: () => setState(() => _condition = Condition.none))
-            : Padding(
+            : Container(
+                decoration: customeBackground(),
                 padding: const EdgeInsets.all(10),
                 child: FutureBuilder<ActivityDetailResponse?>(
                   future: Api().getActivityDetail(widget.id),
@@ -134,7 +135,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               0, 20, 0, 0),
-                                          child: const Text('JOINERS', style: TextStyle(fontSize: 22),),
+                                          child: const Text(
+                                            'JOINERS',
+                                            style: TextStyle(fontSize: 22),
+                                          ),
                                         ),
                                         Container(
                                           height: 100,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
+import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
@@ -89,36 +90,40 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       future: Api().getProfileById(widget.id),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
-          return ListView(
-            children: <Widget>[
-              Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 2),
+          return Container(
+            decoration: customeBackground(),
+            child: ListView(
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 2),
+                      ),
+                      child: const Image(
+                        image: AssetImage('assets/images/foto1.jpeg'),
+                      ),
                     ),
-                    child: const Image(
-                      image: AssetImage('assets/images/foto1.jpeg'),
-                    ),
-                  ),
-                ],
-              ),
-              CustomeFocusedTextField(
-                padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
-                readOnly: true,
-                labelText: 'Name & Surname',
-                controller: TextEditingController(text: projectSnap.data?.name),
-              ),
-              CustomeFocusedTextField(
-                readOnly: true,
-                labelText: 'About',
-                controller:
-                    TextEditingController(text: projectSnap.data?.about),
-              )
-            ],
+                  ],
+                ),
+                CustomeFocusedTextField(
+                  padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
+                  readOnly: true,
+                  labelText: 'Name & Surname',
+                  controller:
+                      TextEditingController(text: projectSnap.data?.name),
+                ),
+                CustomeFocusedTextField(
+                  readOnly: true,
+                  labelText: 'About',
+                  controller:
+                      TextEditingController(text: projectSnap.data?.about),
+                )
+              ],
+            ),
           );
         } else {
           return const Center(
