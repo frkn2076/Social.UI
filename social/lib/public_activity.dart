@@ -6,9 +6,11 @@ import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
+import 'package:social/login.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/custome_widgets/custome_searchbar.dart';
 import 'package:social/register.dart';
+import 'package:social/utils/condition.dart';
 
 class PublicActivity extends StatefulWidget {
   const PublicActivity({Key? key}) : super(key: key);
@@ -27,6 +29,7 @@ class _PublicActivityState extends State<PublicActivity> {
   RangeValues _capacityRange = const RangeValues(2, 100);
   bool _searchBoolean = false;
   bool _includeExpiredActivities = false;
+  bool _showPopupMessage = false;
 
   @override
   void initState() {
@@ -49,7 +52,7 @@ class _PublicActivityState extends State<PublicActivity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const CustomeBackButton(),
+        automaticallyImplyLeading: false,
         title: !_searchBoolean
             ? const Text('Activities')
             : CustomeSearchBar(
@@ -86,116 +89,101 @@ class _PublicActivityState extends State<PublicActivity> {
           buildFilterPopup(),
         ],
       ),
-      body: Container(
-        decoration: customeBackground(),
-        padding: const EdgeInsets.all(10),
-        child: FutureBuilder<List<AllActivityResponse>>(
-          future: _activities,
-          builder: (context, projectSnap) {
-            return projectSnap.connectionState == ConnectionState.done
-                ? RefreshIndicator(
-                    child: ListView.builder(
-                      itemCount: projectSnap.data?.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Register()),
-                            )
-                          },
-                          child: GestureDetector(
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
-                                image: const DecorationImage(
-                                  image: AssetImage("assets/images/ada.jpeg"),
-                                  fit: BoxFit.cover,
+      body: _showPopupMessage
+          ? AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 198, 131, 210),
+              title: const Text('Info'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: const <Widget>[
+                    Text('Are you sure to exit?'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('No'),
+                  onPressed: () => setState(() => _showPopupMessage = false),
+                ),
+                TextButton(
+                  child: const Text('Yes'),
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Login())),
+                )
+              ],
+            )
+          : Container(
+              decoration: customeBackground(),
+              padding: const EdgeInsets.all(10),
+              child: FutureBuilder<List<AllActivityResponse>>(
+                future: _activities,
+                builder: (context, projectSnap) {
+                  return projectSnap.connectionState == ConnectionState.done
+                      ? RefreshIndicator(
+                          child: ListView.builder(
+                            itemCount: projectSnap.data?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Register()),
+                                  )
+                                },
+                                child: GestureDetector(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.all(10),
+                                    margin: const EdgeInsets.all(15.0),
+                                    decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Colors.blueAccent),
+                                      image: const DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/ada.jpeg"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      projectSnap.data![index].title!,
+                                      style: const TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 30),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ActivityDetail(
+                                              id: projectSnap
+                                                  .data![index].id!)),
+                                    );
+                                  },
                                 ),
-                              ),
-                              child: Text(
-                                projectSnap.data![index].title!,
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 30),
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ActivityDetail(
-                                        id: projectSnap.data![index].id!)),
                               );
                             },
                           ),
+                          onRefresh: () async {
+                            setState(() {
+                              _activities = Api().getActivitiesRandomlyByFilter(
+                                  _fromDateFilter,
+                                  _toDateFilter,
+                                  _capacityRange.start.round(),
+                                  _capacityRange.end.round(),
+                                  _searchText);
+                            });
+                          },
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    ),
-                    onRefresh: () async {
-                      setState(() {
-                        _activities = Api().getActivitiesRandomlyByFilter(
-                            _fromDateFilter,
-                            _toDateFilter,
-                            _capacityRange.start.round(),
-                            _capacityRange.end.round(),
-                            _searchText);
-                      });
-                    },
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          decoration: customeBackground(),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                child: IconButton(
-                    icon:
-                        const Icon(Icons.settings_outlined, color: Colors.blue),
-                    onPressed: () {}),
+                },
               ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: IconButton(
-                  // do not remove below comments
-                  // icon: const CircleAvatar(
-                  //   radius: 20,
-                  //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-                  // ),
-                  icon: const CircleAvatar(
-                    backgroundColor: Color(0xffE6E6E6),
-                    radius: 30,
-                    child: Icon(Icons.person,
-                        color: Colors.blue //Color(0xffCCCCCC),
-                        ),
-                  ),
-                  tooltip: 'Go to profile',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const PrivateProfile()),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
+      bottomNavigationBar: buildBottomNavigationBar(),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () => Navigator.push(
@@ -337,6 +325,61 @@ class _PublicActivityState extends State<PublicActivity> {
       offset: const Offset(0, 50),
       color: const Color.fromARGB(255, 194, 159, 239),
       elevation: 2,
+    );
+  }
+
+  Widget buildBottomNavigationBar() {
+    return BottomAppBar(
+      child: Container(
+        decoration: customeBackground(),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: RotatedBox(
+                quarterTurns: 2,
+                child: IconButton(
+                    icon: const Icon(Icons.logout_outlined, color: Colors.blue),
+                    onPressed: () => setState(() => _showPopupMessage = true)),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: IconButton(
+                  icon: const Icon(Icons.settings_outlined, color: Colors.blue),
+                  onPressed: () {}),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: IconButton(
+                // do not remove below comments
+                // icon: const CircleAvatar(
+                //   radius: 20,
+                //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
+                // ),
+                icon: const CircleAvatar(
+                  backgroundColor: Color(0xffE6E6E6),
+                  radius: 30,
+                  child:
+                      Icon(Icons.person, color: Colors.blue //Color(0xffCCCCCC),
+                          ),
+                ),
+                tooltip: 'Go to profile',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PrivateProfile()),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
