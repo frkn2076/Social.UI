@@ -51,6 +51,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   var _condition = Condition.none;
 
+  String? dropdownValue;
+
   int year = 0;
   int month = 0;
   int day = 0;
@@ -96,6 +98,87 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: 'Category',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        child: DropdownButton<String>(
+                          dropdownColor: const Color.fromARGB(255, 167, 143, 234),
+                            value: dropdownValue,
+                            style: const TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            onChanged: (String? value) {
+                              setState(() {
+                                dropdownValue = value!;
+                              });
+                            },
+                            items: const [
+                              DropdownMenuItem<String>(
+                                value: 'other',
+                                child: Text('other'),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'picnic',
+                                child: Text('picnic'),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'cinema',
+                                child: Text('cinema'),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'sport',
+                                child: Text('sport'),
+                              )
+                            ]),
+                      ),
+                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    //   // decoration: BoxDecoration(
+                    //   //   border: Border.all(color: Colors.black),
+                    //   //   borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                    //   // ),
+                    //   child: DropdownButton<String>(
+                    //       value: dropdownValue,
+                    //       icon: const Icon(Icons.arrow_downward),
+                    //       elevation: 16,
+                    //       style: const TextStyle(color: Colors.deepPurple),
+                    //       underline: Container(
+                    //         height: 2,
+                    //         color: Colors.deepPurpleAccent,
+                    //       ),
+                    //       onChanged: (String? value) {
+                    //         setState(() {
+                    //           dropdownValue = value!;
+                    //         });
+                    //       },
+                    //       items: const [
+                    //         DropdownMenuItem<String>(
+                    //           value: 'other',
+                    //           child: Text('other'),
+                    //         ),
+                    //         DropdownMenuItem<String>(
+                    //           value: 'picnic',
+                    //           child: Text('picnic'),
+                    //         ),
+                    //         DropdownMenuItem<String>(
+                    //           value: 'cinema',
+                    //           child: Text('cinema'),
+                    //         ),
+                    //         DropdownMenuItem<String>(
+                    //           value: 'sport',
+                    //           child: Text('sport'),
+                    //         )
+                    //       ]),
+                    // ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextField(

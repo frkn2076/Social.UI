@@ -345,12 +345,12 @@ class _PublicActivityState extends State<PublicActivity> {
                     onPressed: () => setState(() => _showPopupMessage = true)),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: IconButton(
-                  icon: const Icon(Icons.settings_outlined, color: Colors.blue),
-                  onPressed: () {}),
-            ),
+            // Container(
+            //   padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+            //   child: IconButton(
+            //       icon: const Icon(Icons.settings_outlined, color: Colors.blue),
+            //       onPressed: () {}),
+            // ),
             const Spacer(),
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),

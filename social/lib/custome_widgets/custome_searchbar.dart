@@ -9,27 +9,29 @@ class CustomeSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: onChanged,
-      autofocus: true, 
-      cursorColor: Colors.white,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-      ),
-      textInputAction:
-          TextInputAction.search, 
-      decoration: const InputDecoration(
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        hintText: 'Search',
-        hintStyle: TextStyle(
-          color: Colors.white60,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+      child: TextField(
+        onChanged: onChanged,
+        autofocus: true,
+        cursorColor: Colors.white,
+        style: const TextStyle(
+          color: Colors.white,
           fontSize: 20,
+        ),
+        textInputAction: TextInputAction.search,
+        decoration: const InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          hintText: 'Search',
+          hintStyle: TextStyle(
+            color: Colors.white60,
+            fontSize: 20,
+          ),
         ),
       ),
     );
