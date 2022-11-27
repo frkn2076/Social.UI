@@ -5,10 +5,6 @@ class PrivateProfileResponse {
   String? password;
   String? photo;
   String? name;
-  String? surname;
-  String? refreshToken;
-  String? expireDate;
-  String? role;
   String? about;
 
   PrivateProfileResponse(
@@ -18,10 +14,6 @@ class PrivateProfileResponse {
       this.password,
       this.photo,
       this.name,
-      this.surname,
-      this.refreshToken,
-      this.expireDate,
-      this.role,
       this.about});
 
   PrivateProfileResponse.fromJson(Map<String, dynamic> json) {
@@ -31,10 +23,6 @@ class PrivateProfileResponse {
     password = json['password'];
     photo = json['photo'];
     name = json['name'];
-    surname = json['surname'];
-    refreshToken = json['refreshToken'];
-    expireDate = json['expireDate'];
-    role = json['role'];
     about = json['about'];
   }
 }

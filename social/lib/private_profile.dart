@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
@@ -9,6 +11,7 @@ import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
+import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
 
 class PrivateProfile extends StatelessWidget {
@@ -84,10 +87,11 @@ class MyStatefulWidget extends StatefulWidget {
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final TextEditingController _nameController = TextEditingController();
-  // final TextEditingController _photoController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
 
-  var _condition = Condition.none;
+  Condition _condition = Condition.none;
+  String? _photo;
+  Image? _image;
 
   @override
   Widget build(BuildContext context) {
@@ -107,11 +111,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
                   if (projectSnap.connectionState == ConnectionState.done) {
-                    if(projectSnap.data?.name?.isNotEmpty ?? false){
+                    if (projectSnap.data?.name?.isNotEmpty ?? false) {
                       _nameController.text = projectSnap.data!.name!;
                     }
-                    if(projectSnap.data?.about?.isNotEmpty ?? false){
-                      _aboutController.text= projectSnap.data!.about!;
+                    if (projectSnap.data?.about?.isNotEmpty ?? false) {
+                      _aboutController.text = projectSnap.data!.about!;
+                    }
+                    if(projectSnap.data?.photo?.isNotEmpty ?? false){
+                      _image = Helper.imageFromBase64String(projectSnap.data!.photo!);
                     }
                     return Container(
                       decoration: customeBackground(),
@@ -120,6 +127,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Stack(
                             children: [
                               Container(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.3,
+                                ),
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(5),
                                 margin: const EdgeInsets.fromLTRB(
@@ -128,9 +139,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   border:
                                       Border.all(color: Colors.blue, width: 2),
                                 ),
-                                child: const Image(
-                                  image: AssetImage('assets/images/foto1.jpeg'),
-                                ),
+                                child: _image ??
+                                    const Image(
+                                      fit: BoxFit.contain,
+                                      image: AssetImage(
+                                          'assets/images/empty_profile.jpg'),
+                                    ),
                               ),
                               Positioned(
                                 right: 100.0,
@@ -145,6 +159,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   onPressed: () async {
                                     var pickedFile = await ImagePicker()
                                         .pickImage(source: ImageSource.gallery);
+
+                                    if (pickedFile?.path != null) {
+                                      setState(() {
+                                        _photo = Helper.base64StringFromImage(
+                                            pickedFile!.path);
+                                        File? pickedImage =
+                                            File(pickedFile.path);
+                                        _image = Image.file(pickedImage);
+                                      });
+                                    }
                                   },
                                 ),
                               ),
@@ -170,7 +194,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   onPressed: () => {
                                     Api()
                                         .updatePrivateProfile(
-                                            null,
+                                            _photo,
                                             _nameController.text,
                                             _aboutController.text)
                                         .then(
