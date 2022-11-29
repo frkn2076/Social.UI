@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class Helper {
   static String formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
@@ -24,8 +23,13 @@ class Helper {
     return Image.memory(base64Decode(base64String));
   }
 
-  static double height(BuildContext context) => MediaQuery.of(context).copyWith().size.height;
+  static AssetImage getImageByCategory(String category) {
+    return AssetImage("assets/images/categories/$category.jpg");
+  }
 
-  static double width(BuildContext context) => MediaQuery.of(context).copyWith().size.width;
+  static double height(BuildContext context) =>
+      MediaQuery.of(context).copyWith().size.height;
 
+  static double width(BuildContext context) =>
+      MediaQuery.of(context).copyWith().size.width;
 }

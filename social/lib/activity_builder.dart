@@ -51,7 +51,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   var _condition = Condition.none;
 
-  String? dropdownValue;
+  String? _category;
 
   int year = 0;
   int month = 0;
@@ -108,8 +108,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           ),
                         ),
                         child: DropdownButton<String>(
-                          dropdownColor: const Color.fromARGB(255, 167, 143, 234),
-                            value: dropdownValue,
+                            dropdownColor:
+                                const Color.fromARGB(255, 167, 143, 234),
+                            hint: const Text('Pick a category'),
+                            isExpanded: true,
+                            value: _category,
                             style: const TextStyle(color: Colors.deepPurple),
                             underline: Container(
                               height: 2,
@@ -117,68 +120,65 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                             onChanged: (String? value) {
                               setState(() {
-                                dropdownValue = value!;
+                                _category = value!;
                               });
                             },
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: 'other',
-                                child: Text('other'),
-                              ),
+                            items: [
                               DropdownMenuItem<String>(
                                 value: 'picnic',
-                                child: Text('picnic'),
+                                child: Row(
+                                  children: [
+                                    const Text('picnic'),
+                                    const Spacer(),
+                                    Image.asset(
+                                      "assets/images/categories/picnic.jpg",
+                                      fit: BoxFit.contain,
+                                    )
+                                  ],
+                                ),
                               ),
                               DropdownMenuItem<String>(
                                 value: 'cinema',
-                                child: Text('cinema'),
+                                child: Row(
+                                  children: [
+                                    const Text('cinema'),
+                                    const Spacer(),
+                                    Image.asset(
+                                      "assets/images/categories/cinema.jpg",
+                                      fit: BoxFit.contain,
+                                    )
+                                  ],
+                                ),
                               ),
                               DropdownMenuItem<String>(
                                 value: 'sport',
-                                child: Text('sport'),
-                              )
+                                child: Row(
+                                  children: [
+                                    const Text('sport'),
+                                    const Spacer(),
+                                    Image.asset(
+                                      "assets/images/categories/sport.jpg",
+                                      fit: BoxFit.contain,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: 'other',
+                                child: Row(
+                                  children: [
+                                    const Text('other'),
+                                    const Spacer(),
+                                    Image.asset(
+                                      "assets/images/categories/other.jpg",
+                                      fit: BoxFit.contain,
+                                    )
+                                  ],
+                                ),
+                              ),
                             ]),
                       ),
                     ),
-                    // Container(
-                    //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    //   // decoration: BoxDecoration(
-                    //   //   border: Border.all(color: Colors.black),
-                    //   //   borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                    //   // ),
-                    //   child: DropdownButton<String>(
-                    //       value: dropdownValue,
-                    //       icon: const Icon(Icons.arrow_downward),
-                    //       elevation: 16,
-                    //       style: const TextStyle(color: Colors.deepPurple),
-                    //       underline: Container(
-                    //         height: 2,
-                    //         color: Colors.deepPurpleAccent,
-                    //       ),
-                    //       onChanged: (String? value) {
-                    //         setState(() {
-                    //           dropdownValue = value!;
-                    //         });
-                    //       },
-                    //       items: const [
-                    //         DropdownMenuItem<String>(
-                    //           value: 'other',
-                    //           child: Text('other'),
-                    //         ),
-                    //         DropdownMenuItem<String>(
-                    //           value: 'picnic',
-                    //           child: Text('picnic'),
-                    //         ),
-                    //         DropdownMenuItem<String>(
-                    //           value: 'cinema',
-                    //           child: Text('cinema'),
-                    //         ),
-                    //         DropdownMenuItem<String>(
-                    //           value: 'sport',
-                    //           child: Text('sport'),
-                    //         )
-                    //       ]),
-                    // ),
                     Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: TextField(
@@ -319,7 +319,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       _locationController.text,
                                       dateInput,
                                       _phoneNumberController.text,
-                                      _currentCapacity)
+                                      _currentCapacity,
+                                      _category)
                                   .then((isSuccess) {
                                 setState(() =>
                                     _condition = isSuccess.conditionParser());

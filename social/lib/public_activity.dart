@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
-import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
@@ -10,7 +9,7 @@ import 'package:social/login.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/custome_widgets/custome_searchbar.dart';
 import 'package:social/register.dart';
-import 'package:social/utils/condition.dart';
+import 'package:social/utils/helper.dart';
 
 class PublicActivity extends StatefulWidget {
   const PublicActivity({Key? key}) : super(key: key);
@@ -139,9 +138,8 @@ class _PublicActivityState extends State<PublicActivity> {
                                     decoration: BoxDecoration(
                                       border:
                                           Border.all(color: Colors.blueAccent),
-                                      image: const DecorationImage(
-                                        image: AssetImage(
-                                            "assets/images/ada.jpeg"),
+                                      image: DecorationImage(
+                                        image: Helper.getImageByCategory(projectSnap.data![index].category!),
                                         fit: BoxFit.cover,
                                       ),
                                     ),

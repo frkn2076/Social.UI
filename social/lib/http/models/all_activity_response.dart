@@ -4,8 +4,9 @@ class AllActivityResponse {
   String? detail;
   String? location;
   String? date;
+  String? category;
 
-  AllActivityResponse({this.id, this.title, this.detail, this.location, this.date});
+  AllActivityResponse({this.id, this.title, this.detail, this.location, this.date, this.category});
 
   AllActivityResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -13,5 +14,6 @@ class AllActivityResponse {
     detail = json['detail'];
     location = json['location'];
     date = json['date'];
+    category = json['category'];
   }
 }

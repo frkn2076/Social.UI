@@ -221,7 +221,7 @@ class Api {
   }
 
   Future<bool> createActivity(String? title, String? detail, String? location,
-      String? date, String? phoneNumber, int capacity) async {
+      String? date, String? phoneNumber, int capacity, String? category) async {
     _checkAndUpdateTokens();
 
     final body = jsonEncode(<String, Object?>{
@@ -230,7 +230,8 @@ class Api {
       'location': location,
       'date': date,
       'phoneNumber': phoneNumber,
-      'capacity': capacity
+      'capacity': capacity,
+      'category': category
     });
 
     final response = await http.post(Uri.parse('${_baseUrl}activity'),
