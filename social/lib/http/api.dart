@@ -83,7 +83,8 @@ class Api {
       DateTime toDate,
       int fromCapacity,
       int toCapacity,
-      String? key) async {
+      String? key,
+      List<String> categories) async {
     _checkAndUpdateTokens();
 
     // to set userId, will be removed later
@@ -94,7 +95,8 @@ class Api {
       'toDate': _formatDateTimeForPayload(toDate),
       'fromCapacity': 2,
       'toCapacity': 100,
-      'key': key
+      'key': key,
+      'categories': categories
     });
 
     final response = await http.post(
