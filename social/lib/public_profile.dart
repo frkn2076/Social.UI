@@ -6,6 +6,7 @@ import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
 
 class PublicProfile extends StatelessWidget {
@@ -84,12 +85,17 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  Image? _image;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<PrivateProfileResponse?>(
       future: Api().getProfileById(widget.id),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
+          if (projectSnap.data?.photo?.isNotEmpty ?? false) {
+            _image = Helper.imageFromBase64String(projectSnap.data!.photo!);
+          }
           return Container(
             decoration: customeBackground(),
             child: ListView(
@@ -97,15 +103,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 Stack(
                   children: [
                     Container(
+                      constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.3,
+                      ),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(5),
                       margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blue, width: 2),
                       ),
-                      child: const Image(
-                        image: AssetImage('assets/images/foto1.jpeg'),
-                      ),
+                      child: _image ??
+                          const Image(
+                            fit: BoxFit.contain,
+                            image:
+                                AssetImage('assets/images/empty_profile.jpg'),
+                          ),
                     ),
                   ],
                 ),

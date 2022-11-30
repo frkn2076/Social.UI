@@ -222,18 +222,18 @@ class _PublicActivityState extends State<PublicActivity> {
             builder: (builderContext, innerSetState) {
               return Column(
                 children: [
-                  Row(
-                    children: [
-                      const Text("Include expired ones"),
-                      Switch(
-                        value: _includeExpiredActivities,
-                        onChanged: (value) => innerSetState(() {
-                          _includeExpiredActivities = value;
-                          _fromDateFilter = value ? DateTime(2022, 1, 1) : _now;
-                        }),
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Text("Include expired ones"),
+                  //     Switch(
+                  //       value: _includeExpiredActivities,
+                  //       onChanged: (value) => innerSetState(() {
+                  //         _includeExpiredActivities = value;
+                  //         _fromDateFilter = value ? DateTime(2022, 1, 1) : _now;
+                  //       }),
+                  //     )
+                  //   ],
+                  // ),
                   Row(
                     children: [
                       const Text('From: '),
@@ -304,6 +304,11 @@ class _PublicActivityState extends State<PublicActivity> {
                               _capacityRange = const RangeValues(2, 100);
                               _fromDateFilter = _now;
                               _toDateFilter = DateTime(_now.year + 2, 1, 1);
+
+                              _isPicnic = true;
+                              _isCinema = true;
+                              _isSport = true;
+                              _isOther = true;
                             });
                           },
                         ),
@@ -358,21 +363,10 @@ class _PublicActivityState extends State<PublicActivity> {
                     onPressed: () => setState(() => _showPopupMessage = true)),
               ),
             ),
-            // Container(
-            //   padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-            //   child: IconButton(
-            //       icon: const Icon(Icons.settings_outlined, color: Colors.blue),
-            //       onPressed: () {}),
-            // ),
             const Spacer(),
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
               child: IconButton(
-                // do not remove below comments
-                // icon: const CircleAvatar(
-                //   radius: 20,
-                //   backgroundImage: AssetImage('assets/images/foto1.jpeg'),
-                // ),
                 icon: const CircleAvatar(
                   backgroundColor: Color(0xffE6E6E6),
                   radius: 30,
@@ -419,6 +413,7 @@ class _PublicActivityState extends State<PublicActivity> {
           onChanged: (String? value) {},
           items: [
             DropdownMenuItem(
+              value: 'picnic',
               child: Row(
                 children: [
                   const Text('picnic'),
