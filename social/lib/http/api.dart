@@ -15,7 +15,7 @@ class Api {
 
   static const _baseUrl = _emulatorBaseUrl;
 
-  static DateFormat _dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  static final DateFormat _dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
   // static String? _accessToken;
   // static DateTime _accessTokenExpireDate = DateTime.now();
