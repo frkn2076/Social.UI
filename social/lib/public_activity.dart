@@ -9,6 +9,7 @@ import 'package:social/login.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/custome_widgets/custome_searchbar.dart';
 import 'package:social/register.dart';
+import 'package:social/settings.dart';
 import 'package:social/utils/helper.dart';
 
 class PublicActivity extends StatefulWidget {
@@ -28,7 +29,6 @@ class _PublicActivityState extends State<PublicActivity> {
   String? _searchText;
   RangeValues _capacityRange = const RangeValues(2, 100);
   bool _searchBoolean = false;
-  bool _includeExpiredActivities = false;
   bool _showPopupMessage = false;
 
   bool _isPicnic = true;
@@ -222,18 +222,6 @@ class _PublicActivityState extends State<PublicActivity> {
             builder: (builderContext, innerSetState) {
               return Column(
                 children: [
-                  // Row(
-                  //   children: [
-                  //     const Text("Include expired ones"),
-                  //     Switch(
-                  //       value: _includeExpiredActivities,
-                  //       onChanged: (value) => innerSetState(() {
-                  //         _includeExpiredActivities = value;
-                  //         _fromDateFilter = value ? DateTime(2022, 1, 1) : _now;
-                  //       }),
-                  //     )
-                  //   ],
-                  // ),
                   Row(
                     children: [
                       const Text('From: '),
@@ -300,7 +288,6 @@ class _PublicActivityState extends State<PublicActivity> {
                           child: const Text("Reset"),
                           onPressed: () {
                             innerSetState(() {
-                              _includeExpiredActivities = false;
                               _capacityRange = const RangeValues(2, 100);
                               _fromDateFilter = _now;
                               _toDateFilter = DateTime(_now.year + 2, 1, 1);
@@ -354,14 +341,26 @@ class _PublicActivityState extends State<PublicActivity> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Container(
+            //   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+            //   child: RotatedBox(
+            //     quarterTurns: 2,
+            //     child: IconButton(
+            //         icon: const Icon(Icons.logout_outlined, color: Colors.blue),
+            //         onPressed: () => setState(() => _showPopupMessage = true)),
+            //   ),
+            // ),
             Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: RotatedBox(
-                quarterTurns: 2,
-                child: IconButton(
-                    icon: const Icon(Icons.logout_outlined, color: Colors.blue),
-                    onPressed: () => setState(() => _showPopupMessage = true)),
-              ),
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: IconButton(
+                  icon: const Icon(Icons.settings_outlined, color: Colors.blue),
+                  onPressed: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Settings()),
+                  );
+                  }),
             ),
             const Spacer(),
             Container(

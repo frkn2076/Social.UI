@@ -43,6 +43,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController passwordController =
       TextEditingController(text: Holder.password);
   var _condition = Condition.none;
+  String _errorMessage = "Something went wrong";
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           : _condition == Condition.fail
               ? CustomePopup(
                   title: 'Fail',
-                  message: 'Something went wrong',
+                  message: _errorMessage,
                   buttonName: 'Close',
                   onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
@@ -98,13 +99,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       child: ElevatedButton(
                         child: const Text('Sign in'),
                         onPressed: () {
-                          var response = Api().register(
-                              userNameController.text, passwordController.text);
-                          response.then(
-                            (isSuccess) {
+                          Api()
+                              .register(userNameController.text,
+                                  passwordController.text)
+                              .then(
+                            (response) {
                               setState(
                                 () {
-                                  if (isSuccess) {
+                                  if (response.isSuccessful!) {
                                     _condition = Condition.none;
                                     Holder.userName = userNameController.text;
                                     Holder.password = passwordController.text;
@@ -116,6 +118,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     );
                                   } else {
                                     _condition = Condition.fail;
+                                    _errorMessage = response.error!;
                                   }
                                 },
                               );

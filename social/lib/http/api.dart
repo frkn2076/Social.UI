@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:social/http/models/generic_response.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/all_activity_response.dart';
@@ -26,7 +27,7 @@ class Api {
     "Content-type": "application/json",
   };
 
-  Future<bool> register(String userName, String password) async {
+  Future<GenericResponse> register(String userName, String password) async {
     final body = jsonEncode(
         <String, Object>{'UserName': userName, 'Password': password});
 
@@ -47,12 +48,12 @@ class Api {
               .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
-      return true;
+      return GenericResponse.createSuccessResponse(true);
     }
-    return false;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<bool> login(String userName, String password) async {
+  Future<GenericResponse> login(String userName, String password) async {
     final body = jsonEncode(
         <String, Object>{'UserName': userName, 'Password': password});
 
@@ -73,9 +74,9 @@ class Api {
               .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
-      return true;
+      return GenericResponse.createSuccessResponse(true);
     }
-    return false;
+    return GenericResponse.createFailResponse(response.body);
   }
 
   Future<List<AllActivityResponse>> getAllActivities(bool isRefresh) async {
@@ -110,8 +111,8 @@ class Api {
     final body = jsonEncode(<String, Object?>{
       'fromDate': _formatDateTimeForPayload(fromDate),
       'toDate': _formatDateTimeForPayload(toDate),
-      'fromCapacity': 2,
-      'toCapacity': 100,
+      'fromCapacity': fromCapacity,
+      'toCapacity': toCapacity,
       'key': key,
       'categories': categories
     });

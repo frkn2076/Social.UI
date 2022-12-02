@@ -43,6 +43,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController passwordController =
       TextEditingController(text: Holder.password);
   bool _isAlertDialogOn = false;
+  String _errorMessage = "Something went wrong";
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: _isAlertDialogOn
           ? CustomePopup(
               title: 'Wrong credentials',
-              message: 'Your username or password is wrong',
+              message: _errorMessage,
               buttonName: 'Close',
               onPressed: () => setState(() => _isAlertDialogOn = false))
           : ListView(
@@ -105,13 +106,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: ElevatedButton(
                     child: const Text('Login'),
                     onPressed: () {
-                      var response = Api().login(
-                          userNameController.text, passwordController.text);
-                      response.then(
-                        (isSuccess) {
+                      Api().login(
+                          userNameController.text, passwordController.text).then(
+                        (response) {
                           setState(
                             () {
-                              if (isSuccess) {
+                              if (response.isSuccessful == true) {
                                 _isAlertDialogOn = false;
                                 Holder.userName = userNameController.text;
                                 Holder.password = passwordController.text;
@@ -123,6 +123,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 );
                               } else {
                                 _isAlertDialogOn = true;
+                                _errorMessage = response.error!;
                               }
                             },
                           );
