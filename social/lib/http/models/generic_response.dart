@@ -5,11 +5,11 @@ class GenericResponse<T> {
 
   GenericResponse({this.isSuccessful, this.error, this.response});
 
-  static GenericResponse createSuccessResponse<T>(T response){
+  static GenericResponse<T> createSuccessResponse<T>(T response){
     return GenericResponse<T>(isSuccessful: true, response: response);
   }
 
-  static GenericResponse createFailResponse<T>(String error){
+  static GenericResponse<T> createFailResponse<T>(String error){
     return GenericResponse<T>(isSuccessful: false, error: error);
   }
 

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
+import 'package:social/http/models/generic_response.dart';
 import 'package:social/register.dart';
 
 class OwnerActivity extends StatelessWidget {
@@ -42,12 +44,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Container(
       decoration: customeBackground(),
       padding: const EdgeInsets.all(10),
-      child: FutureBuilder<List<AllActivityResponse>>(
+      child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
         future: Api().getOwnerActivities(widget.id),
         builder: (context, projectSnap) {
-          return projectSnap.connectionState == ConnectionState.done
+          return projectSnap.connectionState == ConnectionState.done &&
+                  projectSnap.data?.isSuccessful == true
               ? ListView.builder(
-                  itemCount: projectSnap.data?.length,
+                  itemCount: projectSnap.data?.response?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () => {
@@ -70,7 +73,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                           ),
                           child: Text(
-                            projectSnap.data![index].title!,
+                            projectSnap.data!.response![index].title!,
                             style: const TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.w500,
@@ -82,16 +85,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ActivityDetail(
-                                    id: projectSnap.data![index].id!)),
+                                    id: projectSnap
+                                        .data!.response![index].id!)),
                           );
                         },
                       ),
                     );
                   },
                 )
-              : const Center(
-                  child: CircularProgressIndicator(),
-                );
+              : projectSnap.connectionState == ConnectionState.done
+                  ? CustomePopup(
+                      title: 'Fail',
+                      message: projectSnap.data!.error!,
+                      buttonName: 'Ok',
+                      onPressed: () => setState(
+                        () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    );
         },
       ),
     );

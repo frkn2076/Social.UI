@@ -18,10 +18,6 @@ class Api {
 
   static final DateFormat _dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
-  // static String? _accessToken;
-  // static DateTime _accessTokenExpireDate = DateTime.now();
-  // static String? _refreshToken;
-
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Content-type": "application/json",
@@ -79,24 +75,7 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<List<AllActivityResponse>> getAllActivities(bool isRefresh) async {
-    await _checkAndUpdateTokens();
-
-    final response = await http.get(
-        Uri.parse('${_baseUrl}activity/all/$isRefresh'),
-        headers: _fixedHeaders);
-
-    if (response.statusCode == 200) {
-      return json
-          .decode(response.body)
-          .map<AllActivityResponse>(
-              (data) => AllActivityResponse.fromJson(data))
-          .toList();
-    }
-    return List.empty();
-  }
-
-  Future<List<AllActivityResponse>> getActivitiesRandomlyByFilter(
+  Future<GenericResponse<List<AllActivityResponse>>> getActivitiesRandomlyByFilter(
       DateTime fromDate,
       DateTime toDate,
       int fromCapacity,
@@ -123,16 +102,18 @@ class Api {
         body: body);
 
     if (response.statusCode == 200) {
-      return json
+      var decodedResponse = json
           .decode(response.body)
           .map<AllActivityResponse>(
               (data) => AllActivityResponse.fromJson(data))
           .toList();
+        
+      return GenericResponse.createSuccessResponse<List<AllActivityResponse>>(decodedResponse);
     }
-    return List.empty();
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<ActivityDetailResponse?> getActivityDetail(int activityId) async {
+  Future<GenericResponse<ActivityDetailResponse>> getActivityDetail(int activityId) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -142,12 +123,12 @@ class Api {
     if (response.statusCode == 200) {
       var responseBody =
           ActivityDetailResponse.fromJson(jsonDecode(response.body));
-      return responseBody;
+      return GenericResponse.createSuccessResponse(responseBody);
     }
-    return null;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<bool> joinActivity(int activityId) async {
+  Future<GenericResponse> joinActivity(int activityId) async {
     await _checkAndUpdateTokens();
 
     final body = jsonEncode(<String, Object>{'activityId': activityId});
@@ -156,12 +137,12 @@ class Api {
         headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
-      return true;
+      return GenericResponse.createSuccessResponse(true);
     }
-    return false;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<PrivateProfileResponse?> getPrivateProfile() async {
+  Future<GenericResponse<PrivateProfileResponse>> getPrivateProfile() async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}profile/private'),
@@ -171,12 +152,12 @@ class Api {
       var responseBody =
           PrivateProfileResponse.fromJson(jsonDecode(response.body));
       Holder.userId = responseBody.id;
-      return responseBody;
+      return GenericResponse.createSuccessResponse(responseBody);
     }
-    return null;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<bool> updatePrivateProfile(
+  Future<GenericResponse> updatePrivateProfile(
       String? photo, String? name, String? about) async {
     await _checkAndUpdateTokens();
 
@@ -187,12 +168,12 @@ class Api {
         headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
-      return true;
+      return GenericResponse.createSuccessResponse(true);
     }
-    return false;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<PrivateProfileResponse?> getProfileById(int id) async {
+  Future<GenericResponse<PrivateProfileResponse>> getProfileById(int id) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}profile/$id'),
@@ -201,29 +182,12 @@ class Api {
     if (response.statusCode == 200) {
       var responseBody =
           PrivateProfileResponse.fromJson(jsonDecode(response.body));
-      return responseBody;
+      return GenericResponse.createSuccessResponse(responseBody);
     }
-    return null;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<List<AllActivityResponse>> getPrivateActivities() async {
-    await _checkAndUpdateTokens();
-
-    final response = await http.get(
-        Uri.parse('${_baseUrl}activity/private/all'),
-        headers: _fixedHeaders);
-
-    if (response.statusCode == 200) {
-      return json
-          .decode(response.body)
-          .map<AllActivityResponse>(
-              (data) => AllActivityResponse.fromJson(data))
-          .toList();
-    }
-    return List.empty();
-  }
-
-  Future<List<AllActivityResponse>> getJoinedActivities(int userId) async {
+  Future<GenericResponse<List<AllActivityResponse>>> getJoinedActivities(int userId) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -231,16 +195,17 @@ class Api {
         headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
-      return json
+      var responseBody = json
           .decode(response.body)
           .map<AllActivityResponse>(
               (data) => AllActivityResponse.fromJson(data))
           .toList();
+      return GenericResponse.createSuccessResponse(responseBody);
     }
-    return List.empty();
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<bool> createActivity(String? title, String? detail, String? location,
+  Future<GenericResponse> createActivity(String? title, String? detail, String? location,
       String? date, String? phoneNumber, int capacity, String? category) async {
     await _checkAndUpdateTokens();
 
@@ -258,25 +223,26 @@ class Api {
         headers: _fixedHeaders, body: body);
 
     if (response.statusCode == 200) {
-      return true;
+      return GenericResponse.createSuccessResponse(true);
     }
-    return false;
+    return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<List<AllActivityResponse>> getOwnerActivities(int id) async {
+  Future<GenericResponse<List<AllActivityResponse>>> getOwnerActivities(int id) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}activity/owner/$id'),
         headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
-      return json
+      var responseBody = json
           .decode(response.body)
           .map<AllActivityResponse>(
               (data) => AllActivityResponse.fromJson(data))
           .toList();
+      return GenericResponse.createSuccessResponse(responseBody);
     }
-    return List.empty();
+    return GenericResponse.createFailResponse(response.body);
   }
 
   static String _formatDateTimeForPayload(DateTime? dateTime) {

@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
+import 'package:social/http/models/generic_response.dart';
 import 'package:social/login.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/custome_widgets/custome_searchbar.dart';
@@ -20,7 +22,7 @@ class PublicActivity extends StatefulWidget {
 }
 
 class _PublicActivityState extends State<PublicActivity> {
-  late Future<List<AllActivityResponse>> _activities;
+  late Future<GenericResponse<List<AllActivityResponse>>> _activities;
   late DateTime _now;
   late DateTime _fromDateFilter;
   late DateTime _toDateFilter;
@@ -125,13 +127,14 @@ class _PublicActivityState extends State<PublicActivity> {
           : Container(
               decoration: customeBackground(),
               padding: const EdgeInsets.all(10),
-              child: FutureBuilder<List<AllActivityResponse>>(
+              child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
                 future: _activities,
                 builder: (context, projectSnap) {
-                  return projectSnap.connectionState == ConnectionState.done
+                  return projectSnap.connectionState == ConnectionState.done &&
+                          projectSnap.data?.isSuccessful == true
                       ? RefreshIndicator(
                           child: ListView.builder(
-                            itemCount: projectSnap.data?.length,
+                            itemCount: projectSnap.data?.response?.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () => {
@@ -151,12 +154,13 @@ class _PublicActivityState extends State<PublicActivity> {
                                           Border.all(color: Colors.blueAccent),
                                       image: DecorationImage(
                                         image: Helper.getImageByCategory(
-                                            projectSnap.data![index].category!),
+                                            projectSnap.data!.response![index]
+                                                .category!),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                     child: Text(
-                                      projectSnap.data![index].title!,
+                                      projectSnap.data!.response![index].title!,
                                       style: const TextStyle(
                                           color: Colors.blue,
                                           fontWeight: FontWeight.w500,
@@ -169,7 +173,7 @@ class _PublicActivityState extends State<PublicActivity> {
                                       MaterialPageRoute(
                                           builder: (context) => ActivityDetail(
                                               id: projectSnap
-                                                  .data![index].id!)),
+                                                  .data!.response![index].id!)),
                                     );
                                   },
                                 ),
@@ -188,9 +192,20 @@ class _PublicActivityState extends State<PublicActivity> {
                             });
                           },
                         )
-                      : const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                      : projectSnap.connectionState == ConnectionState.done
+                          ? CustomePopup(
+                              title: 'Fail',
+                              message: projectSnap.data!.error!,
+                              buttonName: 'Ok',
+                              onPressed: () => setState(
+                                () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            );
                 },
               ),
             ),
@@ -356,10 +371,9 @@ class _PublicActivityState extends State<PublicActivity> {
                   icon: const Icon(Icons.settings_outlined, color: Colors.blue),
                   onPressed: () {
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Settings()),
-                  );
+                      context,
+                      MaterialPageRoute(builder: (context) => const Settings()),
+                    );
                   }),
             ),
             const Spacer(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
@@ -71,6 +72,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     hour = _now.hour;
   }
 
+  String _errorMessage = "Something went wrong";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -93,8 +96,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           : _condition == Condition.fail
               ? CustomePopup(
                   title: 'Fail',
-                  message: 'Something went wrong',
-                  buttonName: 'Close',
+                  message: _errorMessage,
+                  buttonName: 'Ok',
                   onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
@@ -321,9 +324,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       _phoneNumberController.text,
                                       _currentCapacity,
                                       _category)
-                                  .then((isSuccess) {
-                                setState(() =>
-                                    _condition = isSuccess.conditionParser());
+                                  .then((response) {
+                                setState(() => _condition =
+                                    response.isSuccessful!.conditionParser());
+                                if (response.isSuccessful != true) {
+                                  _errorMessage = response.error!;
+                                }
                               });
                             },
                           ),

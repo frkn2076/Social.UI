@@ -5,6 +5,7 @@ import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_focused_textfield.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
+import 'package:social/http/models/generic_response.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
@@ -93,6 +94,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String? _photo;
   Image? _image;
 
+  String _errorMessage = "Something went wrong";
+
   @override
   Widget build(BuildContext context) {
     return _condition == Condition.success
@@ -104,21 +107,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         : _condition == Condition.fail
             ? CustomePopup(
                 title: 'Fail',
-                message: 'Something went wrong',
+                message: _errorMessage,
                 buttonName: 'Close',
                 onPressed: () => setState(() => _condition = Condition.none))
-            : FutureBuilder<PrivateProfileResponse?>(
+            : FutureBuilder<GenericResponse<PrivateProfileResponse>?>(
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
-                  if (projectSnap.connectionState == ConnectionState.done) {
-                    if (projectSnap.data?.name?.isNotEmpty ?? false) {
-                      _nameController.text = projectSnap.data!.name!;
+                  if (projectSnap.connectionState == ConnectionState.done &&
+                      projectSnap.data!.isSuccessful == true) {
+                    if (projectSnap.data?.response?.name?.isNotEmpty ?? false) {
+                      _nameController.text = projectSnap.data!.response!.name!;
                     }
-                    if (projectSnap.data?.about?.isNotEmpty ?? false) {
-                      _aboutController.text = projectSnap.data!.about!;
+                    if (projectSnap.data?.response?.about?.isNotEmpty ??
+                        false) {
+                      _aboutController.text =
+                          projectSnap.data!.response!.about!;
                     }
-                    if(projectSnap.data?.photo?.isNotEmpty ?? false){
-                      _image = Helper.imageFromBase64String(projectSnap.data!.photo!);
+                    if (projectSnap.data?.response?.photo?.isNotEmpty ??
+                        false) {
+                      _image = Helper.imageFromBase64String(
+                          projectSnap.data!.response!.photo!);
                     }
                     return Container(
                       decoration: customeBackground(),
@@ -198,10 +206,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                             _nameController.text,
                                             _aboutController.text)
                                         .then(
-                                      (isSuccess) {
+                                      (response) {
                                         setState(() {
-                                          _condition =
-                                              isSuccess.conditionParser();
+                                          _condition = response.isSuccessful!
+                                              .conditionParser();
+                                          if (response.isSuccessful != true) {
+                                            _errorMessage = response.error!;
+                                          }
                                         });
                                       },
                                     )
@@ -211,6 +222,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                           )
                         ],
+                      ),
+                    );
+                  } else if (projectSnap.connectionState ==
+                      ConnectionState.done) {
+                    return CustomePopup(
+                      title: 'Fail',
+                      message: projectSnap.data!.error!,
+                      buttonName: 'Ok',
+                      onPressed: () => setState(
+                        () {
+                          Navigator.pop(context);
+                        },
                       ),
                     );
                   } else {

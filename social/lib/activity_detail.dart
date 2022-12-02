@@ -5,6 +5,7 @@ import 'package:social/custome_widgets/custome_info_text.dart';
 import 'package:social/custome_widgets/custome_joiner_textbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/activity_detail_response.dart';
+import 'package:social/http/models/generic_response.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/public_activity.dart';
 import 'package:social/public_profile.dart';
@@ -47,6 +48,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   var _condition = Condition.none;
   var _isJoined = false;
 
+  String _errorMessage = "Something went wrong";
+
   @override
   Widget build(BuildContext context) {
     return _condition == Condition.success
@@ -64,16 +67,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         : _condition == Condition.fail
             ? CustomePopup(
                 title: 'Fail',
-                message: 'Something went wrong',
+                message: _errorMessage,
                 buttonName: 'Close',
                 onPressed: () => setState(() => _condition = Condition.none))
             : Container(
                 decoration: customeBackground(),
                 padding: const EdgeInsets.all(10),
-                child: FutureBuilder<ActivityDetailResponse?>(
+                child: FutureBuilder<GenericResponse<ActivityDetailResponse>>(
                   future: Api().getActivityDetail(widget.id),
                   builder: (context, projectSnap) {
-                    return projectSnap.connectionState == ConnectionState.done
+                    return projectSnap.connectionState ==
+                                ConnectionState.done &&
+                            projectSnap.data?.isSuccessful == true
                         ? ListView(
                             children: <Widget>[
                               Container(
@@ -95,7 +100,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 padding: const EdgeInsets.all(10),
                                 margin: const EdgeInsets.all(15.0),
                                 child: Text(
-                                  projectSnap.data!.title!,
+                                  projectSnap.data!.response!.title!,
                                   style: const TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.w500,
@@ -107,7 +112,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 padding: const EdgeInsets.all(5),
                                 margin: const EdgeInsets.all(15.0),
                                 child: Text(
-                                  projectSnap.data!.detail!,
+                                  projectSnap.data!.response!.detail!,
                                   style: const TextStyle(
                                       color: Colors.blue,
                                       fontWeight: FontWeight.w500,
@@ -117,18 +122,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               CustomeInfoText(
                                   title: "Date:",
                                   text: Helper.formatDateTime(
-                                      projectSnap.data!.date!)),
+                                      projectSnap.data!.response!.date!)),
                               CustomeInfoText(
                                   title: "Location:",
-                                  text: projectSnap.data!.location!),
+                                  text: projectSnap.data!.response!.location!),
                               CustomeInfoText(
                                   title: "PhoneNumber:",
-                                  text: projectSnap.data!.joiners!
+                                  text: projectSnap.data!.response!.joiners!
                                           .map((x) => x.id)
                                           .contains(Holder.userId!)
-                                      ? projectSnap.data!.phoneNumber!
+                                      ? projectSnap.data!.response!.phoneNumber!
                                       : '(xxx)xxx-xx-xx'),
-                              projectSnap.data?.joiners?.isEmpty ?? true
+                              projectSnap.data?.response?.joiners?.isEmpty ??
+                                      true
                                   ? Container()
                                   : Column(
                                       children: [
@@ -147,11 +153,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           padding: const EdgeInsets.all(10),
                                           margin: const EdgeInsets.all(15.0),
                                           child: ListView(
-                                            children:
-                                                projectSnap.data!.joiners!.map(
+                                            children: projectSnap
+                                                .data!.response!.joiners!
+                                                .map(
                                               (joiner) {
                                                 bool isPrivate = joiner.id! ==
-                                                    projectSnap.data!.userId!;
+                                                    projectSnap.data!.response!
+                                                        .userId!;
                                                 if (isPrivate) {
                                                   _isJoined = true;
                                                 }
@@ -202,10 +210,23 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           : TextButton(
                                               child: const Text("Join"),
                                               onPressed: () {
-                                                Api().joinActivity(widget.id).then(
-                                                    (isSuccess) => setState(() =>
-                                                        _condition = isSuccess
-                                                            .conditionParser()));
+                                                Api()
+                                                    .joinActivity(widget.id)
+                                                    .then(
+                                                      (response) => setState(
+                                                        () {
+                                                          _condition = response
+                                                              .isSuccessful!
+                                                              .conditionParser();
+                                                          if (response
+                                                                  .isSuccessful !=
+                                                              true) {
+                                                            _errorMessage =
+                                                                response.error!;
+                                                          }
+                                                        },
+                                                      ),
+                                                    );
                                               },
                                             ),
                                     ),
@@ -214,9 +235,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               ),
                             ],
                           )
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                        : projectSnap.connectionState == ConnectionState.done
+                            ? CustomePopup(
+                                title: 'Fail',
+                                message: projectSnap.data!.error!,
+                                buttonName: 'Ok',
+                                onPressed: () {})
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              );
                   },
                 ),
               );
