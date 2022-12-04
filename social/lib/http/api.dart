@@ -42,6 +42,10 @@ class Api {
           'accessTokenExpireDate',
           _dateFormat.format(DateTime.now()
               .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
+      prefs.setString(
+          'refreshTokenExpireDate',
+          _dateFormat.format(DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return GenericResponse.createSuccessResponse(true);
@@ -60,7 +64,7 @@ class Api {
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
-      
+
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('accessToken', responseBody.accessToken!);
       prefs.setString('refreshToken', responseBody.refreshToken!);
@@ -68,6 +72,10 @@ class Api {
           'accessTokenExpireDate',
           _dateFormat.format(DateTime.now()
               .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
+      prefs.setString(
+          'refreshTokenExpireDate',
+          _dateFormat.format(DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return GenericResponse.createSuccessResponse(true);
@@ -75,13 +83,14 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse<List<AllActivityResponse>>> getActivitiesRandomlyByFilter(
-      DateTime fromDate,
-      DateTime toDate,
-      int fromCapacity,
-      int toCapacity,
-      String? key,
-      List<String> categories) async {
+  Future<GenericResponse<List<AllActivityResponse>>>
+      getActivitiesRandomlyByFilter(
+          DateTime fromDate,
+          DateTime toDate,
+          int fromCapacity,
+          int toCapacity,
+          String? key,
+          List<String> categories) async {
     await _checkAndUpdateTokens();
 
     // to set userId, will be removed later
@@ -107,13 +116,15 @@ class Api {
           .map<AllActivityResponse>(
               (data) => AllActivityResponse.fromJson(data))
           .toList();
-        
-      return GenericResponse.createSuccessResponse<List<AllActivityResponse>>(decodedResponse);
+
+      return GenericResponse.createSuccessResponse<List<AllActivityResponse>>(
+          decodedResponse);
     }
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse<ActivityDetailResponse>> getActivityDetail(int activityId) async {
+  Future<GenericResponse<ActivityDetailResponse>> getActivityDetail(
+      int activityId) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -187,7 +198,8 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse<List<AllActivityResponse>>> getJoinedActivities(int userId) async {
+  Future<GenericResponse<List<AllActivityResponse>>> getJoinedActivities(
+      int userId) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -205,8 +217,14 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse> createActivity(String? title, String? detail, String? location,
-      String? date, String? phoneNumber, int capacity, String? category) async {
+  Future<GenericResponse> createActivity(
+      String? title,
+      String? detail,
+      String? location,
+      String? date,
+      String? phoneNumber,
+      int capacity,
+      String? category) async {
     await _checkAndUpdateTokens();
 
     final body = jsonEncode(<String, Object?>{
@@ -228,7 +246,8 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse<List<AllActivityResponse>>> getOwnerActivities(int id) async {
+  Future<GenericResponse<List<AllActivityResponse>>> getOwnerActivities(
+      int id) async {
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}activity/owner/$id'),
@@ -256,9 +275,17 @@ class Api {
     var now = DateTime.now();
     final prefs = await SharedPreferences.getInstance();
     var accessTokenExpireDate = prefs.getString('accessTokenExpireDate');
-    var expireDate = _dateFormat.parse(accessTokenExpireDate!);
-    if (now.compareTo(expireDate) >= 0) {
+    var refreshTokenExpireDate = prefs.getString('refreshTokenExpireDate');
+    var accessExpireDate = _dateFormat.parse(accessTokenExpireDate!);
+    var refreshExpireDate = _dateFormat.parse(refreshTokenExpireDate!);
+    if (now.compareTo(accessExpireDate) >= 0 &&
+        now.compareTo(refreshExpireDate) < 0) {
       await _refreshTokenCaller();
+    } else if (now.compareTo(refreshExpireDate) >= 0) {
+      throw Exception("TokenExpired");
+    } else if (!_fixedHeaders.containsKey("Authorization")) {
+      var accessToken = prefs.getString('accessToken');
+      _fixedHeaders["Authorization"] = "Bearer $accessToken";
     }
   }
 
@@ -274,13 +301,17 @@ class Api {
 
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
-      
+
       prefs.setString('accessToken', responseBody.accessToken!);
       prefs.setString('refreshToken', responseBody.refreshToken!);
       prefs.setString(
           'accessTokenExpireDate',
           _dateFormat.format(DateTime.now()
               .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
+      prefs.setString(
+          'refreshTokenExpireDate',
+          _dateFormat.format(DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return true;

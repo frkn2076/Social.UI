@@ -104,10 +104,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   height: Holder.buttonHeight,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      //this enable feedback helps to turn off the sound on click
+                      enableFeedback: false,
+                    ),
                     child: const Text('Login'),
                     onPressed: () {
-                      Api().login(
-                          userNameController.text, passwordController.text).then(
+                      Api()
+                          .login(
+                              userNameController.text, passwordController.text)
+                          .then(
                         (response) {
                           setState(
                             () {
@@ -118,8 +124,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Dashboard()),
+                                      builder: (context) => const Dashboard()),
                                 );
                               } else {
                                 _isAlertDialogOn = true;

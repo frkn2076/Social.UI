@@ -300,6 +300,10 @@ class _DashboardState extends State<Dashboard> {
                       Container(
                         padding: const EdgeInsets.only(top: 20, left: 20),
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            //this enable feedback helps to turn off the sound on click
+                            enableFeedback: false,
+                          ),
                           child: const Text("Reset"),
                           onPressed: () {
                             innerSetState(() {
@@ -319,6 +323,10 @@ class _DashboardState extends State<Dashboard> {
                       Container(
                         padding: const EdgeInsets.only(top: 20, right: 40),
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            //this enable feedback helps to turn off the sound on click
+                            enableFeedback: false,
+                          ),
                           child: const Text("Search"),
                           onPressed: () {
                             setState(() {

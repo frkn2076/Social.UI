@@ -97,6 +97,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       height: Holder.buttonHeight,
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          //this enable feedback helps to turn off the sound on click
+                          enableFeedback: false,
+                        ),
                         child: const Text('Sign in'),
                         onPressed: () {
                           Api()

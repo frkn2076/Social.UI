@@ -310,6 +310,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              //this enable feedback helps to turn off the sound on click
+                              enableFeedback: false,
+                            ),
                             child: const Text("Save"),
                             onPressed: () {
                               var dateInput = DateFormat('yyyy-MM-ddTHH:mm')

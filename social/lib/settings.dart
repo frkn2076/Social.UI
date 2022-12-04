@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/login.dart';
+import 'package:social/utils/disk_resources.dart';
+import 'package:social/utils/holder.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    var isMuteOn = Holder.isMuteOn;
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
@@ -82,6 +85,35 @@ class _SettingsState extends State<Settings> {
                                   child: Text('English'),
                                 )
                               ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.15,
+                          ),
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              labelText: 'Mute',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                  DiskResources.getBool("isMuteOn") == true ? Icons.volume_up : Icons.volume_off,
+                                  color: Colors.blue),
+                              onPressed: () =>
+                                  setState(() => DiskResources.addOrUpdateBool("isMuteOn", !DiskResources.getBool("isMuteOn"))),
                             ),
                           ),
                         ),
