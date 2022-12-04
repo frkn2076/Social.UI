@@ -364,15 +364,6 @@ class _DashboardState extends State<Dashboard> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Container(
-            //   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-            //   child: RotatedBox(
-            //     quarterTurns: 2,
-            //     child: IconButton(
-            //         icon: const Icon(Icons.logout_outlined, color: Colors.blue),
-            //         onPressed: () => setState(() => _showPopupMessage = true)),
-            //   ),
-            // ),
             Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: IconButton(
