@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/http/api.dart';
 import 'package:social/login.dart';
-import 'package:social/public_activity.dart';
+import 'package:social/dashboard.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/utils/condition.dart';
@@ -114,7 +114,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const PublicActivity()),
+                                              const Dashboard()),
                                     );
                                   } else {
                                     _condition = Condition.fail;

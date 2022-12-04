@@ -14,14 +14,14 @@ import 'package:social/register.dart';
 import 'package:social/settings.dart';
 import 'package:social/utils/helper.dart';
 
-class PublicActivity extends StatefulWidget {
-  const PublicActivity({Key? key}) : super(key: key);
+class Dashboard extends StatefulWidget {
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<PublicActivity> createState() => _PublicActivityState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _PublicActivityState extends State<PublicActivity> {
+class _DashboardState extends State<Dashboard> {
   late Future<GenericResponse<List<AllActivityResponse>>> _activities;
   late DateTime _now;
   late DateTime _fromDateFilter;

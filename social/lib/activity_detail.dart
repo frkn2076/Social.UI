@@ -7,7 +7,7 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/generic_response.dart';
 import 'package:social/private_profile.dart';
-import 'package:social/public_activity.dart';
+import 'package:social/dashboard.dart';
 import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
@@ -61,7 +61,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               setState(() => _condition = Condition.none);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const PublicActivity()),
+                MaterialPageRoute(builder: (context) => const Dashboard()),
               );
             })
         : _condition == Condition.fail

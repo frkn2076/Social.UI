@@ -4,7 +4,7 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/http/api.dart';
-import 'public_activity.dart';
+import 'dashboard.dart';
 import 'package:social/register.dart';
 
 class Login extends StatelessWidget {
@@ -119,7 +119,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const PublicActivity()),
+                                          const Dashboard()),
                                 );
                               } else {
                                 _isAlertDialogOn = true;
