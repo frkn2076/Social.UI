@@ -16,6 +16,9 @@ class CustomeFocusedTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(controller?.text.isEmpty ?? true){
+      controller!.text = labelText;
+    }
     return Container(
       padding: padding ?? const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: TextField(
