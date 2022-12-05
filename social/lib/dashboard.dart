@@ -33,12 +33,19 @@ class _DashboardState extends State<Dashboard> {
   bool _searchBoolean = false;
   bool _showPopupMessage = false;
 
-  bool _isPicnic = true;
-  bool _isCinema = true;
-  bool _isSport = true;
-  bool _isOther = true;
+  // bool _isPicnic = true;
+  // bool _isCinema = true;
+  // bool _isSport = true;
+  // bool _isOther = true;
 
-  final List<String> _categories = ['picnic', 'cinema', 'sport', 'other'];
+  // final List<String> _categories = ['picnic', 'cinema', 'sport', 'other'];
+
+  final Map<String, bool> _categories = <String, bool>{
+    'picnic': true,
+    'cinema': true,
+    'sport': true,
+    'other': true
+  };
 
   @override
   void initState() {
@@ -47,13 +54,7 @@ class _DashboardState extends State<Dashboard> {
     _now = DateTime.now();
     _fromDateFilter = _now;
     _toDateFilter = DateTime(_now.year + 2, 1, 1);
-    _activities = Api().getActivitiesRandomlyByFilter(
-        _fromDateFilter,
-        _toDateFilter,
-        _capacityRange.start.round(),
-        _capacityRange.end.round(),
-        _searchText,
-        _categories);
+    _activities = _getActivities();
   }
 
   TextEditingController nameController = TextEditingController();
@@ -70,13 +71,7 @@ class _DashboardState extends State<Dashboard> {
                 onChanged: (String searchText) {
                   setState(() {
                     _searchText = searchText;
-                    _activities = Api().getActivitiesRandomlyByFilter(
-                        _fromDateFilter,
-                        _toDateFilter,
-                        _capacityRange.start.round(),
-                        _capacityRange.end.round(),
-                        _searchText,
-                        _categories);
+                    _activities = _getActivities();
                   });
                 },
               ),
@@ -182,13 +177,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           onRefresh: () async {
                             setState(() {
-                              _activities = Api().getActivitiesRandomlyByFilter(
-                                  _fromDateFilter,
-                                  _toDateFilter,
-                                  _capacityRange.start.round(),
-                                  _capacityRange.end.round(),
-                                  _searchText,
-                                  _categories);
+                              _activities = _getActivities();
                             });
                           },
                         )
@@ -310,11 +299,7 @@ class _DashboardState extends State<Dashboard> {
                               _capacityRange = const RangeValues(2, 100);
                               _fromDateFilter = _now;
                               _toDateFilter = DateTime(_now.year + 2, 1, 1);
-
-                              _isPicnic = true;
-                              _isCinema = true;
-                              _isSport = true;
-                              _isOther = true;
+                              _resetCategories();
                             });
                           },
                         ),
@@ -327,16 +312,10 @@ class _DashboardState extends State<Dashboard> {
                             //this enable feedback helps to turn off the sound on click
                             enableFeedback: false,
                           ),
-                          child: const Text("Search"),
+                          child: const Text('Search'),
                           onPressed: () {
                             setState(() {
-                              _activities = Api().getActivitiesRandomlyByFilter(
-                                  _fromDateFilter,
-                                  _toDateFilter,
-                                  _capacityRange.start.round(),
-                                  _capacityRange.end.round(),
-                                  _searchText,
-                                  _categories);
+                              _activities = _getActivities();
                               Navigator.pop(context);
                             });
                           },
@@ -413,149 +392,78 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         child: DropdownButton<String>(
-          key: _dropdownKey,
-          dropdownColor: const Color.fromARGB(255, 167, 143, 234),
-          hint: const Text('Pick a category'),
-          isExpanded: true,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
-          ),
-          onChanged: (String? value) {},
-          items: [
-            DropdownMenuItem(
-              value: 'picnic',
-              child: Row(
-                children: [
-                  const Text('picnic'),
-                  const Spacer(),
-                  StatefulBuilder(
-                    builder: (builderContext, setDropdownState) {
-                      return Checkbox(
-                        onChanged: (bool? value) => setDropdownState(
-                          () {
-                            _isPicnic = value!;
-                            if (_isPicnic && !_categories.contains('picnic')) {
-                              _categories.add('picnic');
-                            }
-
-                            if (!_isPicnic && _categories.contains('picnic')) {
-                              _categories.remove('picnic');
-                            }
-                          },
-                        ),
-                        value: _isPicnic,
-                      );
-                    },
-                  )
-                ],
-              ),
+            key: _dropdownKey,
+            dropdownColor: const Color.fromARGB(255, 167, 143, 234),
+            hint: const Text('Pick a category'),
+            isExpanded: true,
+            style: const TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
             ),
-            DropdownMenuItem<String>(
-              value: 'cinema',
-              child: Row(
-                children: [
-                  const Text('cinema'),
-                  const Spacer(),
-                  StatefulBuilder(
-                    builder: (builderContext, setDropdownState) {
-                      return Checkbox(
-                        onChanged: (bool? value) => setDropdownState(
-                          () {
-                            _isCinema = value!;
-                            if (_isCinema && !_categories.contains('cinema')) {
-                              _categories.add('cinema');
-                            }
-
-                            if (!_isCinema && _categories.contains('cinema')) {
-                              _categories.remove('cinema');
-                            }
-                          },
-                        ),
-                        value: _isCinema,
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
-            DropdownMenuItem<String>(
-              value: 'sport',
-              child: Row(
-                children: [
-                  const Text('sport'),
-                  const Spacer(),
-                  StatefulBuilder(
-                    builder: (builderContext, setDropdownState) {
-                      return Checkbox(
-                        onChanged: (bool? value) => setDropdownState(
-                          () {
-                            _isSport = value!;
-                            if (_isSport && !_categories.contains('sport')) {
-                              _categories.add('sport');
-                            }
-
-                            if (!_isSport && _categories.contains('sport')) {
-                              _categories.remove('sport');
-                            }
-                          },
-                        ),
-                        value: _isSport,
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
-            DropdownMenuItem<String>(
-              value: 'other',
-              child: Row(
-                children: [
-                  const Text('other'),
-                  const Spacer(),
-                  StatefulBuilder(
-                    builder: (builderContext, setDropdownState) {
-                      return Checkbox(
-                        onChanged: (bool? value) => setDropdownState(
-                          () {
-                            _isOther = value!;
-                            if (_isOther && !_categories.contains('other')) {
-                              _categories.add('other');
-                            }
-
-                            if (!_isOther && _categories.contains('other')) {
-                              _categories.remove('other');
-                            }
-                          },
-                        ),
-                        value: _isOther,
-                      );
-                    },
-                  )
-                ],
-              ),
-            ),
-            DropdownMenuItem(
-              value: 'a',
-              child: Row(
-                children: [
-                  const Spacer(),
-                  ElevatedButton(
-                    child: const Text('Ok'),
-                    onPressed: () {
-                      setState(() {
-                        Navigator.pop(_dropdownKey.currentContext!);
-                      });
-                    },
+            onChanged: (String? value) {},
+            items: _categories.keys.map((categoryKey) {
+              return DropdownMenuItem(
+                value: categoryKey,
+                child: Row(
+                  children: [
+                    Text(categoryKey),
+                    const Spacer(),
+                    StatefulBuilder(
+                      builder: (builderContext, setDropdownState) {
+                        return Checkbox(
+                          onChanged: (bool? value) => setDropdownState(
+                            () {
+                              _categories[categoryKey] =
+                                  !(_categories[categoryKey] == true);
+                            },
+                          ),
+                          value: _categories[categoryKey],
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            }).toList()
+              ..add(
+                DropdownMenuItem(
+                  value: '',
+                  child: Row(
+                    children: [
+                      const Spacer(),
+                      ElevatedButton(
+                        child: const Text('Ok'),
+                        onPressed: () {
+                          setState(() {
+                            Navigator.pop(_dropdownKey.currentContext!);
+                          });
+                        },
+                      ),
+                      const Spacer()
+                    ],
                   ),
-                  const Spacer()
-                ],
-              ),
-            )
-          ],
-        ),
+                ),
+              )),
       ),
     );
+  }
+
+  Future<GenericResponse<List<AllActivityResponse>>> _getActivities() {
+    return Api().getActivitiesRandomlyByFilter(
+        _fromDateFilter,
+        _toDateFilter,
+        _capacityRange.start.round(),
+        _capacityRange.end.round(),
+        _searchText,
+        _categories.keys.where((key) => _categories[key] == true).toList());
+  }
+
+  void _resetCategories() {
+    for (var category in _categories.entries) {
+      if (category.value == false) {
+        _categories[category.key] = true;
+      }
+    }
   }
 }
