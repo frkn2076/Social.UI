@@ -8,6 +8,7 @@ import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
 
 import 'package:social/register.dart';
+import 'package:social/utils/helper.dart';
 
 class JoinedActivity extends StatelessWidget {
   final int id;
@@ -68,8 +69,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           margin: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.blueAccent),
-                            image: const DecorationImage(
-                              image: AssetImage("assets/images/ada.jpeg"),
+                            image: DecorationImage(
+                              image: Helper.getImageByCategory(
+                                  projectSnap.data!.response![index].category!),
                               fit: BoxFit.cover,
                             ),
                           ),
