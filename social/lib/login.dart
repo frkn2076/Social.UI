@@ -14,30 +14,27 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _title,
-            style: TextStyle(fontSize: Holder.pageFontSize),
-          ),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _title,
+          style: TextStyle(fontSize: Holder.pageFontSize),
         ),
-        body: const MyStatefulWidget(),
+        centerTitle: true,
       ),
+      body: const LoginStatefulWidget(),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class LoginStatefulWidget extends StatefulWidget {
+  const LoginStatefulWidget({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<LoginStatefulWidget> createState() => _LoginStatefulWidgetState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
   TextEditingController userNameController =
       TextEditingController(text: Holder.userName);
   TextEditingController passwordController =

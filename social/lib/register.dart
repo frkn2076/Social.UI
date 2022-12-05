@@ -9,35 +9,32 @@ import 'package:social/utils/condition.dart';
 
 class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
+
   static const String _title = 'Social';
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _title,
-            style: TextStyle(fontSize: Holder.pageFontSize),
-          ),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _title,
+          style: TextStyle(fontSize: Holder.pageFontSize),
         ),
-        body: const MyStatefulWidget(),
+        centerTitle: true,
       ),
+      body: const RegisterStatefulWidget(),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class RegisterStatefulWidget extends StatefulWidget {
+  const RegisterStatefulWidget({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<RegisterStatefulWidget> createState() => _RegisterStatefulWidgetState();
 }
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
   TextEditingController userNameController =
       TextEditingController(text: Holder.userName);
   TextEditingController passwordController =

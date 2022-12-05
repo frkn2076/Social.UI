@@ -3,7 +3,6 @@ import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/login.dart';
 import 'package:social/utils/disk_resources.dart';
-import 'package:social/utils/holder.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -17,7 +16,6 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    var isMuteOn = Holder.isMuteOn;
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
@@ -42,8 +40,13 @@ class _SettingsState extends State<Settings> {
                 ),
                 TextButton(
                   child: const Text('Yes'),
-                  onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Login())),
+                  onPressed: () {
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
                 )
               ],
             )
@@ -110,10 +113,13 @@ class _SettingsState extends State<Settings> {
                             ),
                             child: IconButton(
                               icon: Icon(
-                                  DiskResources.getBool("isMuteOn") == true ? Icons.volume_up : Icons.volume_off,
+                                  DiskResources.getBool("isMuteOn") == true
+                                      ? Icons.volume_up
+                                      : Icons.volume_off,
                                   color: Colors.blue),
-                              onPressed: () =>
-                                  setState(() => DiskResources.addOrUpdateBool("isMuteOn", !DiskResources.getBool("isMuteOn"))),
+                              onPressed: () => setState(() =>
+                                  DiskResources.setOrUpdateBool("isMuteOn",
+                                      !DiskResources.getBool("isMuteOn"))),
                             ),
                           ),
                         ),
@@ -142,7 +148,10 @@ class _SettingsState extends State<Settings> {
                 quarterTurns: 2,
                 child: IconButton(
                     icon: const Icon(Icons.logout_outlined, color: Colors.blue),
-                    onPressed: () => setState(() => _showPopupMessage = true)),
+                    onPressed: () => setState(() {
+                      DiskResources.removeAll();
+                      _showPopupMessage = true;
+                    } )),
               ),
             ),
             const Spacer(),

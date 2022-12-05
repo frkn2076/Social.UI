@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social/http/models/generic_response.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/auth_response.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/holder.dart';
 
 class Api {
@@ -35,17 +35,17 @@ class Api {
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
 
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('accessToken', responseBody.accessToken!);
-      prefs.setString('refreshToken', responseBody.refreshToken!);
-      prefs.setString(
+      DiskResources.setOrUpdateString('accessToken', responseBody.accessToken!);
+      DiskResources.setOrUpdateString(
+          'refreshToken', responseBody.refreshToken!);
+      DiskResources.setOrUpdateDateTime(
           'accessTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
-      prefs.setString(
+          DateTime.now()
+              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1)));
+      DiskResources.setOrUpdateDateTime(
           'refreshTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
+          DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return GenericResponse.createSuccessResponse(true);
@@ -65,17 +65,17 @@ class Api {
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
 
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('accessToken', responseBody.accessToken!);
-      prefs.setString('refreshToken', responseBody.refreshToken!);
-      prefs.setString(
+      DiskResources.setOrUpdateString('accessToken', responseBody.accessToken!);
+      DiskResources.setOrUpdateString(
+          'refreshToken', responseBody.refreshToken!);
+      DiskResources.setOrUpdateDateTime(
           'accessTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
-      prefs.setString(
+          DateTime.now()
+              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1)));
+      DiskResources.setOrUpdateDateTime(
           'refreshTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
+          DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return GenericResponse.createSuccessResponse(true);
@@ -93,7 +93,7 @@ class Api {
           List<String> categories) async {
     await _checkAndUpdateTokens();
 
-    // to set userId, will be removed later
+    // to set userId and userName
     await getPrivateProfile();
 
     final body = jsonEncode(<String, Object?>{
@@ -163,6 +163,7 @@ class Api {
       var responseBody =
           PrivateProfileResponse.fromJson(jsonDecode(response.body));
       Holder.userId = responseBody.id;
+      Holder.userName = responseBody.userName;
       return GenericResponse.createSuccessResponse(responseBody);
     }
     return GenericResponse.createFailResponse(response.body);
@@ -273,25 +274,21 @@ class Api {
 
   Future _checkAndUpdateTokens() async {
     var now = DateTime.now();
-    final prefs = await SharedPreferences.getInstance();
-    var accessTokenExpireDate = prefs.getString('accessTokenExpireDate');
-    var refreshTokenExpireDate = prefs.getString('refreshTokenExpireDate');
-    var accessExpireDate = _dateFormat.parse(accessTokenExpireDate!);
-    var refreshExpireDate = _dateFormat.parse(refreshTokenExpireDate!);
-    if (now.compareTo(accessExpireDate) >= 0 &&
-        now.compareTo(refreshExpireDate) < 0) {
+    var accessExpireDate = DiskResources.getDateTime('accessTokenExpireDate');
+    var refreshExpireDate = DiskResources.getDateTime('refreshTokenExpireDate');
+    if (now.compareTo(accessExpireDate!) >= 0 &&
+        now.compareTo(refreshExpireDate!) < 0) {
       await _refreshTokenCaller();
-    } else if (now.compareTo(refreshExpireDate) >= 0) {
+    } else if (now.compareTo(refreshExpireDate!) >= 0) {
       throw Exception("TokenExpired");
     } else if (!_fixedHeaders.containsKey("Authorization")) {
-      var accessToken = prefs.getString('accessToken');
+      var accessToken = DiskResources.getString('accessToken');
       _fixedHeaders["Authorization"] = "Bearer $accessToken";
     }
   }
 
   Future<bool> _refreshTokenCaller() async {
-    final prefs = await SharedPreferences.getInstance();
-    var refreshToken = prefs.getString('refreshToken');
+    var refreshToken = DiskResources.getString('refreshToken');
 
     _fixedHeaders["Authorization"] = "Bearer $refreshToken";
 
@@ -302,16 +299,17 @@ class Api {
     if (response.statusCode == 200) {
       var responseBody = AuthResponse.fromJson(jsonDecode(response.body));
 
-      prefs.setString('accessToken', responseBody.accessToken!);
-      prefs.setString('refreshToken', responseBody.refreshToken!);
-      prefs.setString(
+      DiskResources.setOrUpdateString('accessToken', responseBody.accessToken!);
+      DiskResources.setOrUpdateString(
+          'refreshToken', responseBody.refreshToken!);
+      DiskResources.setOrUpdateDateTime(
           'accessTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1))));
-      prefs.setString(
+          DateTime.now()
+              .add(Duration(hours: responseBody.accessTokenExpireDate! - 1)));
+      DiskResources.setOrUpdateDateTime(
           'refreshTokenExpireDate',
-          _dateFormat.format(DateTime.now()
-              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1))));
+          DateTime.now()
+              .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
       return true;
