@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/custome_widgets/custome_decoration.dart';
 import 'package:social/custome_widgets/custome_info_text.dart';
 import 'package:social/custome_widgets/custome_joiner_textbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
@@ -82,19 +83,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         ? ListView(
                             children: <Widget>[
                               Container(
-                                height: 120,
-                                width: 100,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(15.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  image: const DecorationImage(
-                                    image: AssetImage("assets/images/ada.jpeg"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                                  height: 120,
+                                  width: 100,
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.all(15.0),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.blueAccent),
+                                    image: DecorationImage(
+                                      image: Helper.getImageByCategory(
+                                          projectSnap
+                                              .data!.response!.category!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
                               Container(
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(10),
@@ -188,8 +191,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               Container(
                                 alignment: Alignment.topCenter,
                                 padding: const EdgeInsets.all(5),
-                                margin: const EdgeInsets.fromLTRB(
-                                    50.0, 20.0, 50.0, 0),
+                                margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -198,14 +200,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         border: Border.all(color: Colors.black),
                                       ),
                                       child: _isJoined
-                                          ? const Tooltip(
-                                              message:
-                                                  'You already joined the activity',
-                                              child: Icon(
-                                                Icons.done_outline_outlined,
-                                                color: Colors.green,
-                                                size: 50,
-                                              ),
+                                          ? Container(
+                                              padding: const EdgeInsets.all(5),
+                                              child: const Text(
+                                                  'You already joined the activity'),
                                             )
                                           : TextButton(
                                               child: const Text("Join"),
