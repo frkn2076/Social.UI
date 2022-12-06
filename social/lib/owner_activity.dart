@@ -8,6 +8,7 @@ import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
 import 'package:social/register.dart';
 import 'package:social/utils/helper.dart';
+import 'package:social/utils/logic_support.dart';
 
 class OwnerActivity extends StatelessWidget {
   final int id;
@@ -46,8 +47,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
         future: Api().getOwnerActivities(widget.id),
         builder: (context, projectSnap) {
-          return projectSnap.connectionState == ConnectionState.done &&
-                  projectSnap.data?.isSuccessful == true
+          return LogicSupport.isSuccessToProceed(projectSnap)
               ? ListView.builder(
                   itemCount: projectSnap.data?.response?.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -93,7 +93,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     );
                   },
                 )
-              : projectSnap.connectionState == ConnectionState.done
+              : LogicSupport.isFailToProceed(projectSnap)
                   ? CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,

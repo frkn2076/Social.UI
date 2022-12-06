@@ -42,7 +42,7 @@ class _SettingsState extends State<Settings> {
                 TextButton(
                   child: const Text('Yes'),
                   onPressed: () {
-
+                    DiskResources.removeAll();
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const Login()),
@@ -148,11 +148,9 @@ class _SettingsState extends State<Settings> {
               child: RotatedBox(
                 quarterTurns: 2,
                 child: IconButton(
-                    icon: const Icon(Icons.logout_outlined, color: Colors.blue),
-                    onPressed: () => setState(() {
-                      DiskResources.removeAll();
-                      _showPopupMessage = true;
-                    } )),
+                  icon: const Icon(Icons.logout_outlined, color: Colors.blue),
+                  onPressed: () => setState(() => _showPopupMessage = true),
+                ),
               ),
             ),
             const Spacer(),

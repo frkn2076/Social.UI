@@ -17,6 +17,7 @@ import 'package:social/register.dart';
 import 'package:social/settings.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/localization_resources.dart';
+import 'package:social/utils/logic_support.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -105,8 +106,7 @@ class _DashboardState extends State<Dashboard> {
           child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
             future: _activities,
             builder: (context, projectSnap) {
-              return projectSnap.connectionState == ConnectionState.done &&
-                      projectSnap.data?.isSuccessful == true
+              return LogicSupport.isSuccessToProceed(projectSnap)
                   ? RefreshIndicator(
                       child: ListView.builder(
                         itemCount: projectSnap.data?.response?.length,
@@ -159,7 +159,7 @@ class _DashboardState extends State<Dashboard> {
                         });
                       },
                     )
-                  : projectSnap.connectionState == ConnectionState.done
+                  : LogicSupport.isFailToProceed(projectSnap)
                       ? CustomePopup(
                           title: 'Fail',
                           message: projectSnap.data!.error!,

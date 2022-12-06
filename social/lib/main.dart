@@ -12,7 +12,7 @@ void main() async {
     HttpOverrides.global = MyHttpOverrides(); // for api call certicifications
     initializeDateFormatting(); // for global localizations of datetime formats
     await DiskResources.init();
-
+    
     return runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,

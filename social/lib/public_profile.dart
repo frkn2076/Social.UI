@@ -10,6 +10,7 @@ import 'package:social/joined_activity.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
+import 'package:social/utils/logic_support.dart';
 
 class PublicProfile extends StatelessWidget {
   final int id;
@@ -92,8 +93,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return FutureBuilder<GenericResponse<PrivateProfileResponse>>(
       future: Api().getProfileById(widget.id),
       builder: (context, projectSnap) {
-        if (projectSnap.connectionState == ConnectionState.done &&
-            projectSnap.data?.isSuccessful == true) {
+        if (LogicSupport.isSuccessToProceed(projectSnap)) {
           if (projectSnap.data?.response?.photo?.isNotEmpty ?? false) {
             _image = Helper.imageFromBase64String(
                 projectSnap.data!.response!.photo!);
@@ -139,7 +139,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ],
             ),
           );
-        } else if (projectSnap.connectionState == ConnectionState.done) {
+        } else if (LogicSupport.isFailToProceed(projectSnap)) {
           return CustomePopup(
             title: 'Fail',
             message: projectSnap.data!.error!,

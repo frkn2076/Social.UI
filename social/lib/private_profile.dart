@@ -15,6 +15,7 @@ import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/utils/localization_resources.dart';
+import 'package:social/utils/logic_support.dart';
 
 class PrivateProfile extends StatelessWidget {
   const PrivateProfile({Key? key}) : super(key: key);
@@ -109,11 +110,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 title: 'Fail',
                 message: _errorMessage,
                 onPressed: () => setState(() => _condition = Condition.none))
-            : FutureBuilder<GenericResponse<PrivateProfileResponse>?>(
+            : FutureBuilder<GenericResponse<PrivateProfileResponse>>(
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
-                  if (projectSnap.connectionState == ConnectionState.done &&
-                      projectSnap.data!.isSuccessful == true) {
+                  if (LogicSupport.isSuccessToProceed(projectSnap)) {
                     if (projectSnap.data?.response?.name?.isNotEmpty ?? false) {
                       _nameController.text = projectSnap.data!.response!.name!;
                     }
@@ -227,8 +227,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         ],
                       ),
                     );
-                  } else if (projectSnap.connectionState ==
-                      ConnectionState.done) {
+                  } else if (LogicSupport.isFailToProceed(projectSnap)) {
                     return CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,
