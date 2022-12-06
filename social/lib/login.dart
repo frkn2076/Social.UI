@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
@@ -43,118 +46,127 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: customeBackground(),
-      padding: const EdgeInsets.all(10),
-      child: _isAlertDialogOn
-          ? CustomePopup(
-              title: LocalizationResources.wrongCredentials,
-              message: _errorMessage,
-              onPressed: () => setState(() => _isAlertDialogOn = false))
-          : ListView(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(fontSize: Holder.titleFontSize),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: userNameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'UserName',
+    return WillPopScope(
+      onWillPop: () async {
+        if (Platform.isAndroid) {
+          SystemNavigator.pop();
+        }
+        return false;
+      },
+      child: Container(
+        decoration: customeBackground(),
+        padding: const EdgeInsets.all(10),
+        child: _isAlertDialogOn
+            ? CustomePopup(
+                title: LocalizationResources.wrongCredentials,
+                message: _errorMessage,
+                onPressed: () => setState(() => _isAlertDialogOn = false))
+            : ListView(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontSize: Holder.titleFontSize),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ForgotPassword(),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: userNameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'UserName',
                       ),
-                    );
-                  },
-                  child: const Text(
-                    'Forgot Password',
-                  ),
-                ),
-                Container(
-                  height: Holder.buttonHeight,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      //this enable feedback helps to turn off the sound on click
-                      enableFeedback: false,
                     ),
-                    child: const Text('Login'),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: TextField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                      ),
+                    ),
+                  ),
+                  TextButton(
                     onPressed: () {
-                      Api()
-                          .login(
-                              userNameController.text, passwordController.text)
-                          .then(
-                        (response) {
-                          setState(
-                            () {
-                              if (response.isSuccessful == true) {
-                                _isAlertDialogOn = false;
-                                Holder.userName = userNameController.text;
-                                Holder.password = passwordController.text;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Dashboard()),
-                                );
-                              } else {
-                                _isAlertDialogOn = true;
-                                _errorMessage = response.error!;
-                              }
-                            },
-                          );
-                        },
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPassword(),
+                        ),
                       );
                     },
+                    child: const Text(
+                      'Forgot Password',
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(LocalizationResources.deosntHaveAnAccount),
-                    TextButton(
-                      child: Text(
-                        'Sign in',
-                        style: TextStyle(fontSize: Holder.titleFontSize),
+                  Container(
+                    height: Holder.buttonHeight,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        //this enable feedback helps to turn off the sound on click
+                        enableFeedback: false,
                       ),
+                      child: const Text('Login'),
                       onPressed: () {
-                        Holder.userName = userNameController.text;
-                        Holder.password = passwordController.text;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Register()),
+                        Api()
+                            .login(userNameController.text,
+                                passwordController.text)
+                            .then(
+                          (response) {
+                            setState(
+                              () {
+                                if (response.isSuccessful == true) {
+                                  _isAlertDialogOn = false;
+                                  Holder.userName = userNameController.text;
+                                  Holder.password = passwordController.text;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Dashboard()),
+                                  );
+                                } else {
+                                  _isAlertDialogOn = true;
+                                  _errorMessage = response.error!;
+                                }
+                              },
+                            );
+                          },
                         );
                       },
-                    )
-                  ],
-                ),
-              ],
-            ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(LocalizationResources.deosntHaveAnAccount),
+                      TextButton(
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(fontSize: Holder.titleFontSize),
+                        ),
+                        onPressed: () {
+                          Holder.userName = userNameController.text;
+                          Holder.password = passwordController.text;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Register()),
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
