@@ -4,20 +4,19 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/localization_resources.dart';
 import 'dashboard.dart';
 import 'package:social/register.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
 
-  static const String _title = 'Social';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _title,
+          'Social',
           style: TextStyle(fontSize: Holder.pageFontSize),
         ),
         centerTitle: true,
@@ -40,7 +39,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
   TextEditingController passwordController =
       TextEditingController(text: Holder.password);
   bool _isAlertDialogOn = false;
-  String _errorMessage = "Something went wrong";
+  String _errorMessage = LocalizationResources.somethingWentWrongError;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +48,8 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
       padding: const EdgeInsets.all(10),
       child: _isAlertDialogOn
           ? CustomePopup(
-              title: 'Wrong credentials',
+              title: LocalizationResources.wrongCredentials,
               message: _errorMessage,
-              buttonName: 'Close',
               onPressed: () => setState(() => _isAlertDialogOn = false))
           : ListView(
               children: <Widget>[
@@ -69,7 +67,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     controller: userNameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      labelText: 'UserName',
                     ),
                   ),
                 ),
@@ -137,7 +135,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Text('Does not have account?'),
+                    Text(LocalizationResources.deosntHaveAnAccount),
                     TextButton(
                       child: Text(
                         'Sign in',

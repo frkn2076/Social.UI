@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
-import 'package:social/custome_widgets/custome_decoration.dart';
 import 'package:social/custome_widgets/custome_info_text.dart';
 import 'package:social/custome_widgets/custome_joiner_textbutton.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
@@ -14,12 +13,11 @@ import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/holder.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class ActivityDetail extends StatelessWidget {
   final int id;
   const ActivityDetail({Key? key, required this.id}) : super(key: key);
-
-  static const String _title = 'Social';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class ActivityDetail extends StatelessWidget {
       appBar: AppBar(
         leading: const CustomeBackButton(),
         title: const Text(
-          _title,
+          'Detail',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
@@ -49,15 +47,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   var _condition = Condition.none;
   var _isJoined = false;
 
-  String _errorMessage = "Something went wrong";
+  String _errorMessage = LocalizationResources.somethingWentWrongError;
 
   @override
   Widget build(BuildContext context) {
     return _condition == Condition.success
         ? CustomePopup(
             title: 'Success',
-            message: 'You have joined activity succesfully!',
-            buttonName: 'Ok',
+            message: LocalizationResources.youJoinedActivitySuccessfully,
             onPressed: () {
               setState(() => _condition = Condition.none);
               Navigator.push(
@@ -69,7 +66,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ? CustomePopup(
                 title: 'Fail',
                 message: _errorMessage,
-                buttonName: 'Close',
                 onPressed: () => setState(() => _condition = Condition.none))
             : Container(
                 decoration: customeBackground(),
@@ -202,8 +198,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       child: _isJoined
                                           ? Container(
                                               padding: const EdgeInsets.all(5),
-                                              child: const Text(
-                                                  'You already joined the activity'),
+                                              child: Text(LocalizationResources
+                                                  .youAlreadyJoinedTheActivity),
                                             )
                                           : TextButton(
                                               child: const Text("Join"),
@@ -237,7 +233,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ? CustomePopup(
                                 title: 'Fail',
                                 message: projectSnap.data!.error!,
-                                buttonName: 'Ok',
                                 onPressed: () {})
                             : const Center(
                                 child: CircularProgressIndicator(),

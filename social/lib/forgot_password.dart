@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/utils/holder.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({Key? key}) : super(key: key);
-
-  static const String _title = 'Forgot Password';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(_title),
+        title: const Text('Forgot Password'),
         centerTitle: true,
       ),
       body: const MyStatefulWidget(),
@@ -64,7 +63,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 //this enable feedback helps to turn off the sound on click
                 enableFeedback: false,
               ),
-              child: const Text('Send email for password'),
+              child: Text(LocalizationResources.sendEmailForPassword),
               onPressed: () {},
             ),
           ),

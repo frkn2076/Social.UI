@@ -3,6 +3,7 @@ import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/login.dart';
 import 'package:social/utils/disk_resources.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -28,8 +29,8 @@ class _SettingsState extends State<Settings> {
               title: const Text('Info'),
               content: SingleChildScrollView(
                 child: ListBody(
-                  children: const <Widget>[
-                    Text('Are you sure to exit?'),
+                  children: <Widget>[
+                    Text(LocalizationResources.areYouSureToExit),
                   ],
                 ),
               ),

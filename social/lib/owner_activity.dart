@@ -13,14 +13,12 @@ class OwnerActivity extends StatelessWidget {
   final int id;
   const OwnerActivity({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Created Activities';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(_title),
+        title: const Text('Created Activities'),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -99,7 +97,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ? CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,
-                      buttonName: 'Ok',
                       onPressed: () => setState(
                         () {
                           Navigator.pop(context);

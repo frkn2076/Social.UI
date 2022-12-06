@@ -14,14 +14,12 @@ class JoinedActivity extends StatelessWidget {
   final int id;
   const JoinedActivity({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Joined Activities';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(_title),
+        title: const Text('Joined Activities'),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -100,8 +98,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   ? CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,
-                      buttonName: 'Ok',
-                      onPressed: () {})
+                      onPressed: () {
+                        Navigator.pop(context);
+                      })
                   : const Center(
                       child: CircularProgressIndicator(),
                     );

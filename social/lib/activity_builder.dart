@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
@@ -11,11 +10,10 @@ import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class ActivityBuilder extends StatelessWidget {
   const ActivityBuilder({Key? key}) : super(key: key);
-
-  static const String _title = 'Activity Builder';
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class ActivityBuilder extends StatelessWidget {
       appBar: AppBar(
         leading: const CustomeBackButton(),
         title: const Text(
-          _title,
+          'Activity Builder',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
@@ -72,7 +70,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     hour = _now.hour;
   }
 
-  String _errorMessage = "Something went wrong";
+  String _errorMessage = LocalizationResources.somethingWentWrongError;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +81,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ? CustomePopup(
               title: 'Success',
               message: 'You have created activity succesfully!',
-              buttonName: 'Ok',
               onPressed: () {
                 setState(() => _condition = Condition.none);
                 Navigator.push(
@@ -97,7 +94,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ? CustomePopup(
                   title: 'Fail',
                   message: _errorMessage,
-                  buttonName: 'Ok',
                   onPressed: () => setState(() => _condition = Condition.none))
               : ListView(
                   children: <Widget>[
@@ -113,7 +109,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         child: DropdownButton<String>(
                             dropdownColor:
                                 const Color.fromARGB(255, 167, 143, 234),
-                            hint: const Text('Pick a category'),
+                            hint: Text(LocalizationResources.pickACategory),
                             isExpanded: true,
                             value: _category,
                             style: const TextStyle(color: Colors.deepPurple),

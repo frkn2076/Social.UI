@@ -15,14 +15,12 @@ class PublicProfile extends StatelessWidget {
   final int id;
   const PublicProfile({Key? key, required this.id}) : super(key: key);
 
-  static const String _title = 'Profile';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(_title),
+        title: const Text('Profile'),
         centerTitle: true,
         actions: [
           Container(
@@ -145,7 +143,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           return CustomePopup(
             title: 'Fail',
             message: projectSnap.data!.error!,
-            buttonName: 'Ok',
             onPressed: () => setState(
               () {
                 Navigator.pop(context);

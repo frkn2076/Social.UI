@@ -14,6 +14,7 @@ import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class PrivateProfile extends StatelessWidget {
   const PrivateProfile({Key? key}) : super(key: key);
@@ -94,21 +95,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String? _photo;
   Image? _image;
 
-  String _errorMessage = "Something went wrong";
+  String _errorMessage = LocalizationResources.somethingWentWrongError;
 
   @override
   Widget build(BuildContext context) {
     return _condition == Condition.success
         ? CustomePopup(
             title: 'Success',
-            message: 'Profile updated successfully',
-            buttonName: 'Ok',
+            message: LocalizationResources.profileUpdatedSuccessfully,
             onPressed: () => setState(() => _condition = Condition.none))
         : _condition == Condition.fail
             ? CustomePopup(
                 title: 'Fail',
                 message: _errorMessage,
-                buttonName: 'Close',
                 onPressed: () => setState(() => _condition = Condition.none))
             : FutureBuilder<GenericResponse<PrivateProfileResponse>?>(
                 future: Api().getPrivateProfile(),
@@ -233,7 +232,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     return CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,
-                      buttonName: 'Ok',
                       onPressed: () => setState(
                         () {
                           Navigator.pop(context);
