@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/utils/localization_resources.dart';
 
@@ -60,8 +61,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                //this enable feedback helps to turn off the sound on click
-                enableFeedback: false,
+                enableFeedback: !DiskResources.getBool("isMuteOn"),
               ),
               child: Text(LocalizationResources.sendEmailForPassword),
               onPressed: () {},

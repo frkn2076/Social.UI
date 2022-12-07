@@ -8,6 +8,7 @@ import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/owner_activity.dart';
 import 'package:social/joined_activity.dart';
 import 'package:social/http/api.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/utils/logic_support.dart';
@@ -143,11 +144,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           return CustomePopup(
             title: 'Fail',
             message: projectSnap.data!.error!,
-            onPressed: () => setState(
-              () {
-                Navigator.pop(context);
-              },
-            ),
+            onPressed: () {
+              if (!DiskResources.getBool("isMuteOn")) {
+                Feedback.forTap(context);
+              }
+              setState(() => Navigator.pop(context));
+            },
           );
         } else {
           return const Center(

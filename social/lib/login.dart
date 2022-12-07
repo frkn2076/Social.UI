@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/forgot_password.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/localization_resources.dart';
@@ -110,8 +111,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        //this enable feedback helps to turn off the sound on click
-                        enableFeedback: false,
+                        enableFeedback: !DiskResources.getBool("isMuteOn"),
                       ),
                       child: const Text('Login'),
                       onPressed: () {

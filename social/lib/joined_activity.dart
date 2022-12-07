@@ -8,6 +8,7 @@ import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
 
 import 'package:social/register.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/logic_support.dart';
 
@@ -53,44 +54,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   itemCount: projectSnap.data?.response?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
-                      onTap: () => {
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          image: DecorationImage(
+                            image: Helper.getImageByCategory(
+                                projectSnap.data!.response![index].category!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Text(
+                          projectSnap.data!.response![index].title!,
+                          style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30),
+                        ),
+                      ),
+                      onTap: () {
+                        if (!DiskResources.getBool("isMuteOn")) {
+                          Feedback.forTap(context);
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Register()),
-                        )
+                            builder: (context) => ActivityDetail(
+                                id: projectSnap.data!.response![index].id!),
+                          ),
+                        );
                       },
-                      child: GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueAccent),
-                            image: DecorationImage(
-                              image: Helper.getImageByCategory(
-                                  projectSnap.data!.response![index].category!),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Text(
-                            projectSnap.data!.response![index].title!,
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 30),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ActivityDetail(
-                                    id: projectSnap
-                                        .data!.response![index].id!)),
-                          );
-                        },
-                      ),
                     );
                   },
                 )
@@ -99,6 +94,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       title: 'Fail',
                       message: projectSnap.data!.error!,
                       onPressed: () {
+                        if (!DiskResources.getBool("isMuteOn")) {
+                          Feedback.forTap(context);
+                        }
                         Navigator.pop(context);
                       })
                   : const Center(

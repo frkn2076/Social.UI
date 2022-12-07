@@ -10,11 +10,10 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
-import 'package:social/login.dart';
 import 'package:social/private_profile.dart';
 import 'package:social/custome_widgets/custome_searchbar.dart';
-import 'package:social/register.dart';
 import 'package:social/settings.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/localization_resources.dart';
 import 'package:social/utils/logic_support.dart';
@@ -83,18 +82,16 @@ class _DashboardState extends State<Dashboard> {
           actions: [
             !_searchBoolean
                 ? IconButton(
+                    enableFeedback: !DiskResources.getBool("isMuteOn"),
                     icon: const Icon(Icons.search),
                     onPressed: () {
-                      setState(() {
-                        _searchBoolean = true;
-                      });
+                      setState(() => _searchBoolean = true);
                     })
                 : IconButton(
+                    enableFeedback: !DiskResources.getBool("isMuteOn"),
                     icon: const Icon(Icons.clear),
                     onPressed: () {
-                      setState(() {
-                        _searchBoolean = false;
-                      });
+                      setState(() => _searchBoolean = false);
                     },
                   ),
             buildFilterPopup(),
@@ -112,44 +109,38 @@ class _DashboardState extends State<Dashboard> {
                         itemCount: projectSnap.data?.response?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            onTap: () => {
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                image: DecorationImage(
+                                  image: Helper.getImageByCategory(projectSnap
+                                      .data!.response![index].category!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Text(
+                                projectSnap.data!.response![index].title!,
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 30),
+                              ),
+                            ),
+                            onTap: () {
+                              if (!DiskResources.getBool("isMuteOn")) {
+                                Feedback.forTap(context);
+                              }
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Register()),
-                              )
+                                    builder: (context) => ActivityDetail(
+                                        id: projectSnap
+                                            .data!.response![index].id!)),
+                              );
                             },
-                            child: GestureDetector(
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.all(10),
-                                margin: const EdgeInsets.all(15.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blueAccent),
-                                  image: DecorationImage(
-                                    image: Helper.getImageByCategory(projectSnap
-                                        .data!.response![index].category!),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Text(
-                                  projectSnap.data!.response![index].title!,
-                                  style: const TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 30),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ActivityDetail(
-                                          id: projectSnap
-                                              .data!.response![index].id!)),
-                                );
-                              },
-                            ),
                           );
                         },
                       ),
@@ -163,11 +154,12 @@ class _DashboardState extends State<Dashboard> {
                       ? CustomePopup(
                           title: 'Fail',
                           message: projectSnap.data!.error!,
-                          onPressed: () => setState(
-                            () {
-                              Navigator.pop(context);
-                            },
-                          ),
+                          onPressed: () {
+                            if (!DiskResources.getBool("isMuteOn")) {
+                              Feedback.forTap(context);
+                            }
+                            setState(() => Navigator.pop(context));
+                          },
                         )
                       : const Center(
                           child: CircularProgressIndicator(),
@@ -177,6 +169,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         bottomNavigationBar: buildBottomNavigationBar(),
         floatingActionButton: FloatingActionButton(
+            enableFeedback: !DiskResources.getBool("isMuteOn"),
             child: const Icon(Icons.add),
             onPressed: () => Navigator.push(
                   context,
@@ -268,8 +261,7 @@ class _DashboardState extends State<Dashboard> {
                         padding: const EdgeInsets.only(top: 20, left: 20),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            //this enable feedback helps to turn off the sound on click
-                            enableFeedback: false,
+                            enableFeedback: !DiskResources.getBool("isMuteOn"),
                           ),
                           child: const Text("Reset"),
                           onPressed: () {
@@ -287,8 +279,7 @@ class _DashboardState extends State<Dashboard> {
                         padding: const EdgeInsets.only(top: 20, right: 40),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            //this enable feedback helps to turn off the sound on click
-                            enableFeedback: false,
+                            enableFeedback: !DiskResources.getBool("isMuteOn"),
                           ),
                           child: const Text('Search'),
                           onPressed: () {
@@ -324,6 +315,7 @@ class _DashboardState extends State<Dashboard> {
             Container(
               padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: IconButton(
+                  enableFeedback: !DiskResources.getBool("isMuteOn"),
                   icon: const Icon(Icons.settings_outlined, color: Colors.blue),
                   onPressed: () {
                     Navigator.push(
@@ -336,6 +328,7 @@ class _DashboardState extends State<Dashboard> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
               child: IconButton(
+                enableFeedback: !DiskResources.getBool("isMuteOn"),
                 icon: const CircleAvatar(
                   backgroundColor: Color(0xffE6E6E6),
                   radius: 30,
@@ -392,6 +385,9 @@ class _DashboardState extends State<Dashboard> {
                         return Checkbox(
                           onChanged: (bool? value) => setDropdownState(
                             () {
+                              if (!DiskResources.getBool("isMuteOn")) {
+                                Feedback.forTap(context);
+                              }
                               _categories[categoryKey] =
                                   !(_categories[categoryKey] == true);
                             },

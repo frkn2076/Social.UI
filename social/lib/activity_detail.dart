@@ -10,6 +10,7 @@ import 'package:social/private_profile.dart';
 import 'package:social/dashboard.dart';
 import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/holder.dart';
@@ -67,7 +68,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ? CustomePopup(
                 title: 'Fail',
                 message: _errorMessage,
-                onPressed: () => setState(() => _condition = Condition.none))
+                onPressed: () {
+                  if (!DiskResources.getBool("isMuteOn")) {
+                    Feedback.forTap(context);
+                  }
+                  setState(() => _condition = Condition.none);
+                })
             : Container(
                 decoration: customeBackground(),
                 padding: const EdgeInsets.all(10),
@@ -165,15 +171,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                   isPrivate: isPrivate,
                                                   userName: joiner.userName!,
                                                   onTap: () {
+                                                    if (!DiskResources.getBool("isMuteOn")) {
+                                                      Feedback.forTap(context);
+                                                    }
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              isPrivate
-                                                                  ? const PrivateProfile()
-                                                                  : PublicProfile(
-                                                                      id: joiner
-                                                                          .id!)),
+                                                        builder: (context) =>
+                                                            isPrivate
+                                                                ? const PrivateProfile()
+                                                                : PublicProfile(
+                                                                    id: joiner
+                                                                        .id!),
+                                                      ),
                                                     );
                                                   },
                                                 );
@@ -203,6 +213,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           : TextButton(
                                               child: const Text("Join"),
                                               onPressed: () {
+                                                if (DiskResources.getBool(
+                                                    "isMuteOn")) {
+                                                  Feedback.forTap(context);
+                                                }
                                                 Api()
                                                     .joinActivity(widget.id)
                                                     .then(
@@ -232,7 +246,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ? CustomePopup(
                                 title: 'Fail',
                                 message: projectSnap.data!.error!,
-                                onPressed: () {})
+                                onPressed: () {
+                                  if (!DiskResources.getBool("isMuteOn")) {
+                                    Feedback.forTap(context);
+                                  }
+                                })
                             : const Center(
                                 child: CircularProgressIndicator(),
                               );

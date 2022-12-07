@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/utils/disk_resources.dart';
 
 class CustomeBackButton extends StatelessWidget {
   const CustomeBackButton({
@@ -13,6 +14,9 @@ class CustomeBackButton extends StatelessWidget {
         color: Colors.black,
       ),
       onTap: () {
+        if (!DiskResources.getBool("isMuteOn")) {
+          Feedback.forTap(context);
+        }
         Navigator.pop(context);
       },
     );

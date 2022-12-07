@@ -10,6 +10,7 @@ import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/localization_resources.dart';
 
 class ActivityBuilder extends StatelessWidget {
@@ -94,7 +95,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ? CustomePopup(
                   title: 'Fail',
                   message: _errorMessage,
-                  onPressed: () => setState(() => _condition = Condition.none))
+                  onPressed: () {
+                    if (!DiskResources.getBool("isMuteOn")) {
+                      Feedback.forTap(context);
+                    }
+                    setState(() => _condition = Condition.none);
+                  })
               : ListView(
                   children: <Widget>[
                     Container(
@@ -307,8 +313,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              //this enable feedback helps to turn off the sound on click
-                              enableFeedback: false,
+                              enableFeedback: !DiskResources.getBool("isMuteOn"),
                             ),
                             child: const Text("Save"),
                             onPressed: () {

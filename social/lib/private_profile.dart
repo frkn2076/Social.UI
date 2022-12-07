@@ -12,6 +12,7 @@ import 'package:social/joined_activity.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
+import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
 import 'package:social/utils/localization_resources.dart';
@@ -109,7 +110,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ? CustomePopup(
                 title: 'Fail',
                 message: _errorMessage,
-                onPressed: () => setState(() => _condition = Condition.none))
+                onPressed: () {
+                  if (!DiskResources.getBool("isMuteOn")) {
+                    Feedback.forTap(context);
+                  }
+                  setState(() => _condition = Condition.none);
+                })
             : FutureBuilder<GenericResponse<PrivateProfileResponse>>(
                 future: Api().getPrivateProfile(),
                 builder: (context, projectSnap) {
@@ -198,8 +204,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               children: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    //this enable feedback helps to turn off the sound on click
-                                    enableFeedback: false,
+                                    enableFeedback:
+                                        !DiskResources.getBool("isMuteOn"),
                                   ),
                                   child: const Text("Save"),
                                   onPressed: () => {
@@ -231,11 +237,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     return CustomePopup(
                       title: 'Fail',
                       message: projectSnap.data!.error!,
-                      onPressed: () => setState(
-                        () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                      onPressed: () {
+                        if (!DiskResources.getBool("isMuteOn")) {
+                          Feedback.forTap(context);
+                        }
+                        setState(() => Navigator.pop(context));
+                      },
                     );
                   } else {
                     return const Center(

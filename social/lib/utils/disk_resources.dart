@@ -10,6 +10,7 @@ class DiskResources {
   }
   
   static bool getBool(String key){
+    print('$key : ${_prefs?.getBool(key)}');
     return _prefs?.getBool(key) == true;
   }
 
