@@ -38,9 +38,10 @@ dependencies:
   intl: ^0.17.0
   image_picker: ^0.8.5
   numberpicker: ^2.1.1
-  flutter_masked_text: ^0.8.0
   syncfusion_flutter_datepicker: ^20.3.58
   shared_preferences: ^2.0.15
+  connectivity_plus: ^2.3.9
+  flutter_masked_text2: ^0.9.1
 
 dev_dependencies:
   flutter_test:

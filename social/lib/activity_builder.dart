@@ -8,8 +8,7 @@ import 'package:social/dashboard.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/localization_resources.dart';
 
@@ -21,10 +20,7 @@ class ActivityBuilder extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(
-          'Activity Builder',
-          style: TextStyle(fontSize: 30),
-        ),
+        title: const Text('Activity Builder'),
         centerTitle: true,
       ),
       body: const MyStatefulWidget(),
@@ -313,7 +309,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              enableFeedback: !DiskResources.getBool("isMuteOn"),
+                              enableFeedback:
+                                  !DiskResources.getBool("isMuteOn"),
                             ),
                             child: const Text("Save"),
                             onPressed: () {

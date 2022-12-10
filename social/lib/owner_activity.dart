@@ -9,6 +9,7 @@ import 'package:social/http/models/generic_response.dart';
 import 'package:social/register.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
+import 'package:social/utils/localization_resources.dart';
 import 'package:social/utils/logic_support.dart';
 
 class OwnerActivity extends StatelessWidget {
@@ -48,60 +49,67 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
         future: Api().getOwnerActivities(widget.id),
         builder: (context, projectSnap) {
-          return LogicSupport.isSuccessToProceed(projectSnap)
-              ? ListView.builder(
-                  itemCount: projectSnap.data?.response?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blueAccent),
-                          image: DecorationImage(
-                            image: Helper.getImageByCategory(
-                                projectSnap.data!.response![index].category!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Text(
-                          projectSnap.data!.response![index].title!,
-                          style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 30),
-                        ),
+          if (LogicSupport.isSuccessToProceed(projectSnap)) {
+            if (projectSnap.data?.response?.isEmpty ?? true) {
+              return const Center(
+                child: Text('No activities'),
+              );
+            }
+            return ListView.builder(
+              itemCount: projectSnap.data?.response?.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blueAccent),
+                      image: DecorationImage(
+                        image: Helper.getImageByCategory(
+                            projectSnap.data!.response![index].category!),
+                        fit: BoxFit.cover,
                       ),
-                      onTap: () {
-                        if (!DiskResources.getBool("isMuteOn")) {
-                          Feedback.forTap(context);
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ActivityDetail(
-                                id: projectSnap.data!.response![index].id!),
-                          ),
-                        );
-                      },
+                    ),
+                    child: Text(
+                      projectSnap.data!.response![index].title!,
+                      style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30),
+                    ),
+                  ),
+                  onTap: () {
+                    if (!DiskResources.getBool("isMuteOn")) {
+                      Feedback.forTap(context);
+                    }
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ActivityDetail(
+                            id: projectSnap.data!.response![index].id!),
+                      ),
                     );
                   },
-                )
-              : LogicSupport.isFailToProceed(projectSnap)
-                  ? CustomePopup(
-                      title: 'Fail',
-                      message: projectSnap.data!.error!,
-                      onPressed: () {
-                        if (!DiskResources.getBool("isMuteOn")) {
-                          Feedback.forTap(context);
-                        }
-                        setState(() => Navigator.pop(context));
-                      },
-                    )
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                );
+              },
+            );
+          } else if (LogicSupport.isFailToProceed(projectSnap)) {
+            return CustomePopup(
+              title: 'Fail',
+              message: projectSnap.data?.error ?? LocalizationResources.somethingWentWrongError,
+              onPressed: () {
+                if (!DiskResources.getBool("isMuteOn")) {
+                  Feedback.forTap(context);
+                }
+                setState(() => Navigator.pop(context));
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
       ),
     );

@@ -19,10 +19,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Social',
-          style: TextStyle(fontSize: Holder.pageFontSize),
-        ),
+        title: const Text('Social'),
         centerTitle: true,
       ),
       body: const LoginStatefulWidget(),
@@ -102,9 +99,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                         ),
                       );
                     },
-                    child: const Text(
-                      'Forgot Password',
-                    ),
+                    child: const Text('Forgot Password'),
                   ),
                   Container(
                     height: Holder.buttonHeight,
@@ -148,10 +143,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     children: <Widget>[
                       Text(LocalizationResources.deosntHaveAnAccount),
                       TextButton(
-                        child: Text(
-                          'Sign in',
-                          style: TextStyle(fontSize: Holder.titleFontSize),
-                        ),
+                        child: const Text('Sign in'),
                         onPressed: () {
                           Holder.userName = userNameController.text;
                           Holder.password = passwordController.text;

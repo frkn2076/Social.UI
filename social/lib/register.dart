@@ -18,10 +18,7 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Social',
-          style: TextStyle(fontSize: Holder.pageFontSize),
-        ),
+        title: const Text('Social'),
         centerTitle: true,
       ),
       body: const RegisterStatefulWidget(),
@@ -138,12 +135,9 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text('Have account?'),
+                      const Text('Have an account?'),
                       TextButton(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(fontSize: Holder.titleFontSize),
-                        ),
+                        child: const Text('Login'),
                         onPressed: () {
                           Holder.userName = userNameController.text;
                           Holder.password = passwordController.text;

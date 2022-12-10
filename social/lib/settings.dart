@@ -96,38 +96,39 @@ class _SettingsState extends State<Settings> {
                       const Spacer(),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxHeight:
-                                MediaQuery.of(context).size.height * 0.15,
-                          ),
-                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                          child: InputDecorator(
-                            decoration: InputDecoration(
-                              labelText: 'Mute',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                  DiskResources.getBool("isMuteOn") == true
-                                      ? Icons.volume_up
-                                      : Icons.volume_off,
-                                  color: Colors.blue),
-                              onPressed: () => setState(() =>
-                                  DiskResources.setOrUpdateBool("isMuteOn",
-                                      !DiskResources.getBool("isMuteOn"))),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
+                  // will be uncommented later
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: Container(
+                  //         constraints: BoxConstraints(
+                  //           maxHeight:
+                  //               MediaQuery.of(context).size.height * 0.15,
+                  //         ),
+                  //         padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  //         child: InputDecorator(
+                  //           decoration: InputDecoration(
+                  //             labelText: 'Mute',
+                  //             border: OutlineInputBorder(
+                  //               borderRadius: BorderRadius.circular(12.0),
+                  //             ),
+                  //           ),
+                  //           child: IconButton(
+                  //             icon: Icon(
+                  //                 DiskResources.getBool("isMuteOn") == true
+                  //                     ? Icons.volume_up
+                  //                     : Icons.volume_off,
+                  //                 color: Colors.blue),
+                  //             onPressed: () => setState(() =>
+                  //                 DiskResources.setOrUpdateBool("isMuteOn",
+                  //                     !DiskResources.getBool("isMuteOn"))),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     const Spacer(),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

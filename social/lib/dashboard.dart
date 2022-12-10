@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -43,14 +44,22 @@ class _DashboardState extends State<Dashboard> {
     'other': true
   };
 
+  Timer? _debounce;
+
   @override
   void initState() {
     super.initState();
     _dropdownKey = GlobalKey();
     _now = DateTime.now();
     _fromDateFilter = _now;
-    _toDateFilter = DateTime(_now.year + 2, 1, 1);
+    _toDateFilter = DateTime(2030, 1, 1);
     _activities = _getActivities();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 
   TextEditingController nameController = TextEditingController();
@@ -74,7 +83,14 @@ class _DashboardState extends State<Dashboard> {
                   onChanged: (String searchText) {
                     setState(() {
                       _searchText = searchText;
-                      _activities = _getActivities();
+                    });
+                    if (_debounce?.isActive ?? false) {
+                      _debounce?.cancel();
+                    }
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      setState(() {
+                        _activities = _getActivities();
+                      });
                     });
                   },
                 ),
@@ -103,67 +119,74 @@ class _DashboardState extends State<Dashboard> {
           child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
             future: _activities,
             builder: (context, projectSnap) {
-              return LogicSupport.isSuccessToProceed(projectSnap)
-                  ? RefreshIndicator(
-                      child: ListView.builder(
-                        itemCount: projectSnap.data?.response?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.blueAccent),
-                                image: DecorationImage(
-                                  image: Helper.getImageByCategory(projectSnap
-                                      .data!.response![index].category!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: Text(
-                                projectSnap.data!.response![index].title!,
-                                style: const TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 30),
-                              ),
+              if (LogicSupport.isSuccessToProceed(projectSnap)) {
+                if (projectSnap.data?.response?.isEmpty ?? true) {
+                  return const Center(
+                    child: Text('No activities'),
+                  );
+                }
+                return RefreshIndicator(
+                  child: ListView.builder(
+                    itemCount: projectSnap.data?.response?.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        child: Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blueAccent),
+                            image: DecorationImage(
+                              image: Helper.getImageByCategory(
+                                  projectSnap.data!.response![index].category!),
+                              fit: BoxFit.cover,
                             ),
-                            onTap: () {
-                              if (!DiskResources.getBool("isMuteOn")) {
-                                Feedback.forTap(context);
-                              }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ActivityDetail(
-                                        id: projectSnap
-                                            .data!.response![index].id!)),
-                              );
-                            },
+                          ),
+                          child: Text(
+                            projectSnap.data!.response![index].title!,
+                            style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 30),
+                          ),
+                        ),
+                        onTap: () {
+                          if (!DiskResources.getBool("isMuteOn")) {
+                            Feedback.forTap(context);
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ActivityDetail(
+                                    id: projectSnap
+                                        .data!.response![index].id!)),
                           );
                         },
-                      ),
-                      onRefresh: () async {
-                        setState(() {
-                          _activities = _getActivities();
-                        });
-                      },
-                    )
-                  : LogicSupport.isFailToProceed(projectSnap)
-                      ? CustomePopup(
-                          title: 'Fail',
-                          message: projectSnap.data!.error!,
-                          onPressed: () {
-                            if (!DiskResources.getBool("isMuteOn")) {
-                              Feedback.forTap(context);
-                            }
-                            setState(() => Navigator.pop(context));
-                          },
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                      );
+                    },
+                  ),
+                  onRefresh: () async {
+                    setState(() {
+                      _activities = _getActivities();
+                    });
+                  },
+                );
+              } else if (LogicSupport.isFailToProceed(projectSnap)) {
+                return CustomePopup(
+                  title: 'Fail',
+                  message: projectSnap.data!.error!,
+                  onPressed: () {
+                    if (!DiskResources.getBool("isMuteOn")) {
+                      Feedback.forTap(context);
+                    }
+                    // setState(() => Navigator.pop(context));
+                  },
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
             },
           ),
         ),
@@ -207,8 +230,8 @@ class _DashboardState extends State<Dashboard> {
                           DateTime? pickedDate = await showDatePicker(
                               context: builderContext,
                               initialDate: _fromDateFilter,
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2100));
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime(2030));
                           if (pickedDate != null) {
                             innerSetState(() => _fromDateFilter = pickedDate);
                           }
@@ -226,8 +249,8 @@ class _DashboardState extends State<Dashboard> {
                           DateTime? pickedDate = await showDatePicker(
                               context: builderContext,
                               initialDate: _toDateFilter,
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2100));
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime(2030));
                           if (pickedDate != null) {
                             innerSetState(() => _toDateFilter = pickedDate);
                           }
@@ -268,7 +291,7 @@ class _DashboardState extends State<Dashboard> {
                             innerSetState(() {
                               _capacityRange = const RangeValues(2, 100);
                               _fromDateFilter = _now;
-                              _toDateFilter = DateTime(_now.year + 2, 1, 1);
+                              _toDateFilter = DateTime(2030, 1, 1);
                               _resetCategories();
                             });
                           },

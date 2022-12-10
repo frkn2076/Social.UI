@@ -26,10 +26,7 @@ class ActivityDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text(
-          'Detail',
-          style: TextStyle(fontSize: 30),
-        ),
+        title: const Text('Detail'),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -171,7 +168,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                   isPrivate: isPrivate,
                                                   userName: joiner.userName!,
                                                   onTap: () {
-                                                    if (!DiskResources.getBool("isMuteOn")) {
+                                                    if (!DiskResources.getBool(
+                                                        "isMuteOn")) {
                                                       Feedback.forTap(context);
                                                     }
                                                     Navigator.push(

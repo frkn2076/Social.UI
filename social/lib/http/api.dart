@@ -8,15 +8,14 @@ import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/auth_response.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/holder.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class Api {
   static const _emulatorBaseUrl = 'https://10.0.2.2:5001/';
   static const _localhostBaseUrl = 'https://localhost:5001/';
-  static const _serverBaseUrl = '';
+  static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _emulatorBaseUrl;
-
-  static final DateFormat _dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+  static const _baseUrl = _serverBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -24,6 +23,10 @@ class Api {
   };
 
   Future<GenericResponse> register(String userName, String password) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     final body = jsonEncode(
         <String, Object>{'UserName': userName, 'Password': password});
 
@@ -54,6 +57,10 @@ class Api {
   }
 
   Future<GenericResponse> login(String userName, String password) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     final body = jsonEncode(
         <String, Object>{'UserName': userName, 'Password': password});
 
@@ -91,6 +98,10 @@ class Api {
           int toCapacity,
           String? key,
           List<String> categories) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     // to set userId and userName
@@ -125,6 +136,10 @@ class Api {
 
   Future<GenericResponse<ActivityDetailResponse>> getActivityDetail(
       int activityId) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -140,6 +155,10 @@ class Api {
   }
 
   Future<GenericResponse> joinActivity(int activityId) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final body = jsonEncode(<String, Object>{'activityId': activityId});
@@ -154,6 +173,10 @@ class Api {
   }
 
   Future<GenericResponse<PrivateProfileResponse>> getPrivateProfile() async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}profile/private'),
@@ -171,6 +194,10 @@ class Api {
 
   Future<GenericResponse> updatePrivateProfile(
       String? photo, String? name, String? about) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final body = jsonEncode(
@@ -186,6 +213,10 @@ class Api {
   }
 
   Future<GenericResponse<PrivateProfileResponse>> getProfileById(int id) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}profile/$id'),
@@ -201,6 +232,10 @@ class Api {
 
   Future<GenericResponse<List<AllActivityResponse>>> getJoinedActivities(
       int userId) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final response = await http.get(
@@ -226,6 +261,10 @@ class Api {
       String? phoneNumber,
       int capacity,
       String? category) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final body = jsonEncode(<String, Object?>{
@@ -249,6 +288,10 @@ class Api {
 
   Future<GenericResponse<List<AllActivityResponse>>> getOwnerActivities(
       int id) async {
+    if (!(await _isConnectionActive())) {
+      GenericResponse.createFailResponse('Check your connection');
+    }
+
     await _checkAndUpdateTokens();
 
     final response = await http.get(Uri.parse('${_baseUrl}activity/owner/$id'),
@@ -312,6 +355,16 @@ class Api {
               .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> _isConnectionActive() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
       return true;
     }
     return false;
