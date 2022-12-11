@@ -79,10 +79,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   builder: (context, projectSnap) {
                     return LogicSupport.isSuccessToProceed(projectSnap)
                         ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             children: <Widget>[
                               Container(
-                                  height: 120,
-                                  width: 100,
+                                  height: Holder.height * 0.05,
+                                  width: Holder.width * 0.1,
                                   alignment: Alignment.center,
                                   padding: const EdgeInsets.all(10),
                                   margin: const EdgeInsets.all(15.0),
@@ -148,12 +149,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           ),
                                         ),
                                         Container(
-                                          height: 100,
-                                          width: 100,
+                                          width: Holder.width * 0.8,
                                           alignment: Alignment.center,
-                                          padding: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 10, 10, 0),
                                           margin: const EdgeInsets.all(15.0),
-                                          child: ListView(
+                                          child: Column(
                                             children: projectSnap
                                                 .data!.response!.joiners!
                                                 .map(
@@ -193,7 +194,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     ),
                               Container(
                                 alignment: Alignment.topCenter,
-                                padding: const EdgeInsets.all(5),
+                                padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
                                 margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +205,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                       ),
                                       child: _isJoined
                                           ? Container(
-                                              padding: const EdgeInsets.all(5),
+                                              padding: const EdgeInsets.all(10),
                                               child: Text(LocalizationResources
                                                   .youAlreadyJoinedTheActivity),
                                             )
