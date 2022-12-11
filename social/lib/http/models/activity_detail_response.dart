@@ -7,6 +7,7 @@ class ActivityDetailResponse {
   int? userId;
   String? phoneNumber;
   String? category;
+  int? capacity;
   List<Joiners>? joiners;
 
   ActivityDetailResponse(
@@ -18,6 +19,7 @@ class ActivityDetailResponse {
       this.userId,
       this.phoneNumber,
       this.category,
+      this.capacity,
       this.joiners});
 
   ActivityDetailResponse.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class ActivityDetailResponse {
     userId = json['userId'];
     phoneNumber = json['phoneNumber'];
     category = json['category'];
+    capacity = json['capacity'];
     if (json['joiners'] != null) {
       joiners = <Joiners>[];
       json['joiners'].forEach((v) {

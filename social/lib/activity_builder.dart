@@ -10,6 +10,7 @@ import 'package:social/http/api.dart';
 import 'package:social/utils/condition.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:social/utils/disk_resources.dart';
+import 'package:social/utils/helper.dart';
 import 'package:social/utils/localization_resources.dart';
 
 class ActivityBuilder extends StatelessWidget {
@@ -41,6 +42,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final MaskedTextController _phoneNumberController =
       MaskedTextController(mask: '(000)000-00-00');
   final TextEditingController _locationController = TextEditingController();
+  final List<String> _categories = ['picnic', 'cinema', 'sport', 'other'];
 
   late DateTime _now;
   late DateTime _initDate;
@@ -124,60 +126,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 _category = value!;
                               });
                             },
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: 'picnic',
-                                child: Row(
-                                  children: [
-                                    const Text('picnic'),
-                                    const Spacer(),
-                                    Image.asset(
-                                      "assets/images/categories/picnic.jpg",
-                                      fit: BoxFit.contain,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'cinema',
-                                child: Row(
-                                  children: [
-                                    const Text('cinema'),
-                                    const Spacer(),
-                                    Image.asset(
-                                      "assets/images/categories/cinema.jpg",
-                                      fit: BoxFit.contain,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'sport',
-                                child: Row(
-                                  children: [
-                                    const Text('sport'),
-                                    const Spacer(),
-                                    Image.asset(
-                                      "assets/images/categories/sport.jpg",
-                                      fit: BoxFit.contain,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: 'other',
-                                child: Row(
-                                  children: [
-                                    const Text('other'),
-                                    const Spacer(),
-                                    Image.asset(
-                                      "assets/images/categories/other.jpg",
-                                      fit: BoxFit.contain,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ]),
+                            items: _categories
+                                .map(
+                                  (category) => DropdownMenuItem<String>(
+                                    value: category,
+                                    child: Row(
+                                      children: [
+                                        Text(category),
+                                        const Spacer(),
+                                        Image(
+                                          image: Helper.getImageByCategory(
+                                              category),
+                                          fit: BoxFit.contain,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                                .toList()),
                       ),
                     ),
                     Container(
@@ -314,25 +280,74 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                             child: const Text("Save"),
                             onPressed: () {
+                              var pickedDate =
+                                  DateTime(year, month, day, hour, minute);
                               var dateInput = DateFormat('yyyy-MM-ddTHH:mm')
-                                  .format(
-                                      DateTime(year, month, day, hour, minute));
-                              Api()
-                                  .createActivity(
-                                      _titleController.text,
-                                      _detailController.text,
-                                      _locationController.text,
-                                      dateInput,
-                                      _phoneNumberController.text,
-                                      _currentCapacity,
-                                      _category)
-                                  .then((response) {
-                                setState(() => _condition =
-                                    response.isSuccessful!.conditionParser());
-                                if (response.isSuccessful != true) {
-                                  _errorMessage = response.error!;
-                                }
-                              });
+                                  .format(pickedDate);
+
+                              if(_category?.isEmpty ?? true){
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .pleasePickACategory;
+                                });
+                              }
+                              else if(_titleController.text.isEmpty){
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .pleaseEnterATitle;
+                                });
+                              } 
+                              else if(_detailController.text.isEmpty){
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .pleaseEnterDetails;
+                                });
+                              }
+                              else if(_locationController.text.isEmpty){
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .pleaseEnterALocation;
+                                });
+                              }
+                              else if (pickedDate.difference(_now).inHours < 48) {
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .activityShouldBeCreated48HoursBeforeIt;
+                                });
+                              } 
+                              else if(_phoneNumberController.text.isEmpty || _phoneNumberController.text.length != 14){
+                                setState(() {
+                                  _condition = Condition.fail;
+                                  _errorMessage = LocalizationResources
+                                      .pleaseEnterAValidPhoneNumber;
+                                });
+                              }
+                              else {
+                                Api()
+                                    .createActivity(
+                                        _titleController.text,
+                                        _detailController.text,
+                                        _locationController.text,
+                                        dateInput,
+                                        _phoneNumberController.text,
+                                        _currentCapacity,
+                                        _category)
+                                    .then(
+                                  (response) {
+                                    setState(() => _condition = response
+                                        .isSuccessful!
+                                        .conditionParser());
+                                    if (response.isSuccessful != true) {
+                                      _errorMessage = response.error!;
+                                    }
+                                  },
+                                );
+                              }
                             },
                           ),
                         ],

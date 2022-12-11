@@ -79,7 +79,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   builder: (context, projectSnap) {
                     return LogicSupport.isSuccessToProceed(projectSnap)
                         ? ListView(
-                            physics: const AlwaysScrollableScrollPhysics(),
                             children: <Widget>[
                               Container(
                                   height: Holder.height * 0.05,
@@ -135,6 +134,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           .contains(Holder.userId!)
                                       ? projectSnap.data!.response!.phoneNumber!
                                       : '(xxx)xxx-xx-xx'),
+                              CustomeInfoText(
+                                  title: "Capacity:",
+                                  text: projectSnap.data!.response!.capacity!
+                                      .toString()),
                               projectSnap.data?.response?.joiners?.isEmpty ??
                                       true
                                   ? Container()
@@ -194,7 +197,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     ),
                               Container(
                                 alignment: Alignment.topCenter,
-                                padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 20, 10, 30),
                                 margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -209,32 +213,44 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                               child: Text(LocalizationResources
                                                   .youAlreadyJoinedTheActivity),
                                             )
-                                          : TextButton(
-                                              child: const Text("Join"),
-                                              onPressed: () {
-                                                if (DiskResources.getBool(
-                                                    "isMuteOn")) {
-                                                  Feedback.forTap(context);
-                                                }
-                                                Api()
-                                                    .joinActivity(widget.id)
-                                                    .then(
-                                                      (response) => setState(
-                                                        () {
-                                                          _condition = response
-                                                              .isSuccessful!
-                                                              .conditionParser();
-                                                          if (response
-                                                                  .isSuccessful !=
-                                                              true) {
-                                                            _errorMessage =
-                                                                response.error!;
-                                                          }
-                                                        },
-                                                      ),
-                                                    );
-                                              },
-                                            ),
+                                          : projectSnap.data!.response!.joiners!
+                                                      .length >=
+                                                  projectSnap
+                                                      .data!.response!.capacity!
+                                              ? Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  child: Text(LocalizationResources
+                                                      .noSpaceForTheActivity),
+                                                )
+                                              : TextButton(
+                                                  child: const Text("Join"),
+                                                  onPressed: () {
+                                                    if (DiskResources.getBool(
+                                                        "isMuteOn")) {
+                                                      Feedback.forTap(context);
+                                                    }
+                                                    Api()
+                                                        .joinActivity(widget.id)
+                                                        .then(
+                                                          (response) =>
+                                                              setState(
+                                                            () {
+                                                              _condition = response
+                                                                  .isSuccessful!
+                                                                  .conditionParser();
+                                                              if (response
+                                                                      .isSuccessful !=
+                                                                  true) {
+                                                                _errorMessage =
+                                                                    response
+                                                                        .error!;
+                                                              }
+                                                            },
+                                                          ),
+                                                        );
+                                                  },
+                                                ),
                                     ),
                                   ],
                                 ),

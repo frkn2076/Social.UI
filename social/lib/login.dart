@@ -35,12 +35,14 @@ class LoginStatefulWidget extends StatefulWidget {
 }
 
 class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
-  TextEditingController userNameController =
+  final TextEditingController _userNameController =
       TextEditingController(text: Holder.userName);
-  TextEditingController passwordController =
+  final TextEditingController _passwordController =
       TextEditingController(text: Holder.password);
   bool _isAlertDialogOn = false;
   String _errorMessage = LocalizationResources.somethingWentWrongError;
+
+  bool _isPasswordVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +74,10 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: userNameController,
+                      maxLength: 15,
+                      controller: _userNameController,
                       decoration: const InputDecoration(
+                        counterText: '',
                         border: OutlineInputBorder(),
                         labelText: 'UserName',
                       ),
@@ -82,11 +86,22 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                     child: TextField(
-                      obscureText: true,
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      maxLength: 15,
+                      obscureText: _isPasswordVisible,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: const OutlineInputBorder(),
                         labelText: 'Password',
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                            onPressed: () => setState(() =>
+                                _isPasswordVisible = !_isPasswordVisible)),
                       ),
                     ),
                   ),
@@ -111,16 +126,16 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                       child: const Text('Login'),
                       onPressed: () {
                         Api()
-                            .login(userNameController.text,
-                                passwordController.text)
+                            .login(_userNameController.text,
+                                _passwordController.text)
                             .then(
                           (response) {
                             setState(
                               () {
                                 if (response.isSuccessful == true) {
                                   _isAlertDialogOn = false;
-                                  Holder.userName = userNameController.text;
-                                  Holder.password = passwordController.text;
+                                  Holder.userName = _userNameController.text;
+                                  Holder.password = _passwordController.text;
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -145,8 +160,8 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                       TextButton(
                         child: const Text('Sign in'),
                         onPressed: () {
-                          Holder.userName = userNameController.text;
-                          Holder.password = passwordController.text;
+                          Holder.userName = _userNameController.text;
+                          Holder.password = _passwordController.text;
                           Navigator.push(
                             context,
                             MaterialPageRoute(

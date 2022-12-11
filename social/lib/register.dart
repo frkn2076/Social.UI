@@ -34,12 +34,14 @@ class RegisterStatefulWidget extends StatefulWidget {
 }
 
 class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
-  TextEditingController userNameController =
+  final TextEditingController _userNameController =
       TextEditingController(text: Holder.userName);
-  TextEditingController passwordController =
+  final TextEditingController _passwordController =
       TextEditingController(text: Holder.password);
-  bool _isPopup = false;
+  bool _isAlertDialogOn = false;
   String _errorMessage = LocalizationResources.somethingWentWrongError;
+
+  bool _isPasswordVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
       child: Container(
         decoration: customeBackground(),
         padding: const EdgeInsets.all(10),
-        child: _isPopup
+        child: _isAlertDialogOn
             ? CustomePopup(
                 title: 'Fail',
                 message: _errorMessage,
@@ -61,7 +63,7 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                   if (!DiskResources.getBool("isMuteOn")) {
                     Feedback.forTap(context);
                   }
-                  setState(() => _isPopup = false);
+                  setState(() => _isAlertDialogOn = false);
                 },
               )
             : ListView(
@@ -77,8 +79,10 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: userNameController,
+                      maxLength: 15,
+                      controller: _userNameController,
                       decoration: const InputDecoration(
+                        counterText: '',
                         border: OutlineInputBorder(),
                         labelText: 'UserName',
                       ),
@@ -87,11 +91,22 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 40),
                     child: TextField(
-                      obscureText: true,
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      maxLength: 15,
+                      obscureText: _isPasswordVisible,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: const OutlineInputBorder(),
                         labelText: 'Password',
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                            onPressed: () => setState(() =>
+                                _isPasswordVisible = !_isPasswordVisible)),
                       ),
                     ),
                   ),
@@ -104,31 +119,45 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                       ),
                       child: const Text('Sign in'),
                       onPressed: () {
-                        Api()
-                            .register(userNameController.text,
-                                passwordController.text)
-                            .then(
-                          (response) {
-                            setState(
-                              () {
-                                if (response.isSuccessful!) {
-                                  _isPopup = false;
-                                  Holder.userName = userNameController.text;
-                                  Holder.password = passwordController.text;
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Dashboard()),
-                                  );
-                                } else {
-                                  _isPopup = true;
-                                  _errorMessage = response.error!;
-                                }
-                              },
-                            );
-                          },
-                        );
+                        if (_userNameController.text.length < 5) {
+                          setState(() {
+                            _isAlertDialogOn = true;
+                            _errorMessage = LocalizationResources
+                                .userNameLengthShouldBe5OrGreater;
+                          });
+                        } else if (_passwordController.text.length < 5) {
+                          setState(() {
+                            _isAlertDialogOn = true;
+                            _errorMessage = LocalizationResources
+                                .passwordLengthShouldBe5OrGreater;
+                          });
+                        } else {
+                          Api()
+                              .register(_userNameController.text,
+                                  _passwordController.text)
+                              .then(
+                            (response) {
+                              setState(
+                                () {
+                                  if (response.isSuccessful!) {
+                                    _isAlertDialogOn = false;
+                                    Holder.userName = _userNameController.text;
+                                    Holder.password = _passwordController.text;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Dashboard()),
+                                    );
+                                  } else {
+                                    _isAlertDialogOn = true;
+                                    _errorMessage = response.error!;
+                                  }
+                                },
+                              );
+                            },
+                          );
+                        }
                       },
                     ),
                   ),
@@ -139,8 +168,8 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                       TextButton(
                         child: const Text('Login'),
                         onPressed: () {
-                          Holder.userName = userNameController.text;
-                          Holder.password = passwordController.text;
+                          Holder.userName = _userNameController.text;
+                          Holder.password = _passwordController.text;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
