@@ -10,7 +10,7 @@ class Helper {
     if (dateTime == null) {
       return "";
     }
-    return DateFormat('dd MMMM yyyy - hh:mm', 'tr').format(dateTime);
+    return DateFormat('dd MMMM yyyy - HH:mm', 'tr').format(dateTime);
   }
 
   static String base64StringFromImage(String path) {
