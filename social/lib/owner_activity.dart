@@ -6,7 +6,6 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
-import 'package:social/register.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/localization_resources.dart';

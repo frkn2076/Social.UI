@@ -15,7 +15,7 @@ class Api {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _serverBaseUrl;
+  static const _baseUrl = _emulatorBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -24,7 +24,7 @@ class Api {
 
   Future<GenericResponse> register(String userName, String password) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     final body = jsonEncode(
@@ -58,7 +58,7 @@ class Api {
 
   Future<GenericResponse> login(String userName, String password) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     final body = jsonEncode(
@@ -99,7 +99,7 @@ class Api {
           String? key,
           List<String> categories) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -134,10 +134,56 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
+  Future<GenericResponse<List<AllActivityResponse>>>
+      getActivitiesByFilterPagination(
+          bool isRefresh,
+          DateTime fromDate,
+          DateTime toDate,
+          int fromCapacity,
+          int toCapacity,
+          String? key,
+          List<String> categories) async {
+    if (!(await _isConnectionActive())) {
+      return GenericResponse.createFailResponse('Check your connection');
+    }
+
+    await _checkAndUpdateTokens();
+
+    // to set userId and userName
+    await getPrivateProfile();
+
+    final body = jsonEncode(<String, Object?>{
+      'isRefresh': isRefresh,
+      'fromDate': _formatDateTimeForPayload(fromDate),
+      'toDate': _formatDateTimeForPayload(toDate),
+      'fromCapacity': fromCapacity,
+      'toCapacity': toCapacity,
+      'key': key,
+      'categories': categories
+    });
+
+    final response = await http.post(
+        Uri.parse('${_baseUrl}activity/pagination'),
+        headers: _fixedHeaders,
+        body: body);
+
+    if (response.statusCode == 200) {
+      var decodedResponse = json
+          .decode(response.body)
+          .map<AllActivityResponse>(
+              (data) => AllActivityResponse.fromJson(data))
+          .toList();
+
+      return GenericResponse.createSuccessResponse<List<AllActivityResponse>>(
+          decodedResponse);
+    }
+    return GenericResponse.createFailResponse(response.body);
+  }
+
   Future<GenericResponse<ActivityDetailResponse>> getActivityDetail(
       int activityId) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -156,7 +202,7 @@ class Api {
 
   Future<GenericResponse> joinActivity(int activityId) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -174,7 +220,7 @@ class Api {
 
   Future<GenericResponse<PrivateProfileResponse>> getPrivateProfile() async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -195,7 +241,7 @@ class Api {
   Future<GenericResponse> updatePrivateProfile(
       String? photo, String? name, String? about) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -214,7 +260,7 @@ class Api {
 
   Future<GenericResponse<PrivateProfileResponse>> getProfileById(int id) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -233,7 +279,7 @@ class Api {
   Future<GenericResponse<List<AllActivityResponse>>> getJoinedActivities(
       int userId) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -262,7 +308,7 @@ class Api {
       int capacity,
       String? category) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -289,7 +335,7 @@ class Api {
   Future<GenericResponse<List<AllActivityResponse>>> getOwnerActivities(
       int id) async {
     if (!(await _isConnectionActive())) {
-      GenericResponse.createFailResponse('Check your connection');
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();

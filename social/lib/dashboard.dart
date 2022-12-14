@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_background.dart';
-import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
@@ -16,8 +15,9 @@ import 'package:social/custome_widgets/custome_searchbar.dart';
 import 'package:social/settings.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
+import 'package:social/utils/holder.dart';
 import 'package:social/utils/localization_resources.dart';
-import 'package:social/utils/logic_support.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -27,7 +27,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late Future<GenericResponse<List<AllActivityResponse>>> _activities;
   late DateTime _now;
   late DateTime _fromDateFilter;
   late DateTime _toDateFilter;
@@ -46,6 +45,9 @@ class _DashboardState extends State<Dashboard> {
 
   Timer? _debounce;
 
+  final PagingController<int, AllActivityResponse> _pagingController =
+      PagingController(firstPageKey: 0, invisibleItemsThreshold: 2);
+
   @override
   void initState() {
     super.initState();
@@ -53,12 +55,15 @@ class _DashboardState extends State<Dashboard> {
     _now = DateTime.now();
     _fromDateFilter = _now;
     _toDateFilter = DateTime(2030, 1, 1);
-    _activities = _getActivities();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey, false);
+    });
   }
 
   @override
   void dispose() {
     _debounce?.cancel();
+    _pagingController.dispose();
     super.dispose();
   }
 
@@ -88,9 +93,7 @@ class _DashboardState extends State<Dashboard> {
                       _debounce?.cancel();
                     }
                     _debounce = Timer(const Duration(milliseconds: 500), () {
-                      setState(() {
-                        _activities = _getActivities();
-                      });
+                      _pagingController.refresh();
                     });
                   },
                 ),
@@ -107,89 +110,62 @@ class _DashboardState extends State<Dashboard> {
                     enableFeedback: !DiskResources.getBool("isMuteOn"),
                     icon: const Icon(Icons.clear),
                     onPressed: () {
-                      setState(() => _searchBoolean = false);
+                      setState(() {
+                        _searchBoolean = false;
+                        _searchText = null;
+                      });
                     },
                   ),
             buildFilterPopup(),
           ],
         ),
         body: Container(
-          decoration: customeBackground(),
-          padding: const EdgeInsets.all(10),
-          child: FutureBuilder<GenericResponse<List<AllActivityResponse>>>(
-            future: _activities,
-            builder: (context, projectSnap) {
-              if (LogicSupport.isSuccessToProceed(projectSnap)) {
-                if (projectSnap.data?.response?.isEmpty ?? true) {
-                  return const Center(
-                    child: Text('No activities'),
-                  );
-                }
-                return RefreshIndicator(
-                  child: ListView.builder(
-                    itemCount: projectSnap.data?.response?.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueAccent),
-                            image: DecorationImage(
-                              image: Helper.getImageByCategory(
-                                  projectSnap.data!.response![index].category!),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Text(
-                            projectSnap.data!.response![index].title!,
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 30),
+            decoration: customeBackground(),
+            padding: const EdgeInsets.all(10),
+            child: RefreshIndicator(
+              child: PagedListView<int, AllActivityResponse>(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<AllActivityResponse>(
+                  itemBuilder: (context, item, index) {
+                    return GestureDetector(
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blueAccent),
+                          image: DecorationImage(
+                            image: Helper.getImageByCategory(item.category!),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        onTap: () {
-                          if (!DiskResources.getBool("isMuteOn")) {
-                            Feedback.forTap(context);
-                          }
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ActivityDetail(
-                                    id: projectSnap
-                                        .data!.response![index].id!)),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  onRefresh: () async {
-                    setState(() {
-                      _activities = _getActivities();
-                    });
+                        child: Text(
+                          item.title!,
+                          style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30),
+                        ),
+                      ),
+                      onTap: () {
+                        if (!DiskResources.getBool("isMuteOn")) {
+                          Feedback.forTap(context);
+                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ActivityDetail(id: item.id!)),
+                        );
+                      },
+                    );
                   },
-                );
-              } else if (LogicSupport.isFailToProceed(projectSnap)) {
-                return CustomePopup(
-                  title: 'Fail',
-                  message: projectSnap.data!.error!,
-                  onPressed: () {
-                    if (!DiskResources.getBool("isMuteOn")) {
-                      Feedback.forTap(context);
-                    }
-                    // setState(() => Navigator.pop(context));
-                  },
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-        ),
+                ),
+              ),
+              onRefresh: () async {
+                _pagingController.refresh();
+              },
+            )),
         bottomNavigationBar: buildBottomNavigationBar(),
         floatingActionButton: FloatingActionButton(
             enableFeedback: !DiskResources.getBool("isMuteOn"),
@@ -306,10 +282,8 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           child: const Text('Search'),
                           onPressed: () {
-                            setState(() {
-                              _activities = _getActivities();
-                              Navigator.pop(context);
-                            });
+                            _pagingController.refresh();
+                            Navigator.pop(context);
                           },
                         ),
                       )
@@ -361,11 +335,13 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 tooltip: 'Go to profile',
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PrivateProfile()),
-                  );
+                  if (Holder.userId != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PrivateProfile()),
+                    );
+                  }
                 },
               ),
             ),
@@ -446,14 +422,45 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<GenericResponse<List<AllActivityResponse>>> _getActivities() {
-    return Api().getActivitiesRandomlyByFilter(
+  Future<GenericResponse<List<AllActivityResponse>>> _getActivities(
+      bool isRefresh) {
+    // setState() or markNeedsBuild() called during build Error wihout delayed
+    Future.delayed(Duration.zero, () {
+      if (_searchText?.isEmpty ?? true) {
+        setState(() => _searchBoolean = false);
+      }
+    });
+
+    return Api().getActivitiesByFilterPagination(
+        isRefresh,
         _fromDateFilter,
         _toDateFilter,
         _capacityRange.start.round(),
         _capacityRange.end.round(),
         _searchText,
         _categories.keys.where((key) => _categories[key] == true).toList());
+  }
+
+  Future<void> _fetchPage(int pageKey, bool isRefresh) async {
+    try {
+      if (isRefresh) {
+        _pagingController.itemList = null;
+      }
+      var response = await _getActivities(isRefresh);
+      if (response.isSuccessful == true) {
+        var isLastPage = (response.response?.length ?? 0) < 10;
+        if (isLastPage) {
+          _pagingController.appendLastPage(response.response!);
+        } else {
+          _pagingController.appendPage(
+              response.response!, pageKey + (response.response?.length ?? 0));
+        }
+      } else {
+        _pagingController.error = response.error ?? 'Something went wrong';
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
   }
 
   void _resetCategories() {

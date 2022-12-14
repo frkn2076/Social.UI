@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.0.15
   connectivity_plus: ^2.3.9
   flutter_masked_text2: ^0.9.1
+  infinite_scroll_pagination: ^3.2.0
 
 dev_dependencies:
   flutter_test:
