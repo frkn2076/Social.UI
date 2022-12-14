@@ -21,4 +21,6 @@ class LocalizationResources {
   static String userNameLengthShouldBe15OrLess = 'Username\'s length should be 15 or less';
   static String passwordLengthShouldBe5OrGreater = 'Password\'s length should be 5 or greater';
   static String passwordLengthShouldBe15OrLess = 'Password\'s length should be 15 or less';
+
+  static String fromDateShouldBeBeforeOrEqualToToDate = 'Before date should be before or equal to to date';
 }

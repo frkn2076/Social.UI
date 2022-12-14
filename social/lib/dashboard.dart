@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:social/activity_builder.dart';
 import 'package:social/activity_detail.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/api.dart';
 import 'package:social/http/models/all_activity_response.dart';
 import 'package:social/http/models/generic_response.dart';
@@ -35,6 +36,9 @@ class _DashboardState extends State<Dashboard> {
   String? _searchText;
   RangeValues _capacityRange = const RangeValues(2, 100);
   bool _searchBoolean = false;
+
+  bool _isAlertDialogOn = false;
+  String _errorMessage = LocalizationResources.somethingWentWrongError;
 
   final Map<String, bool> _categories = <String, bool>{
     'picnic': true,
@@ -122,50 +126,63 @@ class _DashboardState extends State<Dashboard> {
         body: Container(
             decoration: customeBackground(),
             padding: const EdgeInsets.all(10),
-            child: RefreshIndicator(
-              child: PagedListView<int, AllActivityResponse>(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<AllActivityResponse>(
-                  itemBuilder: (context, item, index) {
-                    return GestureDetector(
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blueAccent),
-                          image: DecorationImage(
-                            image: Helper.getImageByCategory(item.category!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Text(
-                          item.title!,
-                          style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 30),
-                        ),
+            child: _isAlertDialogOn
+                ? CustomePopup(
+                    title: 'Error',
+                    message: _errorMessage,
+                    onPressed: () {
+                      if (!DiskResources.getBool("isMuteOn")) {
+                        Feedback.forTap(context);
+                      }
+                      setState(() => _isAlertDialogOn = false);
+                    },
+                  )
+                : RefreshIndicator(
+                    child: PagedListView<int, AllActivityResponse>(
+                      pagingController: _pagingController,
+                      builderDelegate:
+                          PagedChildBuilderDelegate<AllActivityResponse>(
+                        itemBuilder: (context, item, index) {
+                          return GestureDetector(
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blueAccent),
+                                image: DecorationImage(
+                                  image:
+                                      Helper.getImageByCategory(item.category!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Text(
+                                item.title!,
+                                style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 30),
+                              ),
+                            ),
+                            onTap: () {
+                              if (!DiskResources.getBool("isMuteOn")) {
+                                Feedback.forTap(context);
+                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ActivityDetail(id: item.id!)),
+                              );
+                            },
+                          );
+                        },
                       ),
-                      onTap: () {
-                        if (!DiskResources.getBool("isMuteOn")) {
-                          Feedback.forTap(context);
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ActivityDetail(id: item.id!)),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              onRefresh: () async {
-                _pagingController.refresh();
-              },
-            )),
+                    ),
+                    onRefresh: () async {
+                      _pagingController.refresh();
+                    },
+                  )),
         bottomNavigationBar: buildBottomNavigationBar(),
         floatingActionButton: FloatingActionButton(
             enableFeedback: !DiskResources.getBool("isMuteOn"),
@@ -282,8 +299,16 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           child: const Text('Search'),
                           onPressed: () {
-                            _pagingController.refresh();
                             Navigator.pop(context);
+                            if (_toDateFilter.compareTo(_fromDateFilter) < 0) {
+                              setState(() {
+                                _isAlertDialogOn = true;
+                                _errorMessage = LocalizationResources
+                                    .fromDateShouldBeBeforeOrEqualToToDate;
+                              });
+                            } else {
+                              _pagingController.refresh();
+                            }
                           },
                         ),
                       )
