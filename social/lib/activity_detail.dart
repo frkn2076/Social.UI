@@ -50,31 +50,27 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _condition == Condition.success
-        ? CustomePopup(
-            title: 'Success',
-            message: LocalizationResources.youJoinedActivitySuccessfully,
-            onPressed: () {
-              setState(() => _condition = Condition.none);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Dashboard()),
-              );
-            })
-        : _condition == Condition.fail
-            ? CustomePopup(
-                title: 'Fail',
-                message: _errorMessage,
-                onPressed: () {
-                  if (!DiskResources.getBool("isMuteOn")) {
-                    Feedback.forTap(context);
-                  }
-                  setState(() => _condition = Condition.none);
-                })
-            : Container(
-                decoration: customeBackground(),
-                padding: const EdgeInsets.all(10),
-                child: FutureBuilder<GenericResponse<ActivityDetailResponse>>(
+    return Container(
+      decoration: customeBackground(),
+      padding: const EdgeInsets.all(10),
+      child: _condition == Condition.success
+          ? CustomePopup(
+              title: 'Success',
+              message: LocalizationResources.youJoinedActivitySuccessfully,
+              onPressed: () {
+                setState(() => _condition = Condition.none);
+              })
+          : _condition == Condition.fail
+              ? CustomePopup(
+                  title: 'Fail',
+                  message: _errorMessage,
+                  onPressed: () {
+                    if (!DiskResources.getBool("isMuteOn")) {
+                      Feedback.forTap(context);
+                    }
+                    setState(() => _condition = Condition.none);
+                  })
+              : FutureBuilder<GenericResponse<ActivityDetailResponse>>(
                   future: Api().getActivityDetail(widget.id),
                   builder: (context, projectSnap) {
                     return LogicSupport.isSuccessToProceed(projectSnap)
@@ -211,7 +207,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                           ? Container(
                                               padding: const EdgeInsets.all(10),
                                               child: Text(LocalizationResources
-                                                  .youAlreadyJoinedTheActivity),
+                                                  .youJoinedTheActivity),
                                             )
                                           : projectSnap.data!.response!.joiners!
                                                       .length >=
@@ -220,8 +216,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                               ? Container(
                                                   padding:
                                                       const EdgeInsets.all(10),
-                                                  child: Text(LocalizationResources
-                                                      .noSpaceForTheActivity),
+                                                  child: Text(
+                                                      LocalizationResources
+                                                          .noSpaceForTheActivity),
                                                 )
                                               : TextButton(
                                                   child: const Text("Join"),
@@ -271,6 +268,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               );
                   },
                 ),
-              );
+    );
   }
 }

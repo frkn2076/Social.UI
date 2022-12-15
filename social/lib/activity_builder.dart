@@ -62,7 +62,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   void initState() {
     super.initState();
     _now = DateTime.now();
-    _initDate = DateTime(_now.year, _now.month, _now.day, _now.hour, 0);
+    _initDate = DateTime(_now.year, _now.month, _now.day, _now.hour, 0).add(const Duration(days: 3));
     year = _now.year;
     month = _now.month;
     day = _now.day;

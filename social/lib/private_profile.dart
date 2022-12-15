@@ -101,41 +101,44 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _condition == Condition.success
-        ? CustomePopup(
-            title: 'Success',
-            message: LocalizationResources.profileUpdatedSuccessfully,
-            onPressed: () => setState(() => _condition = Condition.none))
-        : _condition == Condition.fail
-            ? CustomePopup(
-                title: 'Fail',
-                message: _errorMessage,
-                onPressed: () {
-                  if (!DiskResources.getBool("isMuteOn")) {
-                    Feedback.forTap(context);
-                  }
-                  setState(() => _condition = Condition.none);
-                })
-            : FutureBuilder<GenericResponse<PrivateProfileResponse>>(
-                future: Api().getPrivateProfile(),
-                builder: (context, projectSnap) {
-                  if (LogicSupport.isSuccessToProceed(projectSnap)) {
-                    if (projectSnap.data?.response?.name?.isNotEmpty ?? false) {
-                      _nameController.text = projectSnap.data!.response!.name!;
+    return Container(
+      decoration: customeBackground(),
+      padding: const EdgeInsets.all(10),
+      child: _condition == Condition.success
+          ? CustomePopup(
+              title: 'Success',
+              message: LocalizationResources.profileUpdatedSuccessfully,
+              onPressed: () => setState(() => _condition = Condition.none))
+          : _condition == Condition.fail
+              ? CustomePopup(
+                  title: 'Fail',
+                  message: _errorMessage,
+                  onPressed: () {
+                    if (!DiskResources.getBool("isMuteOn")) {
+                      Feedback.forTap(context);
                     }
-                    if (projectSnap.data?.response?.about?.isNotEmpty ??
-                        false) {
-                      _aboutController.text =
-                          projectSnap.data!.response!.about!;
-                    }
-                    if (projectSnap.data?.response?.photo?.isNotEmpty ??
-                        false) {
-                      _image = Helper.imageFromBase64String(
-                          projectSnap.data!.response!.photo!);
-                    }
-                    return Container(
-                      decoration: customeBackground(),
-                      child: ListView(
+                    setState(() => _condition = Condition.none);
+                  })
+              : FutureBuilder<GenericResponse<PrivateProfileResponse>>(
+                  future: Api().getPrivateProfile(),
+                  builder: (context, projectSnap) {
+                    if (LogicSupport.isSuccessToProceed(projectSnap)) {
+                      if (projectSnap.data?.response?.name?.isNotEmpty ??
+                          false) {
+                        _nameController.text =
+                            projectSnap.data!.response!.name!;
+                      }
+                      if (projectSnap.data?.response?.about?.isNotEmpty ??
+                          false) {
+                        _aboutController.text =
+                            projectSnap.data!.response!.about!;
+                      }
+                      if (projectSnap.data?.response?.photo?.isNotEmpty ??
+                          false) {
+                        _image = Helper.imageFromBase64String(
+                            projectSnap.data!.response!.photo!);
+                      }
+                      return ListView(
                         children: <Widget>[
                           Stack(
                             children: [
@@ -147,7 +150,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.all(5),
                                 margin: const EdgeInsets.fromLTRB(
-                                    100.0, 20.0, 100.0, 0),
+                                    100.0, 10.0, 100.0, 0),
                                 decoration: BoxDecoration(
                                   border:
                                       Border.all(color: Colors.blue, width: 2),
@@ -231,25 +234,25 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             ),
                           )
                         ],
-                      ),
-                    );
-                  } else if (LogicSupport.isFailToProceed(projectSnap)) {
-                    return CustomePopup(
-                      title: 'Fail',
-                      message: projectSnap.data!.error!,
-                      onPressed: () {
-                        if (!DiskResources.getBool("isMuteOn")) {
-                          Feedback.forTap(context);
-                        }
-                        setState(() => Navigator.pop(context));
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              );
+                      );
+                    } else if (LogicSupport.isFailToProceed(projectSnap)) {
+                      return CustomePopup(
+                        title: 'Fail',
+                        message: projectSnap.data!.error!,
+                        onPressed: () {
+                          if (!DiskResources.getBool("isMuteOn")) {
+                            Feedback.forTap(context);
+                          }
+                          setState(() => Navigator.pop(context));
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+    );
   }
 }

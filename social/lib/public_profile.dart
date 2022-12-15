@@ -91,17 +91,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GenericResponse<PrivateProfileResponse>>(
-      future: Api().getProfileById(widget.id),
-      builder: (context, projectSnap) {
-        if (LogicSupport.isSuccessToProceed(projectSnap)) {
-          if (projectSnap.data?.response?.photo?.isNotEmpty ?? false) {
-            _image = Helper.imageFromBase64String(
-                projectSnap.data!.response!.photo!);
-          }
-          return Container(
-            decoration: customeBackground(),
-            child: ListView(
+    return Container(
+      decoration: customeBackground(),
+      padding: const EdgeInsets.all(10),
+      child: FutureBuilder<GenericResponse<PrivateProfileResponse>>(
+        future: Api().getProfileById(widget.id),
+        builder: (context, projectSnap) {
+          if (LogicSupport.isSuccessToProceed(projectSnap)) {
+            if (projectSnap.data?.response?.photo?.isNotEmpty ?? false) {
+              _image = Helper.imageFromBase64String(
+                  projectSnap.data!.response!.photo!);
+            }
+            return ListView(
               children: <Widget>[
                 Stack(
                   children: [
@@ -111,7 +112,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       ),
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(5),
-                      margin: const EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 0),
+                      margin: const EdgeInsets.fromLTRB(100.0, 10.0, 100.0, 0),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blue, width: 2),
                       ),
@@ -138,25 +139,25 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       text: projectSnap.data?.response?.about),
                 )
               ],
-            ),
-          );
-        } else if (LogicSupport.isFailToProceed(projectSnap)) {
-          return CustomePopup(
-            title: 'Fail',
-            message: projectSnap.data!.error!,
-            onPressed: () {
-              if (!DiskResources.getBool("isMuteOn")) {
-                Feedback.forTap(context);
-              }
-              setState(() => Navigator.pop(context));
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+            );
+          } else if (LogicSupport.isFailToProceed(projectSnap)) {
+            return CustomePopup(
+              title: 'Fail',
+              message: projectSnap.data!.error!,
+              onPressed: () {
+                if (!DiskResources.getBool("isMuteOn")) {
+                  Feedback.forTap(context);
+                }
+                setState(() => Navigator.pop(context));
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }
