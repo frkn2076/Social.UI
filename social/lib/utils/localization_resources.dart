@@ -7,7 +7,7 @@ class LocalizationResources {
   static String sendEmailForPassword = 'Send email for password';
   static String pickACategory = 'Pick a category';
   static String youJoinedActivitySuccessfully = 'You joined activity succesfully!';
-  static String youAlreadyJoinedTheActivity = 'You already joined the activity';
+  static String youJoinedTheActivity = 'You joined the activity';
   static String noSpaceForTheActivity = 'No space for the activity';
   
   static String activityShouldBeCreated48HoursBeforeIt = 'Activity should be created 48 hours before it';
