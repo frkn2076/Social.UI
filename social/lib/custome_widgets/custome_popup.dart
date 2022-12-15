@@ -9,7 +9,7 @@ class CustomePopup extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.message,
-      this.buttonName = 'Ok',
+      required this.buttonName,
       required this.onPressed})
       : super(key: key);
 

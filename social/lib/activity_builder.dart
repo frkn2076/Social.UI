@@ -21,7 +21,7 @@ class ActivityBuilder extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Activity Builder'),
+        title: Text(LocalizationResources.activityBuilder),
         centerTitle: true,
       ),
       body: const MyStatefulWidget(),
@@ -78,8 +78,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       padding: const EdgeInsets.all(10),
       child: _condition == Condition.success
           ? CustomePopup(
-              title: 'Success',
-              message: 'You have created activity succesfully!',
+              title: LocalizationResources.success,
+              message: LocalizationResources.youHaveCreatedActivitySuccessfully,
+              buttonName: LocalizationResources.ok,
               onPressed: () {
                 setState(() => _condition = Condition.none);
                 Navigator.push(
@@ -91,8 +92,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               })
           : _condition == Condition.fail
               ? CustomePopup(
-                  title: 'Fail',
+                  title: LocalizationResources.fail,
                   message: _errorMessage,
+                  buttonName: LocalizationResources.ok,
                   onPressed: () {
                     if (!DiskResources.getBool("isMuteOn")) {
                       Feedback.forTap(context);
@@ -105,7 +107,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: 'Category',
+                          labelText: LocalizationResources.category,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
@@ -132,7 +134,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     value: category,
                                     child: Row(
                                       children: [
-                                        Text(category),
+                                        Text(LocalizationResources.getCategory(category)),
                                         const Spacer(),
                                         Image(
                                           image: Helper.getImageByCategory(
@@ -153,7 +155,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0)),
-                          labelText: 'Title',
+                          labelText: LocalizationResources.title,
                         ),
                       ),
                     ),
@@ -164,7 +166,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0)),
-                          labelText: 'Detail',
+                          labelText: LocalizationResources.detail,
                         ),
                       ),
                     ),
@@ -175,7 +177,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12.0)),
-                          labelText: 'Location',
+                          labelText: LocalizationResources.location,
                         ),
                       ),
                     ),
@@ -185,7 +187,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           MediaQuery.of(context).copyWith().size.height * 0.20,
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: 'Date',
+                          labelText: LocalizationResources.date,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
@@ -211,7 +213,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           MediaQuery.of(context).copyWith().size.height * 0.20,
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: 'Time',
+                          labelText: LocalizationResources.time,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -237,9 +239,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                               child: TextField(
                                 controller: _phoneNumberController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'PhoneNumber',
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: LocalizationResources.phoneNumber,
                                 ),
                               ),
                             ),
@@ -247,7 +249,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Expanded(
                             child: InputDecorator(
                               decoration: InputDecoration(
-                                labelText: 'Capacity',
+                                labelText: LocalizationResources.capacity,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12.0),
                                 ),
@@ -278,7 +280,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               enableFeedback:
                                   !DiskResources.getBool("isMuteOn"),
                             ),
-                            child: const Text("Save"),
+                            child: Text(LocalizationResources.save),
                             onPressed: () {
                               var pickedDate =
                                   DateTime(year, month, day, hour, minute);

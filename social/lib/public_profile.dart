@@ -11,6 +11,7 @@ import 'package:social/http/api.dart';
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
 import 'package:social/utils/holder.dart';
+import 'package:social/utils/localization_resources.dart';
 import 'package:social/utils/logic_support.dart';
 
 class PublicProfile extends StatelessWidget {
@@ -22,7 +23,7 @@ class PublicProfile extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Profile'),
+        title: Text(LocalizationResources.profile),
         centerTitle: true,
         actions: [
           Container(
@@ -35,7 +36,7 @@ class PublicProfile extends StatelessWidget {
             ),
             child: IconButton(
               icon: const Icon(Icons.nordic_walking_outlined),
-              tooltip: 'Joined Ones',
+              tooltip: LocalizationResources.joinedOnes,
               onPressed: () {
                 if (Holder.userId != null) {
                   Navigator.push(
@@ -58,7 +59,7 @@ class PublicProfile extends StatelessWidget {
             ),
             child: IconButton(
               icon: const Icon(Icons.supervised_user_circle_outlined),
-              tooltip: "Created Ones",
+              tooltip: LocalizationResources.createdOnes,
               onPressed: () {
                 if (Holder.userId != null) {
                   Navigator.push(
@@ -128,13 +129,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 CustomeFocusedTextField(
                   padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
                   readOnly: true,
-                  labelText: 'Name & Surname',
+                  labelText: LocalizationResources.nameAndSurname,
                   controller: TextEditingController(
                       text: projectSnap.data?.response?.name),
                 ),
                 CustomeFocusedTextField(
                   readOnly: true,
-                  labelText: 'About',
+                  labelText: LocalizationResources.about,
                   controller: TextEditingController(
                       text: projectSnap.data?.response?.about),
                 )
@@ -142,8 +143,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             );
           } else if (LogicSupport.isFailToProceed(projectSnap)) {
             return CustomePopup(
-              title: 'Fail',
+              title: LocalizationResources.fail,
               message: projectSnap.data!.error!,
+              buttonName: LocalizationResources.ok,
               onPressed: () {
                 if (!DiskResources.getBool("isMuteOn")) {
                   Feedback.forTap(context);

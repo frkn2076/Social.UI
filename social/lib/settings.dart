@@ -14,19 +14,22 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   bool _showPopupMessage = false;
+  final List<String> _languages = ['Türkçe', 'English'];
+  String _currentLanguage = 'Türkçe';
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Settings'),
+        title: Text(LocalizationResources.settings),
         centerTitle: true,
       ),
       body: _showPopupMessage
           ? AlertDialog(
               backgroundColor: const Color.fromARGB(255, 198, 131, 210),
-              title: const Text('Info'),
+              title: Text(LocalizationResources.info),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
@@ -36,11 +39,11 @@ class _SettingsState extends State<Settings> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: const Text('No'),
+                  child: Text(LocalizationResources.no),
                   onPressed: () => setState(() => _showPopupMessage = false),
                 ),
                 TextButton(
-                  child: const Text('Yes'),
+                  child: Text(LocalizationResources.yes),
                   onPressed: () {
                     DiskResources.removeAll();
                     Navigator.push(
@@ -67,7 +70,7 @@ class _SettingsState extends State<Settings> {
                           padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                           child: InputDecorator(
                             decoration: InputDecoration(
-                              labelText: 'Language',
+                              labelText: LocalizationResources.language,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
@@ -76,19 +79,27 @@ class _SettingsState extends State<Settings> {
                               dropdownColor:
                                   const Color.fromARGB(255, 167, 143, 234),
                               isExpanded: true,
-                              value: 'English',
+                              value: _currentLanguage,
                               style: const TextStyle(color: Colors.deepPurple),
                               underline: Container(
                                 height: 2,
                                 color: Colors.deepPurpleAccent,
                               ),
-                              onChanged: (String? value) {},
-                              items: const [
-                                DropdownMenuItem<String>(
-                                  value: 'English',
-                                  child: Text('English'),
-                                )
-                              ],
+                              onChanged: (String? value) {
+                                if(value?.isNotEmpty ?? false){
+                                  DiskResources.setOrUpdateString('language', value!);
+                                  LocalizationResources.updateResources();
+                                  setState(() => _currentLanguage = value);
+                                }
+                              },
+                              items: _languages.map(
+                                (language) {
+                                  return DropdownMenuItem<String>(
+                                    value: language,
+                                    child: Text(language),
+                                  );
+                                },
+                              ).toList(),
                             ),
                           ),
                         ),

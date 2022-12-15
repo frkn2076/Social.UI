@@ -13,7 +13,7 @@ class ForgotPassword extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Forgot Password'),
+        title: Text(LocalizationResources.forgotPassword),
         centerTitle: true,
       ),
       body: const MyStatefulWidget(),
@@ -42,7 +42,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             alignment: Alignment.center,
             padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
             child: Text(
-              'Forgot Password',
+              LocalizationResources.forgotPassword,
               style: TextStyle(fontSize: Holder.titleFontSize),
             ),
           ),
@@ -50,9 +50,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 40),
             child: TextField(
               controller: emailController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: LocalizationResources.email,
               ),
             ),
           ),

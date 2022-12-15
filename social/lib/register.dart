@@ -57,8 +57,9 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
         padding: const EdgeInsets.all(10),
         child: _isAlertDialogOn
             ? CustomePopup(
-                title: 'Fail',
+                title: LocalizationResources.fail,
                 message: _errorMessage,
+                buttonName: LocalizationResources.ok,
                 onPressed: () {
                   if (!DiskResources.getBool("isMuteOn")) {
                     Feedback.forTap(context);
@@ -72,7 +73,7 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
                     child: Text(
-                      'Sign In',
+                      LocalizationResources.signIn,
                       style: TextStyle(fontSize: Holder.titleFontSize),
                     ),
                   ),
@@ -81,10 +82,10 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                     child: TextField(
                       maxLength: 15,
                       controller: _userNameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         counterText: '',
-                        border: OutlineInputBorder(),
-                        labelText: 'UserName',
+                        border: const OutlineInputBorder(),
+                        labelText: LocalizationResources.userName,
                       ),
                     ),
                   ),
@@ -97,7 +98,7 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                       decoration: InputDecoration(
                         counterText: '',
                         border: const OutlineInputBorder(),
-                        labelText: 'Password',
+                        labelText: LocalizationResources.password,
                         suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordVisible
@@ -117,7 +118,7 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                       style: ElevatedButton.styleFrom(
                         enableFeedback: !DiskResources.getBool("isMuteOn"),
                       ),
-                      child: const Text('Sign in'),
+                      child: Text(LocalizationResources.signIn),
                       onPressed: () {
                         if (_userNameController.text.length < 5) {
                           setState(() {
@@ -164,9 +165,9 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text('Have an account?'),
+                      Text(LocalizationResources.haveAnAccount),
                       TextButton(
-                        child: const Text('Login'),
+                        child: Text(LocalizationResources.login),
                         onPressed: () {
                           Holder.userName = _userNameController.text;
                           Holder.password = _passwordController.text;

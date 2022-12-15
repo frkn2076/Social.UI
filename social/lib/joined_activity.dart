@@ -9,6 +9,7 @@ import 'package:social/http/models/generic_response.dart';
 
 import 'package:social/utils/disk_resources.dart';
 import 'package:social/utils/helper.dart';
+import 'package:social/utils/localization_resources.dart';
 import 'package:social/utils/logic_support.dart';
 
 class JoinedActivity extends StatelessWidget {
@@ -20,7 +21,7 @@ class JoinedActivity extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Joined Activities'),
+        title: Text(LocalizationResources.joinedActivites),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -50,8 +51,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         builder: (context, projectSnap) {
           if (LogicSupport.isSuccessToProceed(projectSnap)) {
             if (projectSnap.data?.response?.isEmpty ?? true) {
-              return const Center(
-                child: Text('No activities'),
+              return Center(
+                child: Text(LocalizationResources.noActivities),
               );
             }
             return ListView.builder(
@@ -97,6 +98,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             return CustomePopup(
                 title: 'Fail',
                 message: projectSnap.data!.error!,
+                buttonName: LocalizationResources.ok,
                 onPressed: () {
                   if (!DiskResources.getBool("isMuteOn")) {
                     Feedback.forTap(context);

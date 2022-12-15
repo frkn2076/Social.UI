@@ -87,7 +87,7 @@ class _DashboardState extends State<Dashboard> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: !_searchBoolean
-              ? const Text('Activities')
+              ? Text(LocalizationResources.activities)
               : CustomeSearchBar(
                   onChanged: (String searchText) {
                     setState(() {
@@ -128,8 +128,9 @@ class _DashboardState extends State<Dashboard> {
             padding: const EdgeInsets.all(10),
             child: _isAlertDialogOn
                 ? CustomePopup(
-                    title: 'Error',
+                    title: LocalizationResources.fail,
                     message: _errorMessage,
+                    buttonName: LocalizationResources.ok,
                     onPressed: () {
                       if (!DiskResources.getBool("isMuteOn")) {
                         Feedback.forTap(context);
@@ -215,45 +216,84 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Row(
                     children: [
-                      const Text('From: '),
-                      Text(DateFormat('dd-MM-yyyy').format(_fromDateFilter)),
-                      TextButton(
-                        child: const Icon(Icons.calendar_month),
-                        onPressed: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: builderContext,
-                              initialDate: _fromDateFilter,
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(2030));
-                          if (pickedDate != null) {
-                            innerSetState(() => _fromDateFilter = pickedDate);
-                          }
-                        },
-                      )
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Text('${LocalizationResources.from}:'),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: Row(
+                            children: [
+                              Text(
+                                DateFormat('dd-MM-yyyy')
+                                    .format(_fromDateFilter),
+                              ),
+                              TextButton(
+                                child: const Icon(Icons.calendar_month),
+                                onPressed: () async {
+                                  DateTime? pickedDate = await showDatePicker(
+                                      context: builderContext,
+                                      initialDate: _fromDateFilter,
+                                      firstDate: DateTime(2022),
+                                      lastDate: DateTime(2030));
+                                  if (pickedDate != null) {
+                                    innerSetState(
+                                        () => _fromDateFilter = pickedDate);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
-                      const Text('To     : '),
-                      Text(DateFormat('dd-MM-yyyy').format(_toDateFilter)),
-                      TextButton(
-                        child: const Icon(Icons.calendar_month),
-                        onPressed: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: builderContext,
-                              initialDate: _toDateFilter,
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime(2030));
-                          if (pickedDate != null) {
-                            innerSetState(() => _toDateFilter = pickedDate);
-                          }
-                        },
-                      )
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: Text('${LocalizationResources.to}:'),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: Row(
+                            children: [
+                              Text(
+                                DateFormat('dd-MM-yyyy').format(_toDateFilter),
+                              ),
+                              TextButton(
+                                child: const Icon(Icons.calendar_month),
+                                onPressed: () async {
+                                  DateTime? pickedDate = await showDatePicker(
+                                      context: builderContext,
+                                      initialDate: _toDateFilter,
+                                      firstDate: DateTime(2022),
+                                      lastDate: DateTime(2030));
+                                  if (pickedDate != null) {
+                                    innerSetState(
+                                        () => _toDateFilter = pickedDate);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
-                      const Text('Capacity:'),
+                      Text('${LocalizationResources.capacity}:'),
                       RangeSlider(
                         values: _capacityRange,
                         max: 100,
@@ -279,7 +319,7 @@ class _DashboardState extends State<Dashboard> {
                           style: ElevatedButton.styleFrom(
                             enableFeedback: !DiskResources.getBool("isMuteOn"),
                           ),
-                          child: const Text("Reset"),
+                          child: Text(LocalizationResources.reset),
                           onPressed: () {
                             innerSetState(() {
                               _capacityRange = const RangeValues(2, 100);
@@ -297,7 +337,7 @@ class _DashboardState extends State<Dashboard> {
                           style: ElevatedButton.styleFrom(
                             enableFeedback: !DiskResources.getBool("isMuteOn"),
                           ),
-                          child: const Text('Search'),
+                          child: Text(LocalizationResources.search),
                           onPressed: () {
                             Navigator.pop(context);
                             if (_toDateFilter.compareTo(_fromDateFilter) < 0) {
@@ -358,7 +398,7 @@ class _DashboardState extends State<Dashboard> {
                       Icon(Icons.person, color: Colors.blue //Color(0xffCCCCCC),
                           ),
                 ),
-                tooltip: 'Go to profile',
+                tooltip: LocalizationResources.goToProfile,
                 onPressed: () {
                   if (Holder.userId != null) {
                     Navigator.push(
@@ -381,7 +421,7 @@ class _DashboardState extends State<Dashboard> {
       padding: const EdgeInsets.only(top: 10, right: 20),
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: 'Category',
+          labelText: LocalizationResources.category,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -402,7 +442,7 @@ class _DashboardState extends State<Dashboard> {
                 value: categoryKey,
                 child: Row(
                   children: [
-                    Text(categoryKey),
+                    Text(LocalizationResources.getCategory(categoryKey)),
                     const Spacer(),
                     StatefulBuilder(
                       builder: (builderContext, setDropdownState) {
@@ -431,7 +471,7 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       const Spacer(),
                       ElevatedButton(
-                        child: const Text('Ok'),
+                        child: Text(LocalizationResources.ok),
                         onPressed: () {
                           setState(() {
                             Navigator.pop(_dropdownKey.currentContext!);
@@ -481,7 +521,9 @@ class _DashboardState extends State<Dashboard> {
               response.response!, pageKey + (response.response?.length ?? 0));
         }
       } else {
-        _pagingController.error = response.error ?? 'Something went wrong';
+        _pagingController.error = (response.error?.isEmpty ?? true)
+            ? LocalizationResources.somethingWentWrongError
+            : response.error;
       }
     } catch (error) {
       _pagingController.error = error;

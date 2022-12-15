@@ -20,7 +20,7 @@ class OwnerActivity extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Created Activities'),
+        title: Text(LocalizationResources.createdActivites),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -50,8 +50,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         builder: (context, projectSnap) {
           if (LogicSupport.isSuccessToProceed(projectSnap)) {
             if (projectSnap.data?.response?.isEmpty ?? true) {
-              return const Center(
-                child: Text('No activities'),
+              return Center(
+                child: Text(LocalizationResources.noActivities),
               );
             }
             return ListView.builder(
@@ -95,8 +95,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             );
           } else if (LogicSupport.isFailToProceed(projectSnap)) {
             return CustomePopup(
-              title: 'Fail',
+              title: LocalizationResources.fail,
               message: projectSnap.data?.error ?? LocalizationResources.somethingWentWrongError,
+              buttonName: LocalizationResources.ok,
               onPressed: () {
                 if (!DiskResources.getBool("isMuteOn")) {
                   Feedback.forTap(context);

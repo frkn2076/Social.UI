@@ -39,7 +39,7 @@ class PrivateProfile extends StatelessWidget {
             ),
             child: IconButton(
               icon: const Icon(Icons.nordic_walking_outlined),
-              tooltip: 'Joined Ones',
+              tooltip: LocalizationResources.joinedOnes,
               onPressed: () {
                 if (Holder.userId != null) {
                   Navigator.push(
@@ -62,7 +62,7 @@ class PrivateProfile extends StatelessWidget {
             ),
             child: IconButton(
               icon: const Icon(Icons.supervised_user_circle_outlined),
-              tooltip: "Created Ones",
+              tooltip: LocalizationResources.createdOnes,
               onPressed: () {
                 if (Holder.userId != null) {
                   Navigator.push(
@@ -106,13 +106,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       padding: const EdgeInsets.all(10),
       child: _condition == Condition.success
           ? CustomePopup(
-              title: 'Success',
+              title: LocalizationResources.success,
               message: LocalizationResources.profileUpdatedSuccessfully,
+              buttonName: LocalizationResources.ok,
               onPressed: () => setState(() => _condition = Condition.none))
           : _condition == Condition.fail
               ? CustomePopup(
-                  title: 'Fail',
+                  title: LocalizationResources.fail,
                   message: _errorMessage,
+                  buttonName: LocalizationResources.ok,
                   onPressed: () {
                     if (!DiskResources.getBool("isMuteOn")) {
                       Feedback.forTap(context);
@@ -192,11 +194,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           ),
                           CustomeFocusedTextField(
                             padding: const EdgeInsets.fromLTRB(20, 50, 150, 0),
-                            labelText: 'Name & Surname',
+                            labelText: LocalizationResources.nameAndSurname,
                             controller: _nameController,
                           ),
                           CustomeFocusedTextField(
-                            labelText: 'About me',
+                            labelText: LocalizationResources.about,
                             controller: _aboutController,
                           ),
                           Container(
@@ -210,7 +212,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     enableFeedback:
                                         !DiskResources.getBool("isMuteOn"),
                                   ),
-                                  child: const Text("Save"),
+                                  child: Text(LocalizationResources.save),
                                   onPressed: () => {
                                     Api()
                                         .updatePrivateProfile(
@@ -239,6 +241,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       return CustomePopup(
                         title: 'Fail',
                         message: projectSnap.data!.error!,
+                        buttonName: LocalizationResources.ok,
                         onPressed: () {
                           if (!DiskResources.getBool("isMuteOn")) {
                             Feedback.forTap(context);

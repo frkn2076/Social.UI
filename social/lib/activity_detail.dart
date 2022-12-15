@@ -7,7 +7,6 @@ import 'package:social/custome_widgets/custome_popup.dart';
 import 'package:social/http/models/activity_detail_response.dart';
 import 'package:social/http/models/generic_response.dart';
 import 'package:social/private_profile.dart';
-import 'package:social/dashboard.dart';
 import 'package:social/public_profile.dart';
 import 'package:social/utils/condition.dart';
 import 'package:social/utils/disk_resources.dart';
@@ -26,7 +25,7 @@ class ActivityDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const CustomeBackButton(),
-        title: const Text('Detail'),
+        title: Text(LocalizationResources.detail),
         centerTitle: true,
       ),
       body: MyStatefulWidget(id: id),
@@ -55,15 +54,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       padding: const EdgeInsets.all(10),
       child: _condition == Condition.success
           ? CustomePopup(
-              title: 'Success',
+              title: LocalizationResources.success,
               message: LocalizationResources.youJoinedActivitySuccessfully,
+              buttonName: LocalizationResources.ok,
               onPressed: () {
                 setState(() => _condition = Condition.none);
               })
           : _condition == Condition.fail
               ? CustomePopup(
-                  title: 'Fail',
+                  title: LocalizationResources.fail,
                   message: _errorMessage,
+                  buttonName: LocalizationResources.ok,
                   onPressed: () {
                     if (!DiskResources.getBool("isMuteOn")) {
                       Feedback.forTap(context);
@@ -117,21 +118,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 ),
                               ),
                               CustomeInfoText(
-                                  title: "Date:",
+                                  title: '${LocalizationResources.date}:',
                                   text: Helper.formatDateTime(
                                       projectSnap.data!.response!.date!)),
                               CustomeInfoText(
-                                  title: "Location:",
+                                  title: '${LocalizationResources.location}:',
                                   text: projectSnap.data!.response!.location!),
                               CustomeInfoText(
-                                  title: "PhoneNumber:",
+                                  title: '${LocalizationResources.phoneNumber}:',
                                   text: projectSnap.data!.response!.joiners!
                                           .map((x) => x.id)
                                           .contains(Holder.userId!)
                                       ? projectSnap.data!.response!.phoneNumber!
                                       : '(xxx)xxx-xx-xx'),
                               CustomeInfoText(
-                                  title: "Capacity:",
+                                  title: '${LocalizationResources.capacity}:',
                                   text: projectSnap.data!.response!.capacity!
                                       .toString()),
                               projectSnap.data?.response?.joiners?.isEmpty ??
@@ -142,9 +143,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               0, 20, 0, 0),
-                                          child: const Text(
-                                            'JOINERS',
-                                            style: TextStyle(fontSize: 22),
+                                          child: Text(
+                                            LocalizationResources.joiners,
+                                            style: const TextStyle(fontSize: 22),
                                           ),
                                         ),
                                         Container(
@@ -221,7 +222,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                           .noSpaceForTheActivity),
                                                 )
                                               : TextButton(
-                                                  child: const Text("Join"),
+                                                  child: Text(LocalizationResources.join),
                                                   onPressed: () {
                                                     if (DiskResources.getBool(
                                                         "isMuteOn")) {
@@ -256,8 +257,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           )
                         : LogicSupport.isFailToProceed(projectSnap)
                             ? CustomePopup(
-                                title: 'Fail',
+                                title: LocalizationResources.fail,
                                 message: projectSnap.data!.error!,
+                                buttonName: LocalizationResources.ok,
                                 onPressed: () {
                                   if (!DiskResources.getBool("isMuteOn")) {
                                     Feedback.forTap(context);

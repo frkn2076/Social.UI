@@ -33,5 +33,4 @@ class Helper {
 
   static double width(BuildContext context) =>
       MediaQuery.of(context).copyWith().size.width;
-
 }

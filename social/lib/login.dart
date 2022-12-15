@@ -60,6 +60,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
             ? CustomePopup(
                 title: LocalizationResources.wrongCredentials,
                 message: _errorMessage,
+                buttonName: LocalizationResources.ok,
                 onPressed: () => setState(() => _isAlertDialogOn = false))
             : ListView(
                 children: <Widget>[
@@ -67,7 +68,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.fromLTRB(10, 100, 10, 20),
                     child: Text(
-                      'Login',
+                      LocalizationResources.login,
                       style: TextStyle(fontSize: Holder.titleFontSize),
                     ),
                   ),
@@ -76,10 +77,10 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     child: TextField(
                       maxLength: 15,
                       controller: _userNameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         counterText: '',
-                        border: OutlineInputBorder(),
-                        labelText: 'UserName',
+                        border: const OutlineInputBorder(),
+                        labelText: LocalizationResources.userName,
                       ),
                     ),
                   ),
@@ -92,7 +93,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                       decoration: InputDecoration(
                         counterText: '',
                         border: const OutlineInputBorder(),
-                        labelText: 'Password',
+                        labelText: LocalizationResources.password,
                         suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordVisible
@@ -114,7 +115,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                         ),
                       );
                     },
-                    child: const Text('Forgot Password'),
+                    child: Text(LocalizationResources.forgotPassword),
                   ),
                   Container(
                     height: Holder.buttonHeight,
@@ -123,7 +124,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                       style: ElevatedButton.styleFrom(
                         enableFeedback: !DiskResources.getBool("isMuteOn"),
                       ),
-                      child: const Text('Login'),
+                      child: Text(LocalizationResources.login),
                       onPressed: () {
                         Api()
                             .login(_userNameController.text,
@@ -158,7 +159,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                     children: <Widget>[
                       Text(LocalizationResources.deosntHaveAnAccount),
                       TextButton(
-                        child: const Text('Sign in'),
+                        child: Text(LocalizationResources.signIn),
                         onPressed: () {
                           Holder.userName = _userNameController.text;
                           Holder.password = _passwordController.text;
