@@ -15,7 +15,7 @@ class Api {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _emulatorBaseUrl;
+  static const _baseUrl = _serverBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -49,8 +49,10 @@ class Api {
           'refreshTokenExpireDate',
           DateTime.now()
               .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
+      DiskResources.setOrUpdateString("cookie", response.headers['set-cookie']!);
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
+      _fixedHeaders["Cookie"] = response.headers['set-cookie']!;
       return GenericResponse.createSuccessResponse(true);
     }
     return GenericResponse.createFailResponse(response.body);
@@ -83,8 +85,10 @@ class Api {
           'refreshTokenExpireDate',
           DateTime.now()
               .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
-
+      DiskResources.setOrUpdateString("cookie", response.headers['set-cookie']!);
+      
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
+      _fixedHeaders["Cookie"] = response.headers['set-cookie']!;
       return GenericResponse.createSuccessResponse(true);
     }
     return GenericResponse.createFailResponse(response.body);
@@ -374,6 +378,10 @@ class Api {
       var accessToken = DiskResources.getString('accessToken');
       _fixedHeaders["Authorization"] = "Bearer $accessToken";
     }
+
+    if(_fixedHeaders["Cookie"]?.isEmpty ?? true){
+      _fixedHeaders["Cookie"] = DiskResources.getString('cookie') ?? "";
+    }
   }
 
   Future<bool> _refreshTokenCaller() async {
@@ -399,8 +407,10 @@ class Api {
           'refreshTokenExpireDate',
           DateTime.now()
               .add(Duration(hours: responseBody.refreshTokenExpireDate! - 1)));
+      DiskResources.setOrUpdateString("cookie", response.headers['set-cookie']!);
 
       _fixedHeaders["Authorization"] = "Bearer ${responseBody.accessToken}";
+      _fixedHeaders["Cookie"] = response.headers['set-cookie']!;
       return true;
     }
     return false;
