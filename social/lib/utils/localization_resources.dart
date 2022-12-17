@@ -12,7 +12,7 @@ class LocalizationResources {
       sendEmailForPassword = 'Şifre için mail gönder';
       pickACategory = 'Bir kategori seç!';
       youJoinedActivitySuccessfully = 'Aktiviteye başarıyla katıldın!';
-      youJoinedTheActivity = 'Aktiviteye katıldın!';
+      goToChatRoom = 'Mesaj odasına git';
       noSpaceForTheActivity = 'Aktivite kapasitesi dolu!';
       activityShouldBeCreated48HoursBeforeIt = 'Aktivite 48 saat öncesinden oluşturulmalı!';
       pleaseEnterATitle = 'Bir başlık giriniz!';
@@ -82,7 +82,7 @@ class LocalizationResources {
       sendEmailForPassword = 'Send email for password';
       pickACategory = 'Pick a category';
       youJoinedActivitySuccessfully = 'You joined activity succesfully!';
-      youJoinedTheActivity = 'You joined the activity';
+      goToChatRoom = 'Go to chat room';
       noSpaceForTheActivity = 'No space for the activity';
       activityShouldBeCreated48HoursBeforeIt = 'Activity should be created 48 hours before it';
       pleaseEnterATitle = 'Please enter a title';
@@ -154,7 +154,7 @@ class LocalizationResources {
   static String sendEmailForPassword = 'Şifre için mail gönder!';
   static String pickACategory = 'Bir kategori seç!';
   static String youJoinedActivitySuccessfully = 'Aktiviteye başarıyla katıldın!';
-  static String youJoinedTheActivity = 'Aktiviteye katıldın!';
+  static String goToChatRoom = 'Mesaj odasına git';
   static String noSpaceForTheActivity = 'Aktivite kapasitesi dolu!';
   static String activityShouldBeCreated48HoursBeforeIt = 'Aktivite 48 saat öncesinden oluşturulmalı!';
   static String pleaseEnterATitle = 'Bir başlık giriniz!';

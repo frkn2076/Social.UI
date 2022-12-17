@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/activitiy_chat_room.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
 import 'package:social/custome_widgets/custome_info_text.dart';
@@ -125,7 +126,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                   title: '${LocalizationResources.location}:',
                                   text: projectSnap.data!.response!.location!),
                               CustomeInfoText(
-                                  title: '${LocalizationResources.phoneNumber}:',
+                                  title:
+                                      '${LocalizationResources.phoneNumber}:',
                                   text: projectSnap.data!.response!.joiners!
                                           .map((x) => x.id)
                                           .contains(Holder.userId!)
@@ -145,7 +147,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                               0, 20, 0, 0),
                                           child: Text(
                                             LocalizationResources.joiners,
-                                            style: const TextStyle(fontSize: 22),
+                                            style:
+                                                const TextStyle(fontSize: 22),
                                           ),
                                         ),
                                         Container(
@@ -200,29 +203,65 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.black),
-                                      ),
-                                      child: _isJoined
-                                          ? Container(
-                                              padding: const EdgeInsets.all(10),
+                                    _isJoined
+                                        ? Container(
+                                            padding: const EdgeInsets.all(10),
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                enableFeedback:
+                                                    !DiskResources.getBool(
+                                                        "isMuteOn"),
+                                              ),
                                               child: Text(LocalizationResources
-                                                  .youJoinedTheActivity),
-                                            )
-                                          : projectSnap.data!.response!.joiners!
-                                                      .length >=
-                                                  projectSnap
-                                                      .data!.response!.capacity!
-                                              ? Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
+                                                  .goToChatRoom),
+                                              onPressed: () {
+                                                if (projectSnap
+                                                        .data?.response !=
+                                                    null) {
+                                                  var response = projectSnap
+                                                      .data!.response!;
+                                                  if (response.id != null &&
+                                                      response.title != null) {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ActivityChatRoom(
+                                                          id: response.id!,
+                                                          activity:
+                                                              response.title!,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ),
+                                          )
+                                        : projectSnap.data!.response!.joiners!
+                                                    .length >=
+                                                projectSnap
+                                                    .data!.response!.capacity!
+                                            ? Container(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Text(
+                                                    LocalizationResources
+                                                        .noSpaceForTheActivity),
+                                              )
+                                            : Container(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    enableFeedback:
+                                                        !DiskResources.getBool(
+                                                            "isMuteOn"),
+                                                  ),
                                                   child: Text(
                                                       LocalizationResources
-                                                          .noSpaceForTheActivity),
-                                                )
-                                              : TextButton(
-                                                  child: Text(LocalizationResources.join),
+                                                          .join),
                                                   onPressed: () {
                                                     if (DiskResources.getBool(
                                                         "isMuteOn")) {
@@ -249,7 +288,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                         );
                                                   },
                                                 ),
-                                    ),
+                                              ),
                                   ],
                                 ),
                               ),
