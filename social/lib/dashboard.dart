@@ -49,6 +49,8 @@ class _DashboardState extends State<Dashboard> {
 
   Timer? _debounce;
 
+  bool _isRefresh = false;
+
   final PagingController<int, AllActivityResponse> _pagingController =
       PagingController(firstPageKey: 0, invisibleItemsThreshold: 2);
 
@@ -60,7 +62,9 @@ class _DashboardState extends State<Dashboard> {
     _fromDateFilter = _now;
     _toDateFilter = DateTime(2030, 1, 1);
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey, false);
+      var isFirstCall = (_pagingController.itemList?.length ?? 0) == 0;
+      _isRefresh = isFirstCall;
+      _fetchPage(pageKey);
     });
   }
 
@@ -181,6 +185,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
                     onRefresh: () async {
+                      _isRefresh = true;
                       _pagingController.refresh();
                     },
                   )),
@@ -506,12 +511,12 @@ class _DashboardState extends State<Dashboard> {
         _categories.keys.where((key) => _categories[key] == true).toList());
   }
 
-  Future<void> _fetchPage(int pageKey, bool isRefresh) async {
+  Future<void> _fetchPage(int pageKey) async {
     try {
-      if (isRefresh) {
-        _pagingController.itemList = null;
-      }
-      var response = await _getActivities(isRefresh);
+      // if (_isRefresh) {
+      //   _pagingController.itemList = null;
+      // }
+      var response = await _getActivities(_isRefresh);
       if (response.isSuccessful == true) {
         var isLastPage = (response.response?.length ?? 0) < 10;
         if (isLastPage) {

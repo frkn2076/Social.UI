@@ -15,7 +15,7 @@ class Api {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _serverBaseUrl;
+  static const _baseUrl = _emulatorBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -25,6 +25,10 @@ class Api {
   Future<GenericResponse> register(String userName, String password) async {
     if (!(await _isConnectionActive())) {
       return GenericResponse.createFailResponse('Check your connection');
+    }
+    
+    if(_fixedHeaders.containsKey('Cookie')){
+      _fixedHeaders.remove('Cookie');
     }
 
     final body = jsonEncode(
@@ -61,6 +65,10 @@ class Api {
   Future<GenericResponse> login(String userName, String password) async {
     if (!(await _isConnectionActive())) {
       return GenericResponse.createFailResponse('Check your connection');
+    }
+
+    if(_fixedHeaders.containsKey('Cookie')){
+      _fixedHeaders.remove('Cookie');
     }
 
     final body = jsonEncode(
@@ -380,7 +388,11 @@ class Api {
     }
 
     if(_fixedHeaders["Cookie"]?.isEmpty ?? true){
-      _fixedHeaders["Cookie"] = DiskResources.getString('cookie') ?? "";
+      if(DiskResources.getString('cookie')?.isEmpty ?? true){
+        await _refreshTokenCaller();
+      }else{
+        _fixedHeaders["Cookie"] = DiskResources.getString('cookie')!;
+      }
     }
   }
 
@@ -388,6 +400,10 @@ class Api {
     var refreshToken = DiskResources.getString('refreshToken');
 
     _fixedHeaders["Authorization"] = "Bearer $refreshToken";
+
+    if(_fixedHeaders.containsKey('Cookie')){
+      _fixedHeaders.remove('Cookie');
+    }
 
     final response = await http.get(
         Uri.parse('${_baseUrl}authentication/refresh'),
