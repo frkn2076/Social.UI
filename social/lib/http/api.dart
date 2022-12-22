@@ -15,7 +15,7 @@ class Api {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _serverBaseUrl;
+  static const _baseUrl = _emulatorBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -364,6 +364,24 @@ class Api {
       return GenericResponse.createSuccessResponse(responseBody);
     }
     return GenericResponse.createFailResponse(response.body);
+  }
+
+  Future<GenericResponse<String>> getRoomMessages(
+      int roomId) async {
+    if (!(await _isConnectionActive())) {
+      return GenericResponse.createFailResponse('Check your connection');
+    }
+
+    await _checkAndUpdateTokens();
+
+    final response = await http.get(
+        Uri.parse('${_baseUrl}activity/messages/$roomId'),
+        headers: _fixedHeaders);
+
+    if (response.statusCode == 200) {
+      return GenericResponse.createSuccessResponse(response.body);
+    }
+    return GenericResponse.createFailResponse('');
   }
 
   static String _formatDateTimeForPayload(DateTime? dateTime) {

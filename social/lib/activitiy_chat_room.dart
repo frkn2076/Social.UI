@@ -13,7 +13,11 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social/custome_widgets/custome_backbutton.dart';
 import 'package:social/custome_widgets/custome_background.dart';
+import 'package:social/http/api.dart';
+import 'package:social/socket/socket_manager.dart';
+import 'package:social/utils/holder.dart';
 import 'package:uuid/uuid.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
 class ActivityChatRoom extends StatelessWidget {
   final int id;
@@ -43,17 +47,38 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  final hubConnection = SocketManager().buildSocketConnection();
+
   List<types.Message> _messages = [];
-  final _user = const types.User(id: '82091008-a484-4a89-ae75-a22bf8d6f3ac');
+  final _user = types.User(id: Holder.userId.toString());
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () async {
+      hubConnection.start();
+    });
+    
     super.initState();
     _loadMessages();
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    hubConnection.on("GroupSendMessage", (arguments) {
+      try {
+        var chatMessage = arguments![0];
+      var message = types.Message.fromJson(chatMessage as Map<String, dynamic>);
+      _messages.add(message);
+      } catch (e) {
+        
+      }
+      
+    });
     return Chat(
       messages: _messages,
       onAttachmentPressed: _handleAttachmentPressed,
@@ -66,7 +91,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 
-  void _addMessage(types.Message message) {
+  void _addMessage(types.Message message) async {
     setState(() {
       _messages.insert(0, message);
     });
@@ -227,18 +252,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       id: const Uuid().v4(),
       text: message.text,
     );
-
+    _sendMessage(message.text);
     _addMessage(textMessage);
   }
 
   void _loadMessages() async {
-    final response = await rootBundle.loadString('assets/messages.json');
-    final messages = (jsonDecode(response) as List)
-        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final result = await Api().getRoomMessages(widget.id);
+    if (result.isSuccessful == true) {
+      final messages = (jsonDecode(result.response!) as List)
+          .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
+          .toList();
+      setState(() {
+        _messages = messages;
+      });
+    }
+  }
 
-    setState(() {
-      _messages = messages;
-    });
+  Future _sendMessage(String message) async {
+    var messageToPublish =
+        SocketManager().createChatMessage(message, widget.id);
+    await hubConnection.invoke("GroupSendMessage",
+        args: <Object>[json.encode(messageToPublish)]);
   }
 }
