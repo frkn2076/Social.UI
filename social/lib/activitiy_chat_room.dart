@@ -57,29 +57,31 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     Future.delayed(Duration.zero, () async {
       hubConnection.start();
     });
-    
+
     super.initState();
     hubConnection.on("GroupSendMessage", (arguments) {
-      try {
-        var chatMessage = arguments![0];
-      var message = types.Message.fromJson(chatMessage as Map<String, dynamic>);
-      _messages.add(message);
-      } catch (e) {
-        print(e);
-      }
-      
+      var args = (arguments as List).cast<String>().map((e) => e);
+      var messages = args.map((e) {
+        var decoded = jsonDecode(e);
+        decoded["createdAt"] = int.parse(
+            decoded["createdAt"]); //fix for long datatype on json issue
+        return types.Message.fromJson(decoded);
+      }).toList();
+      setState(() {
+        _messages.addAll(messages);
+      });
     });
     _loadMessages();
   }
 
   @override
   void dispose() {
+    hubConnection.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Chat(
       messages: _messages,
       onAttachmentPressed: _handleAttachmentPressed,
@@ -259,12 +261,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   void _loadMessages() async {
     final result = await Api().getRoomMessages(widget.id);
-      final messages = (jsonDecode(result) as List)
-        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-        .toList();
+    if (result.isSuccessful == true) {
+      final messages = (jsonDecode(result.response!) as List)
+          .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
+          .toList();
       setState(() {
         _messages = messages;
       });
+    }
   }
 
   Future _sendMessage(String message) async {

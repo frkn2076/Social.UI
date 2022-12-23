@@ -2,6 +2,7 @@ import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:social/utils/holder.dart';
 import 'package:signalr_netcore/msgpack_hub_protocol.dart';
+import 'package:uuid/uuid.dart';
 
 class SocketManager {
   static const _emulatorBaseUrl = 'https://10.0.2.2:5001/';
@@ -42,7 +43,7 @@ class SocketManager {
     Map<String, dynamic> chatMessage = {
       "author": author,
       "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
-      "id": roomId,
+      "id": roomId.toString(),
       "status": 'seen',
       "text": message,
       "type": 'text'

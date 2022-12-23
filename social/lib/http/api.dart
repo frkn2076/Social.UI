@@ -367,10 +367,10 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<String> getRoomMessages(
+  Future<GenericResponse<String>> getRoomMessages(
       int roomId) async {
     if (!(await _isConnectionActive())) {
-      return 'Check your connection';
+      return GenericResponse.createFailResponse('Check your connection');
     }
 
     await _checkAndUpdateTokens();
@@ -384,9 +384,9 @@ class Api {
       //     .decode(response.body)
       //     .map<ChatMessage>(
       //         (data) => ChatMessage.fromJson(data));
-      return response.body;
+      return GenericResponse.createSuccessResponse(response.body);
     }
-    return '';
+    return GenericResponse.createFailResponse('');
   }
 
   static String _formatDateTimeForPayload(DateTime? dateTime) {
