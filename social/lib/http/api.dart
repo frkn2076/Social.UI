@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:social/http/models/chat_message.dart';
 import 'package:social/http/models/generic_response.dart';
 import 'package:social/http/models/private_profile_response.dart';
 import 'package:social/http/models/activity_detail_response.dart';
@@ -366,10 +367,10 @@ class Api {
     return GenericResponse.createFailResponse(response.body);
   }
 
-  Future<GenericResponse<String>> getRoomMessages(
+  Future<String> getRoomMessages(
       int roomId) async {
     if (!(await _isConnectionActive())) {
-      return GenericResponse.createFailResponse('Check your connection');
+      return 'Check your connection';
     }
 
     await _checkAndUpdateTokens();
@@ -379,9 +380,13 @@ class Api {
         headers: _fixedHeaders);
 
     if (response.statusCode == 200) {
-      return GenericResponse.createSuccessResponse(response.body);
+      // var chatMessage = json
+      //     .decode(response.body)
+      //     .map<ChatMessage>(
+      //         (data) => ChatMessage.fromJson(data));
+      return response.body;
     }
-    return GenericResponse.createFailResponse('');
+    return '';
   }
 
   static String _formatDateTimeForPayload(DateTime? dateTime) {

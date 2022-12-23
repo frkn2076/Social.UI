@@ -41,7 +41,7 @@ class SocketManager {
 
     Map<String, dynamic> chatMessage = {
       "author": author,
-      "createdAt": DateTime.now().millisecondsSinceEpoch,
+      "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
       "id": roomId,
       "status": 'seen',
       "text": message,

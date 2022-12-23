@@ -59,6 +59,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     });
     
     super.initState();
+    hubConnection.on("GroupSendMessage", (arguments) {
+      try {
+        var chatMessage = arguments![0];
+      var message = types.Message.fromJson(chatMessage as Map<String, dynamic>);
+      _messages.add(message);
+      } catch (e) {
+        print(e);
+      }
+      
+    });
     _loadMessages();
   }
 
@@ -69,16 +79,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    hubConnection.on("GroupSendMessage", (arguments) {
-      try {
-        var chatMessage = arguments![0];
-      var message = types.Message.fromJson(chatMessage as Map<String, dynamic>);
-      _messages.add(message);
-      } catch (e) {
-        
-      }
-      
-    });
+    
     return Chat(
       messages: _messages,
       onAttachmentPressed: _handleAttachmentPressed,
@@ -258,14 +259,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   void _loadMessages() async {
     final result = await Api().getRoomMessages(widget.id);
-    if (result.isSuccessful == true) {
-      final messages = (jsonDecode(result.response!) as List)
-          .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final messages = (jsonDecode(result) as List)
+        .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
+        .toList();
       setState(() {
         _messages = messages;
       });
-    }
   }
 
   Future _sendMessage(String message) async {
