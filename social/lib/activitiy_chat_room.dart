@@ -68,7 +68,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         return types.Message.fromJson(decoded);
       }).toList();
       setState(() {
-        _messages.addAll(messages);
+        messages.forEach((message) {
+          _messages.insert(0, message);
+        });
       });
     });
     _loadMessages();

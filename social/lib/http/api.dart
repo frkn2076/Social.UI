@@ -16,7 +16,7 @@ class Api {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _emulatorBaseUrl;
+  static const _baseUrl = _serverBaseUrl;
 
   static final Map<String, String> _fixedHeaders = {
     "Access-Control-Allow-Origin": "*",

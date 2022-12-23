@@ -9,7 +9,7 @@ class SocketManager {
   static const _localhostBaseUrl = 'https://localhost:5001/';
   static const _serverBaseUrl = 'https://37.148.213.160:5001/';
 
-  static const _baseUrl = _emulatorBaseUrl;
+  static const _baseUrl = _serverBaseUrl;
 
   HubConnection buildSocketConnection() {
     return HubConnectionBuilder()
@@ -18,8 +18,6 @@ class SocketManager {
     .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000])
     .build();
   }
-
-  
 
   Map<String,dynamic> createChatMessage(String message, int roomId) {
     String? firstName;
