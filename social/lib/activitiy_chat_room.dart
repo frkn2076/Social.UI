@@ -46,17 +46,16 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   List<types.Message> _messages = [];
   final _user = types.User(id: Holder.userId.toString());
+  final _hubConnection = SocketManager.createHubConnection();
 
   @override
   void initState() {
     super.initState();
-    SocketManager.onError();
     Future.delayed(Duration.zero, () async {
-      await SocketManager.startConnection();
       await _joinChatGroup();
     });
 
-    SocketManager.hubConnection.on("GroupSendMessage", (arguments) {
+    _hubConnection.on("GroupSendMessage", (arguments) {
       var args = (arguments as List).cast<String>().map((e) => e);
       var messages = args.map((e) {
         var decoded = jsonDecode(e);
@@ -75,7 +74,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   void dispose() {
-    SocketManager.hubConnection.stop();
+    _hubConnection.stop();
     super.dispose();
   }
 
@@ -185,14 +184,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         width: image.width.toDouble(),
       );
 
-      // var imagee = Helper.base64StringFromImage(result.path);
-      // var filee = Helper.imageFromBase64String(imagee);
-      // filee.height;
-      // filee.width;
-      // filee
-
-      _sendPhotoMessage(
-          image.height, image.width, bytes.length, result.path, result.name);
+      // _sendPhotoMessage(
+      //     image.height, image.width, bytes.length, result.path, result.name);
       _addMessage(message);
     }
   }
@@ -256,7 +249,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     });
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  void _handleSendPressed(types.PartialText message) async {
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -264,7 +257,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       text: message.text,
     );
 
-    _sendTextMessage(message.text);
+    await _sendTextMessage(message.text);
     _addMessage(textMessage);
   }
 
@@ -280,23 +273,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     }
   }
 
-  Future _joinChatGroup() async {
-    await SocketManager.hubConnection
-        .invoke("JoinGroup", args: <Object>[widget.id.toString()]);
-  }
-
   Future _sendTextMessage(String message) async {
     var messageToPublish =
         SocketManager().createChatTextMessage(message, widget.id);
-    await SocketManager.hubConnection.invoke("GroupSendMessage",
-        args: <Object>[json.encode(messageToPublish)]);
+    await _sendDataOverSocket(json.encode(messageToPublish));
   }
 
-  Future _sendPhotoMessage(
-      int height, int width, int size, String uri, String name) async {
-    var messageToPublish = SocketManager()
-        .createChatPhotoMessage(height, width, size, uri, name, widget.id);
-    await SocketManager.hubConnection.invoke("GroupSendMessage",
-        args: <Object>[json.encode(messageToPublish)]);
+  Future _joinChatGroup() async {
+    await SocketManager.startConnectionIfNotOpen(_hubConnection);
+    await _hubConnection
+        .invoke("JoinGroup", args: <Object>[widget.id.toString()]);
+  }
+
+  Future _sendDataOverSocket(String message) async {
+    await SocketManager.startConnectionIfNotOpen(_hubConnection);
+    await _hubConnection.invoke("GroupSendMessage", args: <Object>[message]);
   }
 }

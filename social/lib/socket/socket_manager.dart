@@ -10,35 +10,28 @@ class SocketManager {
 
   static const _baseUrl = _serverBaseUrl;
 
-  static HubConnection hubConnection = HubConnectionBuilder()
+  static HubConnection createHubConnection(){
+    return HubConnectionBuilder()
       .withUrl("${_baseUrl}chatHub")
       .withHubProtocol(MessagePackHubProtocol())
       .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000]).build();
+  }
 
-  static Future startConnection() async {
-    if(hubConnection.state == HubConnectionState.Disconnected 
-    || hubConnection.state == HubConnectionState.Disconnecting) {
+  static Future startConnectionIfNotOpen(HubConnection hubConnection) async {
+    if(hubConnection.state == HubConnectionState.Disconnected) {
       await hubConnection.start();
     }
   }
 
-  static void onError() {
-    hubConnection.onclose(({error}) {
-      hubConnection = HubConnectionBuilder()
-          .withUrl("${_baseUrl}chatHub")
-          .withHubProtocol(MessagePackHubProtocol())
-          .withAutomaticReconnect(
-              retryDelays: [2000, 5000, 10000, 20000]).build();
-      hubConnection.start();
-    });
-  }
-
-  // HubConnection buildSocketConnection() {
-  //   return HubConnectionBuilder()
-  //   .withUrl("${_baseUrl}chatHub")
-  //   .withHubProtocol(MessagePackHubProtocol())
-  //   .withAutomaticReconnect(retryDelays: [2000, 5000, 10000, 20000])
-  //   .build();
+  // static void onError() {
+  //   hubConnection.onclose(({error}) {
+  //     hubConnection = HubConnectionBuilder()
+  //         .withUrl("${_baseUrl}chatHub")
+  //         .withHubProtocol(MessagePackHubProtocol())
+  //         .withAutomaticReconnect(
+  //             retryDelays: [2000, 5000, 10000, 20000]).build();
+  //     hubConnection.start();
+  //   });
   // }
 
   Map<String, dynamic> createChatTextMessage(String message, int activityId) {
