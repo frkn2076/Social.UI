@@ -7,21 +7,17 @@ import 'package:social/login.dart';
 import 'package:social/utils/disk_resources.dart';
 
 void main() async {
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    HttpOverrides.global = MyHttpOverrides(); // for api call certicifications
-    initializeDateFormatting(); // for global localizations of datetime formats
-    await DiskResources.init();
+  WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides(); // for api call certicifications
+  initializeDateFormatting(); // for global localizations of datetime formats
+  await DiskResources.init();
 
-    return runApp(
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: await isTokenValidAsync() ? const Dashboard() : const Login(),
-      ),
-    );
-  } catch (e) {
-    print(e);
-  }
+  return runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: await isTokenValidAsync() ? const Dashboard() : const Login(),
+    ),
+  );
 }
 
 class MyHttpOverrides extends HttpOverrides {
