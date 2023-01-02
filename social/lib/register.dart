@@ -151,18 +151,15 @@ class _RegisterStatefulWidgetState extends State<RegisterStatefulWidget> {
                                 (response) {
                                   setState(
                                     () {
-                                      _condition =
-                                          (response.isSuccessful ?? false)
-                                              .conditionParser();
+                                      _condition = response.isSuccessful
+                                          .conditionParser();
                                       if (response.isSuccessful == true) {
                                         Holder.userName =
                                             _userNameController.text;
                                         Holder.password =
                                             _passwordController.text;
                                       } else {
-                                        _errorMessage = response.error ??
-                                            LocalizationResources
-                                                .somethingWentWrongError;
+                                        _errorMessage = response.error;
                                       }
                                     },
                                   );

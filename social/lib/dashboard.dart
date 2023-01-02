@@ -527,9 +527,7 @@ class _DashboardState extends State<Dashboard> {
               response.response!, pageKey + (response.response?.length ?? 0));
         }
       } else {
-        _pagingController.error = (response.error?.isEmpty ?? true)
-            ? LocalizationResources.somethingWentWrongError
-            : response.error;
+        _pagingController.error = response.error;
       }
     } catch (error) {
       _pagingController.error = error;

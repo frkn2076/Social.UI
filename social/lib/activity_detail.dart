@@ -274,14 +274,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                                               setState(
                                                             () {
                                                               _condition = response
-                                                                  .isSuccessful!
+                                                                  .isSuccessful
                                                                   .conditionParser();
                                                               if (response
                                                                       .isSuccessful !=
                                                                   true) {
                                                                 _errorMessage =
                                                                     response
-                                                                        .error!;
+                                                                        .error;
                                                               }
                                                             },
                                                           ),
@@ -297,7 +297,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         : LogicSupport.isFailToProceed(projectSnap)
                             ? CustomePopup(
                                 title: LocalizationResources.fail,
-                                message: projectSnap.data!.error!,
+                                message: projectSnap.data!.error,
                                 buttonName: LocalizationResources.ok,
                                 onPressed: () {
                                   if (!DiskResources.getBool("isMuteOn")) {

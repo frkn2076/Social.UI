@@ -342,10 +342,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     .then(
                                   (response) {
                                     setState(() => _condition = response
-                                        .isSuccessful!
+                                        .isSuccessful
                                         .conditionParser());
                                     if (response.isSuccessful != true) {
-                                      _errorMessage = response.error!;
+                                      _errorMessage = response.error;
                                     }
                                   },
                                 );

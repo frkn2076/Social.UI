@@ -97,7 +97,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           } else if (LogicSupport.isFailToProceed(projectSnap)) {
             return CustomePopup(
                 title: 'Fail',
-                message: projectSnap.data!.error!,
+                message: projectSnap.data!.error,
                 buttonName: LocalizationResources.ok,
                 onPressed: () {
                   if (!DiskResources.getBool("isMuteOn")) {

@@ -222,10 +222,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                         .then(
                                       (response) {
                                         setState(() {
-                                          _condition = response.isSuccessful!
+                                          _condition = response.isSuccessful
                                               .conditionParser();
                                           if (response.isSuccessful != true) {
-                                            _errorMessage = response.error!;
+                                            _errorMessage = response.error;
                                           }
                                         });
                                       },
@@ -240,7 +240,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     } else if (LogicSupport.isFailToProceed(projectSnap)) {
                       return CustomePopup(
                         title: 'Fail',
-                        message: projectSnap.data!.error!,
+                        message: projectSnap.data!.error,
                         buttonName: LocalizationResources.ok,
                         onPressed: () {
                           if (!DiskResources.getBool("isMuteOn")) {

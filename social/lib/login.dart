@@ -145,7 +145,7 @@ class _LoginStatefulWidgetState extends State<LoginStatefulWidget> {
                                   );
                                 } else {
                                   _isAlertDialogOn = true;
-                                  _errorMessage = response.error!;
+                                  _errorMessage = response.error;
                                 }
                               },
                             );
