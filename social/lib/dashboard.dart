@@ -514,9 +514,6 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      // if (_isRefresh) {
-      //   _pagingController.itemList = null;
-      // }
       var response = await _getActivities(_isRefresh);
       if (response.isSuccessful == true) {
         var isLastPage = (response.response?.length ?? 0) < 10;
