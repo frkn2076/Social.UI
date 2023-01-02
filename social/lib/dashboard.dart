@@ -121,6 +121,7 @@ class _DashboardState extends State<Dashboard> {
                       setState(() {
                         _searchBoolean = false;
                         _searchText = null;
+                        _pagingController.refresh();
                       });
                     },
                   ),
