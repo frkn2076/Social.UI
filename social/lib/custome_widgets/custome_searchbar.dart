@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social/utils/localization_resources.dart';
 
 class CustomeSearchBar extends StatelessWidget {
   final Function(String)? onChanged;
@@ -20,15 +21,15 @@ class CustomeSearchBar extends StatelessWidget {
           fontSize: 20,
         ),
         textInputAction: TextInputAction.search,
-        decoration: const InputDecoration(
-          enabledBorder: UnderlineInputBorder(
+        decoration: InputDecoration(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
-          hintText: 'Search',
-          hintStyle: TextStyle(
+          hintText: LocalizationResources.search,
+          hintStyle: const TextStyle(
             color: Colors.white60,
             fontSize: 20,
           ),

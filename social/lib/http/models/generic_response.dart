@@ -12,10 +12,4 @@ class GenericResponse<T> {
   static GenericResponse<T> createFailResponse<T>(String error){
     return GenericResponse<T>(isSuccessful: false, error: error);
   }
-
-  GenericResponse.fromJson(Map<String, dynamic> json) {
-    isSuccessful = json['IsSuccessful'];
-    error = json['Error'];
-    response = json['Response'];
-  }
 }
