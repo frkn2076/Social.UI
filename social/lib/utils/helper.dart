@@ -8,7 +8,7 @@ class Helper {
 
   static String formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
-      return "";
+      return '';
     }
     return DateFormat('dd MMMM yyyy - HH:mm', 'tr').format(dateTime);
   }
@@ -25,7 +25,7 @@ class Helper {
   }
 
   static AssetImage getImageByCategory(String category) {
-    return AssetImage("assets/images/categories/$category.jpg");
+    return AssetImage('assets/images/categories/$category.jpg');
   }
 
   static double height(BuildContext context) =>
