@@ -26,6 +26,7 @@ class LocalizationResources {
       haveAnAccount = 'Hesabın var mı?';
       noActivities = 'Aktivite bulunamadı';
       youHaveCreatedActivitySuccessfully = 'Aktivite başarılı bir şekilde oluşturuldu';
+      youHaveCreatedAccountSuccessfully = 'Hesap başarılı bir şekilde oluşturuldu';
 
       settings = 'Ayarlar';
       info = 'Bilgilendirme';
@@ -96,6 +97,7 @@ class LocalizationResources {
       haveAnAccount = 'Have an account?';
       noActivities = 'No activities!';
       youHaveCreatedActivitySuccessfully = 'You have created activity succesfully!';
+      youHaveCreatedAccountSuccessfully = 'You have created account succesfully!';
 
       settings = 'Settings';
       info = 'Info';
@@ -167,6 +169,7 @@ class LocalizationResources {
   static String fromDateShouldBeBeforeOrEqualToToDate = 'Bitiş tarihi başlangıç tarihinden önce olamaz!';
   static String noActivities = 'No activities!';
   static String youHaveCreatedActivitySuccessfully = 'You have created activity succesfully!';
+  static String youHaveCreatedAccountSuccessfully = 'You have created account succesfully!';
 
   static String settings = 'Ayarlar';
   static String info = 'Bilgilendirme';
